@@ -205,7 +205,8 @@ body{background:linear-gradient(-45deg, var(--bg), var(--panel), var(--bg));back
   }
 }
 
-.site-header, .site-main, .site-footer{position:relative;z-index:2}
+.site-main, .site-footer{position:relative;z-index:2}
+.site-header{position:relative;z-index:3}
 
 /* Phase 2: Scroll-triggered reveals */
 .reveal{opacity:0;transform:translateY(16px);transition:opacity 600ms ease, transform 600ms ease}
