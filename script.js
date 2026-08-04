@@ -41,33 +41,89 @@
   }, { passive: true });
 })();
 
-// Library search filtering: client-side filter on .card elements
+// Library search filtering: client-side search over SWAY_SKILLS index
 (function() {
   const searchInput = document.querySelector('.search-input');
   const searchForm = document.querySelector('.search-form');
+  const quickLinks = document.getElementById('quick-links');
+  const resultsSection = document.getElementById('search-results');
+  const resultsGrid = document.getElementById('search-results-grid');
+  const noResultsNote = document.getElementById('search-no-results');
+
   if (!searchInput) return;
 
-  // Prevent form submission for client-side filtering
+  // keep preventing form submission (stay on page)
   if (searchForm) {
     searchForm.addEventListener('submit', (e) => {
       e.preventDefault();
     });
   }
 
-  searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase().trim();
-    const cards = document.querySelectorAll('.card');
+  // If the static search index isn't present, bail out and keep original behavior
+  if (typeof SWAY_SKILLS === 'undefined') return;
 
-    cards.forEach((card) => {
-      const text = card.textContent.toLowerCase();
-      const matches = query === '' || text.includes(query);
+  function clearResults() {
+    if (resultsGrid) resultsGrid.innerHTML = '';
+  }
 
-      if (matches) {
-        card.classList.remove('search-hidden');
-      } else {
-        card.classList.add('search-hidden');
-      }
+  function showQuickLinks() {
+    if (quickLinks) quickLinks.hidden = false;
+    if (resultsSection) resultsSection.hidden = true;
+    if (noResultsNote) noResultsNote.hidden = true;
+    clearResults();
+  }
+
+  function renderResults(matches) {
+    clearResults();
+    if (!resultsGrid) return;
+
+    matches.forEach((item, idx) => {
+      const a = document.createElement('a');
+      a.className = 'card reveal';
+      a.href = item.url;
+      a.setAttribute('data-index', idx);
+
+      // Use a simple structure: title + muted category
+      const titleSpan = document.createElement('div');
+      titleSpan.className = 'card__title';
+      titleSpan.textContent = item.title;
+
+      const cat = document.createElement('div');
+      cat.className = 'card__category';
+      cat.textContent = item.category;
+
+      a.appendChild(titleSpan);
+      a.appendChild(cat);
+
+      resultsGrid.appendChild(a);
     });
+  }
+
+  searchInput.addEventListener('input', (e) => {
+    const query = (e.target.value || '').toLowerCase().trim();
+
+    if (!query) {
+      showQuickLinks();
+      return;
+    }
+
+    // filter by title or category
+    const matches = SWAY_SKILLS.filter((s) => {
+      const hay = (s.title + ' ' + s.category).toLowerCase();
+      return hay.includes(query);
+    });
+
+    if (matches.length === 0) {
+      if (quickLinks) quickLinks.hidden = true;
+      if (resultsSection) resultsSection.hidden = false;
+      if (noResultsNote) noResultsNote.hidden = false;
+      clearResults();
+    } else {
+      if (quickLinks) quickLinks.hidden = true;
+      if (resultsSection) resultsSection.hidden = false;
+      if (noResultsNote) noResultsNote.hidden = true;
+      renderResults(matches);
+    }
   });
 })();
 
