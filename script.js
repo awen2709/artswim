@@ -15,6 +15,24 @@
   });
 })();
 
+// Library button navigation: make the Library dropdown button clickable
+(function() {
+  const dropBtn = document.querySelector('.dropbtn');
+  if (!dropBtn) return;
+
+  dropBtn.addEventListener('click', function(e) {
+    // Determine the base URL for library.html
+    const currentPath = window.location.pathname;
+    let libraryUrl = 'library.html';
+    
+    if (currentPath.includes('/figures/') || currentPath.includes('/elements/')) {
+      libraryUrl = '../library.html';
+    }
+    
+    window.location.href = libraryUrl;
+  });
+})();
+
 // Header scroll-state: add .site-header--scrolled class when scrolled past threshold
 (function() {
   const header = document.querySelector('.site-header');
