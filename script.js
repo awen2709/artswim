@@ -59,7 +59,7 @@
   }, { passive: true });
 })();
 
-// Library search filtering: client-side search over SWAY_SKILLS index
+// Library search filtering: client-side search over a static JSON skill index
 (function() {
   const searchInput = document.querySelector('.search-input');
   const searchForm = document.querySelector('.search-form');
@@ -77,8 +77,12 @@
     });
   }
 
-  // If the static search index isn't present, bail out and keep original behavior
-  if (typeof SWAY_SKILLS === 'undefined') return;
+  // Skill index is loaded from search-data.json (one entry per figure/element page)
+  let skills = [];
+  fetch('search-data.json')
+    .then((res) => res.json())
+    .then((data) => { skills = data; })
+    .catch((err) => console.error('Failed to load search index:', err));
 
   function clearResults() {
     if (resultsGrid) resultsGrid.innerHTML = '';
@@ -97,7 +101,7 @@
 
     matches.forEach((item, idx) => {
       const a = document.createElement('a');
-      a.className = 'card reveal';
+      a.className = 'card';
       a.href = item.url;
       a.setAttribute('data-index', idx);
 
@@ -126,7 +130,7 @@
     }
 
     // filter by title or category
-    const matches = SWAY_SKILLS.filter((s) => {
+    const matches = skills.filter((s) => {
       const hay = (s.title + ' ' + s.category).toLowerCase();
       return hay.includes(query);
     });
