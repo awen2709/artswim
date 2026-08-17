@@ -163,6 +163,7 @@ a:focus, button:focus, .search-input:focus{outline:3px solid rgba(111,210,255,0.
 /* Contact page links */
 .contact-list a{color:#ffffff}
 
+<<<<<<< Updated upstream
 /* Figure page: split top/bottom layout for image + tips/media */
 .figure-split{display:flex;flex-direction:column;gap:16px;min-height:64vh}
 .figure-header{margin-bottom:6px}
@@ -223,4 +224,26 @@ body{background:linear-gradient(-45deg, var(--bg), var(--panel), var(--bg));back
 .card.reveal{transition-delay:calc(var(--card-index, 0) * 80ms)}
 .card.reveal.is-visible{transition-delay:0}
 
+=======
+/* Wave / ocean animated backdrop */
+.ocean{
+  position:absolute;top:0;left:0;width:100%;height:40vh;overflow:hidden;pointer-events:none;z-index:0;
+}
+.site-header,.site-main,.site-footer{position:relative;z-index:2}
+.ocean svg{position:absolute;bottom:0;width:200%;height:120%;left:-50%}
+.wave path{transform-origin:center bottom}
+.wave.wave1 path{fill:rgba(111,210,255,0.12)}
+.wave.wave2 path{fill:rgba(111,210,255,0.08)}
+.wave.wave3 path{fill:rgba(111,210,255,0.06)}
+.wave{opacity:0.9}
+.wave.wave1{animation:waveMove 10s linear infinite}
+.wave.wave2{animation:waveMove 18s linear infinite}
+.wave.wave3{animation:waveMove 26s linear infinite}
+@keyframes waveMove{
+  0%{transform:translateX(0) translateY(0)}
+  50%{transform:translateX(-10%) translateY(2%)}
+  100%{transform:translateX(0) translateY(0)}
+}
+
+>>>>>>> Stashed changes
 /* end of style.css */
