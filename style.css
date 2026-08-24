@@ -227,7 +227,7 @@ body{background:linear-gradient(-45deg, var(--bg), var(--panel), var(--bg));back
 =======
 /* Wave / ocean animated backdrop */
 .ocean{
-  position:absolute;top:0;left:0;width:100%;height:40vh;overflow:hidden;pointer-events:none;z-index:0;
+  position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0;
 }
 .site-header,.site-main,.site-footer{position:relative;z-index:2}
 .ocean svg{position:absolute;bottom:0;width:200%;height:120%;left:-50%}
