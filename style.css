@@ -164,6 +164,10 @@ body{
 /* Accessibility focus styles */
 a:focus, button:focus, .search-input:focus{outline:3px solid rgba(111,210,255,0.12);outline-offset:2px}
 
+/* Link styling */
+a{color:var(--accent)}
+a:hover{color:#5ecbff}
+
 /* Contact page links */
 .contact-list a{color:#ffffff}
 
