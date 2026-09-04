@@ -10,32 +10,120 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="page--fade">
-  <!-- Shared ambient background used throughout the site. -->
-  <div class="particles-container" aria-hidden="true">
-    <div class="particle particle-1"></div>
-    <div class="particle particle-2"></div>
-    <div class="particle particle-3"></div>
-    <div class="particle particle-4"></div>
+  <!-- Decorative pool backdrop: view down onto the water, drifting swimmer motifs,
+       and cursor-driven ripples (wired up in script.js). aria-hidden, index.html only. -->
+  <div class="pool-bg" id="pool-bg" aria-hidden="true">
+    <canvas class="pool-water" id="pool-water"></canvas>
+
+    <!-- Swimmer pose sprite sheet: reused via <use> below -->
+    <svg class="pool-sprites" aria-hidden="true" focusable="false">
+      <defs>
+        <g id="swim-star" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="50" cy="20" r="8"></circle>
+          <line x1="50" y1="28" x2="50" y2="60"></line>
+          <line x1="50" y1="32" x2="20" y2="10"></line>
+          <line x1="50" y1="32" x2="80" y2="10"></line>
+          <line x1="50" y1="60" x2="18" y2="90"></line>
+          <line x1="50" y1="60" x2="82" y2="90"></line>
+        </g>
+        <g id="swim-streamline" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="50" cy="10" r="8"></circle>
+          <line x1="46" y1="18" x2="42" y2="2"></line>
+          <line x1="54" y1="18" x2="58" y2="2"></line>
+          <line x1="50" y1="18" x2="50" y2="70"></line>
+          <line x1="50" y1="70" x2="46" y2="96"></line>
+          <line x1="50" y1="70" x2="54" y2="96"></line>
+        </g>
+        <g id="swim-ballet" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="20" cy="50" r="7"></circle>
+          <line x1="20" y1="57" x2="45" y2="60"></line>
+          <line x1="45" y1="60" x2="48" y2="15"></line>
+          <line x1="45" y1="60" x2="65" y2="75"></line>
+          <line x1="20" y1="50" x2="5" y2="35"></line>
+          <line x1="20" y1="50" x2="8" y2="65"></line>
+        </g>
+        <g id="swim-tuck" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="50" cy="25" r="7"></circle>
+          <path d="M50,32 Q65,45 55,65"></path>
+          <line x1="55" y1="65" x2="75" y2="55"></line>
+          <line x1="55" y1="65" x2="78" y2="75"></line>
+          <line x1="50" y1="32" x2="30" y2="20"></line>
+          <line x1="50" y1="32" x2="28" y2="40"></line>
+        </g>
+        <g id="swim-split" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="50" cy="15" r="8"></circle>
+          <line x1="50" y1="23" x2="44" y2="4"></line>
+          <line x1="50" y1="23" x2="56" y2="4"></line>
+          <line x1="50" y1="23" x2="50" y2="55"></line>
+          <line x1="50" y1="55" x2="10" y2="80"></line>
+          <line x1="50" y1="55" x2="90" y2="80"></line>
+        </g>
+        <g id="swim-flamingo" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="30" cy="30" r="7"></circle>
+          <line x1="30" y1="37" x2="40" y2="65"></line>
+          <line x1="40" y1="65" x2="75" y2="50"></line>
+          <path d="M40,65 L55,80 L38,78"></path>
+          <line x1="30" y1="30" x2="10" y2="15"></line>
+          <line x1="30" y1="30" x2="12" y2="45"></line>
+        </g>
+        <g id="swim-vertical" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="50" cy="12" r="8"></circle>
+          <line x1="50" y1="20" x2="50" y2="75"></line>
+          <line x1="50" y1="28" x2="38" y2="50"></line>
+          <line x1="50" y1="28" x2="62" y2="50"></line>
+          <line x1="50" y1="75" x2="46" y2="98"></line>
+          <line x1="50" y1="75" x2="54" y2="98"></line>
+        </g>
+      </defs>
+    </svg>
+
+    <svg class="swimmer swimmer--1" viewBox="0 0 100 100"><use href="#swim-star"></use></svg>
+    <svg class="swimmer swimmer--2" viewBox="0 0 100 100"><use href="#swim-streamline"></use></svg>
+    <svg class="swimmer swimmer--3" viewBox="0 0 100 100"><use href="#swim-ballet"></use></svg>
+    <svg class="swimmer swimmer--4" viewBox="0 0 100 100"><use href="#swim-tuck"></use></svg>
+    <svg class="swimmer swimmer--5" viewBox="0 0 100 100"><use href="#swim-split"></use></svg>
+    <svg class="swimmer swimmer--6" viewBox="0 0 100 100"><use href="#swim-flamingo"></use></svg>
+    <svg class="swimmer swimmer--7" viewBox="0 0 100 100"><use href="#swim-vertical"></use></svg>
+    <svg class="swimmer swimmer--8" viewBox="0 0 100 100"><use href="#swim-star"></use></svg>
+    <svg class="swimmer swimmer--9" viewBox="0 0 100 100"><use href="#swim-ballet"></use></svg>
+    <svg class="swimmer swimmer--10" viewBox="0 0 100 100"><use href="#swim-split"></use></svg>
   </div>
   <!-- Site header/navigation -->
   <header class="site-header" role="banner">
     <div class="container--nav">
       <a class="brand" href="index.html">Sway</a>
-      <nav class="nav" role="navigation" aria-label="Main navigation">
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="site-nav" role="navigation" aria-label="Main navigation">
         <ul class="nav__list">
-          <li><a href="index.html">Home</a></li>
-
-          <!-- Library dropdown -->
-          <li class="dropdown">
+          <li class="dropdown dropdown--mega">
             <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Library ▾</button>
-            <ul class="dropdown__menu">
-              <li><a href="figures.html">Figures</a></li>
-              <li><a href="elements.html">Elements</a></li>
-            </ul>
+            <div class="dropdown__mega">
+              <div class="dropdown__col">
+                <span class="dropdown__heading">Figures</span>
+                <ul class="dropdown__menu">
+                  <li><a href="figures/10u.html">10U</a></li>
+                  <li><a href="figures/12u.html">12U</a></li>
+                  <li><a href="figures/youth-13-15.html">13 - 15 (Youth)</a></li>
+                </ul>
+              </div>
+              <div class="dropdown__col">
+                <span class="dropdown__heading">Elements</span>
+                <ul class="dropdown__menu">
+                  <li><a href="elements/solo-technical.html">Solo Technical</a></li>
+                  <li><a href="elements/duet-technical.html">Duet Technical</a></li>
+                  <li><a href="elements/mixed-duet-technical.html">Mixed Duet Technical</a></li>
+                  <li><a href="elements/junior.html">Team Technical</a></li>
+                </ul>
+              </div>
+            </div>
           </li>
-
           <li><a href="contact.html">Contact</a></li>
         </ul>
+        <form class="nav-search" action="search.html" method="get" role="search" aria-label="Search site">
+          <input class="nav-search__input" type="search" name="q" placeholder="Search…" aria-label="Search">
+        </form>
       </nav>
     </div>
   </header>
@@ -60,7 +148,23 @@
   </main>
 
   <footer class="site-footer">
-    <p>© Sway</p>
+    <div class="site-footer__cols">
+      <div class="site-footer__col reveal">
+        <a class="brand" href="index.html">Sway</a>
+        <p class="site-footer__tagline">A curated catalogue of artistic swimming figures and elements, organized by age and discipline.</p>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Explore</span>
+        <a href="figures.html">Figures</a>
+        <a href="elements.html">Elements</a>
+        <a href="library.html">Library</a>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Contact</span>
+        <a href="contact.html">Get in touch</a>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© Sway</p>
   </footer>
   <script src="script.js" defer></script>
 </body>
