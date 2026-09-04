@@ -299,7 +299,7 @@ function swayLoadSkills() {
   requestAnimationFrame(frame);
 })();
 
-// Pool water simulation (index.html only): renders a textured water surface
+// Pool water simulation (index.html only): renders a clear, textured water surface
 // to <canvas id="pool-water"> using a classic two-buffer ripple/wave algorithm
 // (each cell's next height = average of its neighbours' current height minus
 // its own height two frames ago, then damped). The surface height field is
@@ -381,16 +381,20 @@ function swayLoadSkills() {
     }
   }
 
-  // Pointer tracking: a steady pulse is emitted from wherever the pointer
-  // currently rests (see loop()). Movement itself triggers nothing — no
-  // trail retracing the cursor's path, just ripples from its current spot.
+  // Pointer movement creates small overlapping ripples. Throttling keeps the
+  // effect delicate instead of turning fast cursor movement into a splash.
   let pointerX = null, pointerY = null;
-  let hasPointer = false;
-  let lastPulse = 0;
-  const PULSE_INTERVAL = 1600;
+  let lastRipple = 0;
+  const RIPPLE_INTERVAL = 42;
+  const MIN_MOVE = 4;
 
   function handleMove(clientX, clientY) {
-    hasPointer = true;
+    const now = performance.now();
+    const moved = pointerX === null ? Infinity : Math.hypot(clientX - pointerX, clientY - pointerY);
+    if (moved >= MIN_MOVE && now - lastRipple >= RIPPLE_INTERVAL) {
+      splash(clientX, clientY, 2.6, 1);
+      lastRipple = now;
+    }
     pointerX = clientX;
     pointerY = clientY;
   }
@@ -478,10 +482,6 @@ function swayLoadSkills() {
 
   function loop(now) {
     timeT += 0.006;
-    if (hasPointer && now - lastPulse > PULSE_INTERVAL) {
-      splash(pointerX, pointerY, 5, 1);
-      lastPulse = now;
-    }
     step();
     render();
     requestAnimationFrame(loop);
