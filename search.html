@@ -1,0 +1,103 @@
+<!doctype html>
+<!-- search.html: dedicated search-results page. Reads ?q= from the URL and
+     renders every matching skill as a gallery below a compact, top-left
+     search bar (Google-results-page style) — wired up in script.js. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Search — Sway</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page--fade">
+  <div class="particles-container">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+  </div>
+
+  <header class="site-header" role="banner">
+    <div class="container--nav">
+      <a class="brand" href="index.html">Sway</a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="site-nav" role="navigation" aria-label="Main navigation">
+        <ul class="nav__list">
+          <li class="dropdown dropdown--mega">
+            <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Library ▾</button>
+            <div class="dropdown__mega">
+              <div class="dropdown__col">
+                <span class="dropdown__heading">Figures</span>
+                <ul class="dropdown__menu">
+                  <li><a href="figures/10u.html">10U</a></li>
+                  <li><a href="figures/12u.html">12U</a></li>
+                  <li><a href="figures/youth-13-15.html">13 - 15 (Youth)</a></li>
+                </ul>
+              </div>
+              <div class="dropdown__col">
+                <span class="dropdown__heading">Elements</span>
+                <ul class="dropdown__menu">
+                  <li><a href="elements/solo-technical.html">Solo Technical</a></li>
+                  <li><a href="elements/duet-technical.html">Duet Technical</a></li>
+                  <li><a href="elements/mixed-duet-technical.html">Mixed Duet Technical</a></li>
+                  <li><a href="elements/junior.html">Team Technical</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <form class="nav-search" action="search.html" method="get" role="search" aria-label="Search site">
+          <input class="nav-search__input" type="search" name="q" placeholder="Search…" aria-label="Search">
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <section class="search-bar-top reveal">
+      <form class="search-form" action="search.html" method="get" role="search" aria-label="Search pages">
+        <div class="search-form__field">
+          <input class="search-input" type="search" name="q" placeholder="Search skills, pages, or keywords" aria-label="Search">
+          <button class="search-form__icon" type="submit" aria-label="Search">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+              <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="reveal">
+      <p class="search-results-meta" id="results-meta"></p>
+      <div class="gallery-grid" id="results-gallery"></div>
+      <p class="search-note" id="results-empty" hidden>No skills matched your search. Try a different name, or browse the <a href="library.html">library</a>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__cols">
+      <div class="site-footer__col reveal">
+        <a class="brand" href="index.html">Sway</a>
+        <p class="site-footer__tagline">A curated catalogue of artistic swimming figures and elements, organized by age and discipline.</p>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Explore</span>
+        <a href="figures.html">Figures</a>
+        <a href="elements.html">Elements</a>
+        <a href="library.html">Library</a>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Contact</span>
+        <a href="contact.html">Get in touch</a>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© Sway</p>
+  </footer>
+  <script src="script.js" defer></script>
+</body>
+</html>

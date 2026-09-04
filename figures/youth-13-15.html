@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- figures/youth-13-15.html: 13 - 15 (Youth) skill list -->
+<!-- figures/youth-13-15.html: 13 - 15 (Youth) skill list, shown as an animated card grid -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -28,30 +28,122 @@
     </div>
   </header>
 
+  <!-- Swimmer pose sprite sheet, reused via <use> for the few skills without a real image yet -->
+  <svg class="pool-sprites" aria-hidden="true" focusable="false">
+    <defs>
+      <g id="swim-star" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+        <circle cx="50" cy="20" r="8"></circle>
+        <line x1="50" y1="28" x2="50" y2="60"></line>
+        <line x1="50" y1="32" x2="20" y2="10"></line>
+        <line x1="50" y1="32" x2="80" y2="10"></line>
+        <line x1="50" y1="60" x2="18" y2="90"></line>
+        <line x1="50" y1="60" x2="82" y2="90"></line>
+      </g>
+      <g id="swim-streamline" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+        <circle cx="50" cy="10" r="8"></circle>
+        <line x1="46" y1="18" x2="42" y2="2"></line>
+        <line x1="54" y1="18" x2="58" y2="2"></line>
+        <line x1="50" y1="18" x2="50" y2="70"></line>
+        <line x1="50" y1="70" x2="46" y2="96"></line>
+        <line x1="50" y1="70" x2="54" y2="96"></line>
+      </g>
+      <g id="swim-flamingo" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+        <circle cx="30" cy="30" r="7"></circle>
+        <line x1="30" y1="37" x2="40" y2="65"></line>
+        <line x1="40" y1="65" x2="75" y2="50"></line>
+        <path d="M40,65 L55,80 L38,78"></path>
+        <line x1="30" y1="30" x2="10" y2="15"></line>
+        <line x1="30" y1="30" x2="12" y2="45"></line>
+      </g>
+    </defs>
+  </svg>
+
   <main class="site-main">
-    <section>
+    <section class="figure-hub-intro reveal">
       <h1>13 - 15 (Youth) — Figures</h1>
       <p>Skill list for the Youth category.</p>
       <p><a href="../figures.html">← Back to Figures</a></p>
-      <ul class="skill-list">
-        <li><a href="ipanema-spinning-180.html">Ipanema Spinning 180°</a></li>
-        <li><a href="saturn.html">Saturn</a></li>
-        <li><a href="london-continuous-spin-720.html">London Continuous Spin 720°</a></li>
-        <li><a href="flamingo-bent-knee.html">Flamingo Bent Knee Combined Spin 360° + 360°</a></li>
-        <li><a href="venus.html">Venus</a></li>
-        <li><a href="barracuda-airborne.html">Barracuda Airborne Split, Spin Up 180°</a></li>
-        <li><a href="flying-fish-spinning-360.html">Flying Fish Spinning 360°</a></li>
-        <li><a href="whip-continuous-spin-720.html">Whip Continuous Spin 720°</a></li>
-        <li><a href="albatross-spin-up-360.html">Albatross Spin Up 360°</a></li>
-        <li><a href="cyclone-open-180.html">Cyclone, Open 180°</a></li>
-        <li><a href="walkover-back-closing-360.html">Walkover Back Closing 360°</a></li>
-        <li><a href="swordfish-straight-leg-ariana.html">Swordfish Straight Leg Ariana Rotation</a></li>
-      </ul>
+    </section>
+
+    <section class="figure-grid">
+      <a class="figure-card reveal" href="ipanema-spinning-180.html">
+        <div class="figure-card__media">
+          <img src="../assets/Ipanema Spinning 180.png" alt="Ipanema Spinning 180°" loading="lazy">
+        </div>
+        <div class="figure-card__title">Ipanema Spinning 180°</div>
+      </a>
+      <a class="figure-card reveal" href="saturn.html">
+        <div class="figure-card__media">
+          <img src="../assets/Saturn.png" alt="Saturn" loading="lazy">
+        </div>
+        <div class="figure-card__title">Saturn</div>
+      </a>
+      <a class="figure-card reveal" href="london-continuous-spin-720.html">
+        <div class="figure-card__media">
+          <svg class="figure-card__icon" viewBox="0 0 100 100"><use href="#swim-star"></use></svg>
+        </div>
+        <div class="figure-card__title">London Continuous Spin 720°</div>
+      </a>
+      <a class="figure-card reveal" href="flamingo-bent-knee.html">
+        <div class="figure-card__media">
+          <svg class="figure-card__icon" viewBox="0 0 100 100"><use href="#swim-flamingo"></use></svg>
+        </div>
+        <div class="figure-card__title">Flamingo Bent Knee Combined Spin 360° + 360°</div>
+      </a>
+      <a class="figure-card reveal" href="venus.html">
+        <div class="figure-card__media">
+          <img src="../assets/Venus.png" alt="Venus" loading="lazy">
+        </div>
+        <div class="figure-card__title">Venus</div>
+      </a>
+      <a class="figure-card reveal" href="barracuda-airborne.html">
+        <div class="figure-card__media">
+          <img src="../assets/Barracuda Airborone Split, Spin Up 180.png" alt="Barracuda Airborne Split, Spin Up 180°" loading="lazy">
+        </div>
+        <div class="figure-card__title">Barracuda Airborne Split, Spin Up 180°</div>
+      </a>
+      <a class="figure-card reveal" href="flying-fish-spinning-360.html">
+        <div class="figure-card__media">
+          <svg class="figure-card__icon" viewBox="0 0 100 100"><use href="#swim-streamline"></use></svg>
+        </div>
+        <div class="figure-card__title">Flying Fish Spinning 360°</div>
+      </a>
+      <a class="figure-card reveal" href="whip-continuous-spin-720.html">
+        <div class="figure-card__media">
+          <img src="../assets/Whip Coninuous Spin 720.png" alt="Whip Continuous Spin 720°" loading="lazy">
+        </div>
+        <div class="figure-card__title">Whip Continuous Spin 720°</div>
+      </a>
+      <a class="figure-card reveal" href="albatross-spin-up-360.html">
+        <div class="figure-card__media">
+          <img src="../assets/Albatross Spin Up 360.png" alt="Albatross Spin Up 360°" loading="lazy">
+        </div>
+        <div class="figure-card__title">Albatross Spin Up 360°</div>
+      </a>
+      <a class="figure-card reveal" href="cyclone-open-180.html">
+        <div class="figure-card__media">
+          <img src="../assets/Cyclone, Open 180.png" alt="Cyclone, Open 180°" loading="lazy">
+        </div>
+        <div class="figure-card__title">Cyclone, Open 180°</div>
+      </a>
+      <a class="figure-card reveal" href="walkover-back-closing-360.html">
+        <div class="figure-card__media">
+          <img src="../assets/Walkover Back Closing 360.png" alt="Walkover Back Closing 360°" loading="lazy">
+        </div>
+        <div class="figure-card__title">Walkover Back Closing 360°</div>
+      </a>
+      <a class="figure-card reveal" href="swordfish-straight-leg-ariana.html">
+        <div class="figure-card__media">
+          <img src="../assets/Swordfish Straight Leg Arianna Rotation.png" alt="Swordfish Straight Leg Ariana Rotation" loading="lazy">
+        </div>
+        <div class="figure-card__title">Swordfish Straight Leg Ariana Rotation</div>
+      </a>
     </section>
   </main>
 
   <footer class="site-footer">
     <p>© Sway</p>
   </footer>
+  <script src="../script.js" defer></script>
 </body>
 </html>

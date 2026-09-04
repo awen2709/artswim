@@ -59,53 +59,141 @@
   }, { passive: true });
 })();
 
-// Library search filtering: client-side search over a static JSON skill index
-(function() {
-  const searchInput = document.querySelector('.search-input');
-  const searchForm = document.querySelector('.search-form');
-  const quickLinks = document.getElementById('quick-links');
-  const resultsSection = document.getElementById('search-results');
-  const resultsGrid = document.getElementById('search-results-grid');
-  const noResultsNote = document.getElementById('search-no-results');
-
-  if (!searchInput) return;
-
-  // keep preventing form submission (stay on page)
-  if (searchForm) {
-    searchForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-    });
-  }
-
-  // Skill index is loaded from search-data.json (one entry per figure/element page)
-  let skills = [];
-  fetch('search-data.json')
+// Shared skill index (search-data.json) loader, used by both the
+// autocomplete dropdowns below and the search-results page. Paths in the
+// index are root-relative; from inside figures/ or elements/ they need a
+// "../" prefix, same trick the header dropdown/library-button code uses.
+function swaySkillsBasePath() {
+  const p = window.location.pathname;
+  return (p.includes('/figures/') || p.includes('/elements/')) ? '../' : '';
+}
+function swayLoadSkills() {
+  if (window.__swaySkillsPromise) return window.__swaySkillsPromise;
+  window.__swaySkillsPromise = fetch(swaySkillsBasePath() + 'search-data.json')
     .then((res) => res.json())
-    .then((data) => { skills = data; })
-    .catch((err) => console.error('Failed to load search index:', err));
+    .catch((err) => { console.error('Failed to load search index:', err); return []; });
+  return window.__swaySkillsPromise;
+}
 
-  function clearResults() {
-    if (resultsGrid) resultsGrid.innerHTML = '';
+// Autocomplete dropdown: attaches to every .search-form__field on the page
+// (the library hero search, the header's compact nav-search, etc). Shows up
+// to 6 matches as the visitor types; Enter/the search icon still submits the
+// form normally (to search.html) for the full results.
+(function() {
+  const fields = document.querySelectorAll('.search-form__field');
+  if (!fields.length) return;
+
+  const base = swaySkillsBasePath();
+
+  fields.forEach((field) => {
+    const input = field.querySelector('.search-input, input[type="search"]');
+    if (!input) return;
+
+    const suggest = document.createElement('div');
+    suggest.className = 'search-suggest';
+    suggest.setAttribute('role', 'listbox');
+    field.appendChild(suggest);
+
+    let items = [];
+    let activeIndex = -1;
+
+    function close() {
+      suggest.classList.remove('is-open');
+      suggest.innerHTML = '';
+      items = [];
+      activeIndex = -1;
+    }
+
+    function render(matches) {
+      suggest.innerHTML = '';
+      matches.forEach((item) => {
+        const a = document.createElement('a');
+        a.className = 'search-suggest__item';
+        a.setAttribute('role', 'option');
+        a.href = base + item.url;
+        const title = document.createElement('span');
+        title.textContent = item.title;
+        const cat = document.createElement('span');
+        cat.className = 'search-suggest__cat';
+        cat.textContent = item.category;
+        a.appendChild(title);
+        a.appendChild(cat);
+        suggest.appendChild(a);
+      });
+      items = Array.from(suggest.querySelectorAll('.search-suggest__item'));
+      activeIndex = -1;
+      suggest.classList.toggle('is-open', items.length > 0);
+    }
+
+    function setActive(i) {
+      items.forEach((el) => el.classList.remove('is-active'));
+      if (items[i]) {
+        items[i].classList.add('is-active');
+        items[i].scrollIntoView({ block: 'nearest' });
+      }
+      activeIndex = i;
+    }
+
+    input.addEventListener('input', () => {
+      const query = input.value.toLowerCase().trim();
+      if (!query) { close(); return; }
+      swayLoadSkills().then((skills) => {
+        const matches = skills.filter((s) => (s.title + ' ' + s.category).toLowerCase().includes(query)).slice(0, 6);
+        render(matches);
+      });
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (!items.length) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); setActive((activeIndex + 1) % items.length); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); setActive((activeIndex - 1 + items.length) % items.length); }
+      else if (e.key === 'Enter' && activeIndex >= 0) { e.preventDefault(); items[activeIndex].click(); }
+      else if (e.key === 'Escape') { close(); }
+    });
+
+    input.addEventListener('blur', () => {
+      // let a click on a suggestion register before it disappears
+      setTimeout(close, 150);
+    });
+  });
+})();
+
+// Search-results page (search.html only): reads ?q= and renders every
+// matching skill as a gallery of .card links.
+(function() {
+  const grid = document.getElementById('results-gallery');
+  const meta = document.getElementById('results-meta');
+  const empty = document.getElementById('results-empty');
+  if (!grid) return;
+
+  const query = (new URLSearchParams(window.location.search).get('q') || '').trim();
+  const input = document.querySelector('.search-bar-top .search-input');
+  if (input && query) input.value = query;
+
+  if (!query) {
+    if (meta) meta.textContent = 'Type something above to search the library.';
+    return;
   }
 
-  function showQuickLinks() {
-    if (quickLinks) quickLinks.hidden = false;
-    if (resultsSection) resultsSection.hidden = true;
-    if (noResultsNote) noResultsNote.hidden = true;
-    clearResults();
-  }
+  swayLoadSkills().then((skills) => {
+    const q = query.toLowerCase();
+    const matches = skills.filter((s) => (s.title + ' ' + s.category).toLowerCase().includes(q));
 
-  function renderResults(matches) {
-    clearResults();
-    if (!resultsGrid) return;
+    if (meta) meta.textContent = `${matches.length} result${matches.length === 1 ? '' : 's'} for “${query}”`;
+    if (matches.length === 0) {
+      if (empty) empty.hidden = false;
+      return;
+    }
 
     matches.forEach((item, idx) => {
       const a = document.createElement('a');
+      // dynamically-inserted cards skip .reveal — the page-load
+      // IntersectionObserver already ran before these existed, so they'd
+      // otherwise sit at opacity:0 forever
       a.className = 'card';
+      a.style.setProperty('--card-index', idx);
       a.href = item.url;
-      a.setAttribute('data-index', idx);
 
-      // Use a simple structure: title + muted category
       const titleSpan = document.createElement('div');
       titleSpan.className = 'card__title';
       titleSpan.textContent = item.title;
@@ -116,37 +204,99 @@
 
       a.appendChild(titleSpan);
       a.appendChild(cat);
-
-      resultsGrid.appendChild(a);
+      grid.appendChild(a);
     });
+  });
+})();
+
+// Library media strip (library.html only): auto-drifts, pauses on hover, and
+// can be dragged left/right (mouse or touch) to browse manually. Driven by a
+// single rAF loop that owns the track's transform, rather than a CSS
+// animation, so the drag and the idle drift never fight over the property.
+(function() {
+  const strip = document.querySelector('.media-strip');
+  const track = strip ? strip.querySelector('.media-strip__track') : null;
+  if (!strip || !track) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SPEED = 0.035; // px per ms of idle auto-drift
+
+  let offset = 0;
+  let halfWidth = track.scrollWidth / 2;
+  let hovering = false;
+  let dragging = false;
+  let dragStartX = 0;
+  let dragStartOffset = 0;
+  let dragMoved = false; // true once a drag has moved far enough to not count as a click
+  let last = null;
+
+  function wrap(v) {
+    if (halfWidth <= 0) return v;
+    v = v % halfWidth;
+    if (v > 0) v -= halfWidth;
+    return v;
   }
 
-  searchInput.addEventListener('input', (e) => {
-    const query = (e.target.value || '').toLowerCase().trim();
+  function apply() {
+    track.style.transform = `translateX(${offset}px)`;
+  }
 
-    if (!query) {
-      showQuickLinks();
-      return;
+  function frame(now) {
+    if (last === null) last = now;
+    const dt = now - last;
+    last = now;
+    if (!dragging && !hovering && !reduceMotion) {
+      offset = wrap(offset - SPEED * dt);
+      apply();
     }
+    requestAnimationFrame(frame);
+  }
 
-    // filter by title or category
-    const matches = skills.filter((s) => {
-      const hay = (s.title + ' ' + s.category).toLowerCase();
-      return hay.includes(query);
-    });
+  strip.addEventListener('mouseenter', () => { hovering = true; });
+  strip.addEventListener('mouseleave', () => { hovering = false; });
 
-    if (matches.length === 0) {
-      if (quickLinks) quickLinks.hidden = true;
-      if (resultsSection) resultsSection.hidden = false;
-      if (noResultsNote) noResultsNote.hidden = false;
-      clearResults();
-    } else {
-      if (quickLinks) quickLinks.hidden = true;
-      if (resultsSection) resultsSection.hidden = false;
-      if (noResultsNote) noResultsNote.hidden = true;
-      renderResults(matches);
+  function startDrag(x) {
+    dragging = true;
+    dragMoved = false;
+    dragStartX = x;
+    dragStartOffset = offset;
+    strip.classList.add('media-strip--dragging');
+  }
+  function moveDrag(x) {
+    if (!dragging) return;
+    if (Math.abs(x - dragStartX) > 6) dragMoved = true;
+    offset = wrap(dragStartOffset + (x - dragStartX));
+    apply();
+  }
+  function endDrag() {
+    dragging = false;
+    strip.classList.remove('media-strip--dragging');
+  }
+
+  strip.addEventListener('mousedown', (e) => { startDrag(e.clientX); e.preventDefault(); });
+  window.addEventListener('mousemove', (e) => moveDrag(e.clientX));
+  window.addEventListener('mouseup', endDrag);
+
+  strip.addEventListener('touchstart', (e) => { const t = e.touches[0]; if (t) startDrag(t.clientX); }, { passive: true });
+  strip.addEventListener('touchmove', (e) => { const t = e.touches[0]; if (t) moveDrag(t.clientX); }, { passive: true });
+  strip.addEventListener('touchend', endDrag);
+
+  // A drag that actually moved shouldn't also register as a click-through to
+  // one of the figure links underneath the pointer.
+  strip.addEventListener('click', (e) => {
+    if (dragMoved) {
+      e.preventDefault();
+      e.stopPropagation();
+      dragMoved = false;
     }
-  });
+  }, true);
+
+  // Images have no explicit width, so scrollWidth is only accurate once
+  // they've actually loaded.
+  window.addEventListener('load', () => { halfWidth = track.scrollWidth / 2; });
+  window.addEventListener('resize', () => { halfWidth = track.scrollWidth / 2; }, { passive: true });
+
+  requestAnimationFrame(frame);
 })();
 
 // Pool water simulation (index.html only): renders a textured water surface

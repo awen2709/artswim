@@ -1,5 +1,9 @@
 <!doctype html>
-<!-- library.html: Library hub with a search bar. Currently visual-only; ready to be wired to a search script later. -->
+<!-- library.html: Library hub — search, a real-media showcase strip, and an
+     animated category grid. Search behavior is wired up in script.js and
+     depends on the IDs/classes below (.search-input, .search-form,
+     #quick-links, #search-results, #search-results-grid, #search-no-results).
+     Header nav-search / media-strip drag are also wired up in script.js. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -16,60 +20,316 @@
     <div class="particle particle-3"></div>
     <div class="particle particle-4"></div>
   </div>
-  <!-- Include the same header markup as index (kept inline for static pages) -->
+
+  <!-- Ripple-ring icon sprite, reused via <use> on every category card below -->
+  <svg class="pool-sprites" aria-hidden="true" focusable="false">
+    <defs>
+      <g id="ripple-rings">
+        <circle class="r1" cx="50" cy="50" r="14"></circle>
+        <circle class="r2" cx="50" cy="50" r="14"></circle>
+        <circle class="r3" cx="50" cy="50" r="14"></circle>
+      </g>
+    </defs>
+  </svg>
+
   <header class="site-header" role="banner">
     <div class="container--nav">
       <a class="brand" href="index.html">Sway</a>
-      <nav class="nav" role="navigation" aria-label="Main navigation">
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="site-nav" role="navigation" aria-label="Main navigation">
         <ul class="nav__list">
-          <li><a href="index.html">Home</a></li>
-          <li class="dropdown">
+          <li class="dropdown dropdown--mega">
             <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Library ▾</button>
-            <ul class="dropdown__menu">
-              <li><a href="figures.html">Figures</a></li>
-              <li><a href="elements.html">Elements</a></li>
-            </ul>
+            <div class="dropdown__mega">
+              <div class="dropdown__col">
+                <span class="dropdown__heading">Figures</span>
+                <ul class="dropdown__menu">
+                  <li><a href="figures/10u.html">10U</a></li>
+                  <li><a href="figures/12u.html">12U</a></li>
+                  <li><a href="figures/youth-13-15.html">13 - 15 (Youth)</a></li>
+                </ul>
+              </div>
+              <div class="dropdown__col">
+                <span class="dropdown__heading">Elements</span>
+                <ul class="dropdown__menu">
+                  <li><a href="elements/solo-technical.html">Solo Technical</a></li>
+                  <li><a href="elements/duet-technical.html">Duet Technical</a></li>
+                  <li><a href="elements/mixed-duet-technical.html">Mixed Duet Technical</a></li>
+                  <li><a href="elements/junior.html">Team Technical</a></li>
+                </ul>
+              </div>
+            </div>
           </li>
           <li><a href="contact.html">Contact</a></li>
         </ul>
+        <form class="nav-search" action="search.html" method="get" role="search" aria-label="Search site">
+          <input class="nav-search__input" type="search" name="q" placeholder="Search…" aria-label="Search">
+        </form>
       </nav>
     </div>
   </header>
 
   <main class="site-main">
-    <!-- Search area: large search bar. Without JS, this is a placeholder that submits to the same page. -->
+    <!-- Search hero -->
     <section class="search-hero reveal">
-      <h1>Search the Library</h1>
-      <form class="search-form" action="library.html" method="get" role="search" aria-label="Search pages">
-        <!-- The name "q" reserves the parameter for future enhancement. -->
-        <input class="search-input" type="search" name="q" placeholder="Search skills, pages, or keywords" aria-label="Search">
-        <button class="btn btn--search" type="submit">Search</button>
+      <h1>Dive Into the Library</h1>
+      <p class="lead">Search by name, or browse the categories below.</p>
+      <form class="search-form" action="search.html" method="get" role="search" aria-label="Search pages">
+        <div class="search-form__field">
+          <input class="search-input" type="search" name="q" placeholder="Search skills, pages, or keywords" aria-label="Search">
+          <button class="search-form__icon" type="submit" aria-label="Search">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+              <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+            </svg>
+          </button>
+        </div>
       </form>
-      <p class="search-note">(Search currently displays the library hub. Client-side search can be added later.)</p>
     </section>
 
-    <section class="library-links reveal" id="quick-links">
-      <h2>Quick links</h2>
-      <div class="grid">
-        <a class="card reveal" href="figures/10u.html">Figures — 10U</a>
-        <a class="card reveal" href="figures/12u.html">Figures — 12U</a>
-        <a class="card reveal" href="figures/youth-13-15.html">Figures — 13 - 15 (Youth)</a>
-        <a class="card reveal" href="elements/solo-technical.html">Elements — Solo Technical</a>
-        <a class="card reveal" href="elements/duet-technical.html">Elements — Duet Technical</a>
-        <a class="card reveal" href="elements/mixed-duet-technical.html">Elements — Mixed Duet Technical</a>
-        <a class="card reveal" href="elements/junior.html">Elements — Team Technical</a>
+    <!-- Real-media showcase: framed as its own section, auto-drifting and
+         drag-to-scroll (mouse or touch) via script.js -->
+    <section class="media-section reveal">
+      <h2>From the Figure Archive</h2>
+      <p class="lead">Real diagrams pulled straight from the figure library — drag to browse.</p>
+      <div class="media-strip">
+        <div class="media-strip__track">
+          <a class="media-strip__item" href="figures/saturn.html">
+            <img src="assets/Saturn.png" alt="Saturn figure diagram">
+            <span class="media-strip__caption">Saturn</span>
+          </a>
+          <a class="media-strip__item" href="figures/venus.html">
+            <img src="assets/Venus.png" alt="Venus figure diagram">
+            <span class="media-strip__caption">Venus</span>
+          </a>
+          <a class="media-strip__item" href="figures/ipanema-spinning-180.html">
+            <img src="assets/Ipanema Spinning 180.png" alt="Ipanema Spinning 180° figure diagram">
+            <span class="media-strip__caption">Ipanema Spinning 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/albatross-spin-up-360.html">
+            <img src="assets/Albatross Spin Up 360.png" alt="Albatross Spin Up 360° figure diagram">
+            <span class="media-strip__caption">Albatross Spin Up 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/cyclone-open-180.html">
+            <img src="assets/Cyclone, Open 180.png" alt="Cyclone, Open 180° figure diagram">
+            <span class="media-strip__caption">Cyclone, Open 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/walkover-back-closing-360.html">
+            <img src="assets/Walkover Back Closing 360.png" alt="Walkover Back Closing 360° figure diagram">
+            <span class="media-strip__caption">Walkover Back Closing 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/whip-continuous-spin-720.html">
+            <img src="assets/Whip Coninuous Spin 720.png" alt="Whip Continuous Spin 720° figure diagram">
+            <span class="media-strip__caption">Whip Continuous Spin 720°</span>
+          </a>
+          <a class="media-strip__item" href="figures/barracuda-airborne.html">
+            <img src="assets/Barracuda Airborone Split, Spin Up 180.png" alt="Barracuda Airborne Split, Spin Up 180° figure diagram">
+            <span class="media-strip__caption">Barracuda Airborne Split, Spin Up 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/swordfish-straight-leg-ariana.html">
+            <img src="assets/Swordfish Straight Leg Arianna Rotation.png" alt="Swordfish Straight Leg Ariana Rotation figure diagram">
+            <span class="media-strip__caption">Swordfish Straight Leg Ariana Rotation</span>
+          </a>
+          <!-- duplicated for a seamless loop; hidden from assistive tech and keyboard tab order since they're the same links again -->
+          <a class="media-strip__item" href="figures/saturn.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Saturn.png" alt="">
+            <span class="media-strip__caption">Saturn</span>
+          </a>
+          <a class="media-strip__item" href="figures/venus.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Venus.png" alt="">
+            <span class="media-strip__caption">Venus</span>
+          </a>
+          <a class="media-strip__item" href="figures/ipanema-spinning-180.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Ipanema Spinning 180.png" alt="">
+            <span class="media-strip__caption">Ipanema Spinning 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/albatross-spin-up-360.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Albatross Spin Up 360.png" alt="">
+            <span class="media-strip__caption">Albatross Spin Up 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/cyclone-open-180.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Cyclone, Open 180.png" alt="">
+            <span class="media-strip__caption">Cyclone, Open 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/walkover-back-closing-360.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Walkover Back Closing 360.png" alt="">
+            <span class="media-strip__caption">Walkover Back Closing 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/whip-continuous-spin-720.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Whip Coninuous Spin 720.png" alt="">
+            <span class="media-strip__caption">Whip Continuous Spin 720°</span>
+          </a>
+          <a class="media-strip__item" href="figures/barracuda-airborne.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Barracuda Airborone Split, Spin Up 180.png" alt="">
+            <span class="media-strip__caption">Barracuda Airborne Split, Spin Up 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/swordfish-straight-leg-ariana.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Swordfish Straight Leg Arianna Rotation.png" alt="">
+            <span class="media-strip__caption">Swordfish Straight Leg Ariana Rotation</span>
+          </a>
+        </div>
       </div>
     </section>
 
-    <section class="library-links reveal" id="search-results" hidden>
-      <h2>Search results</h2>
-      <div class="grid" id="search-results-grid"></div>
-      <p class="search-note" id="search-no-results" hidden>No skills matched your search.</p>
+    <section class="library-links reveal" id="quick-links">
+      <h2>Browse by category</h2>
+      <div class="category-grid">
+        <div class="category-card reveal">
+          <a class="category-card__clip" href="figures/10u.html">
+            <div class="category-card__face">
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <span class="category-card__title">Figures — 10U</span>
+              <span class="category-card__count">6 figures</span>
+            </div>
+          </a>
+          <ul class="category-card__list">
+            <li><a href="figures/barracuda.html">Barracuda</a></li>
+            <li><a href="figures/ballet-leg-single.html">Ballet Leg Single</a></li>
+            <li><a href="figures/neptunus.html">Neptunus</a></li>
+            <li><a href="figures/blossom-walkout.html">Blossom Walkout</a></li>
+            <li><a href="figures/surface-prawn.html">Surface Prawn</a></li>
+            <li><a href="figures/kipnus.html">Kipnus</a></li>
+          </ul>
+        </div>
+        <div class="category-card reveal">
+          <a class="category-card__clip" href="figures/12u.html">
+            <div class="category-card__face">
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <span class="category-card__title">Figures — 12U</span>
+              <span class="category-card__count">8 figures</span>
+            </div>
+          </a>
+          <ul class="category-card__list">
+            <li><a href="figures/swordfish.html">Swordfish</a></li>
+            <li><a href="figures/straight-ballet-leg.html">Straight Ballet Leg</a></li>
+            <li><a href="figures/barracuda-12u.html">Barracuda</a></li>
+            <li><a href="figures/front-ariana.html">Front Ariana</a></li>
+            <li><a href="figures/tower.html">Tower</a></li>
+            <li><a href="figures/swanita-spinning-180.html">Swanita Spinning 180°</a></li>
+            <li><a href="figures/water-drop.html">Water Drop</a></li>
+            <li><a href="figures/kip.html">Kip</a></li>
+          </ul>
+        </div>
+        <div class="category-card reveal">
+          <a class="category-card__clip" href="figures/youth-13-15.html">
+            <div class="category-card__face">
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <span class="category-card__title">Figures — 13 - 15 (Youth)</span>
+              <span class="category-card__count">12 figures</span>
+            </div>
+          </a>
+          <ul class="category-card__list">
+            <li><a href="figures/ipanema-spinning-180.html">Ipanema Spinning 180°</a></li>
+            <li><a href="figures/saturn.html">Saturn</a></li>
+            <li><a href="figures/london-continuous-spin-720.html">London Continuous Spin 720°</a></li>
+            <li><a href="figures/flamingo-bent-knee.html">Flamingo Bent Knee Combined Spin</a></li>
+            <li><a href="figures/venus.html">Venus</a></li>
+            <li><a href="figures/barracuda-airborne.html">Barracuda Airborne Split, Spin Up 180°</a></li>
+            <li><a href="figures/flying-fish-spinning-360.html">Flying Fish Spinning 360°</a></li>
+            <li><a href="figures/whip-continuous-spin-720.html">Whip Continuous Spin 720°</a></li>
+            <li><a href="figures/albatross-spin-up-360.html">Albatross Spin Up 360°</a></li>
+            <li><a href="figures/cyclone-open-180.html">Cyclone, Open 180°</a></li>
+            <li><a href="figures/walkover-back-closing-360.html">Walkover Back Closing 360°</a></li>
+            <li><a href="figures/swordfish-straight-leg-ariana.html">Swordfish Straight Leg Ariana Rotation</a></li>
+          </ul>
+        </div>
+        <div class="category-card reveal">
+          <a class="category-card__clip" href="elements/solo-technical.html">
+            <div class="category-card__face">
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <span class="category-card__title">Elements — Solo Technical</span>
+              <span class="category-card__count">9 elements</span>
+            </div>
+          </a>
+          <ul class="category-card__list">
+            <li><a href="elements/thrust-continuous-spin-720.html">Thrust Continuous Spin 720°</a></li>
+            <li><a href="elements/thrust-continuous-spin-360.html">Thrust Continuous Spin 360°</a></li>
+            <li><a href="elements/combined-spin-1080.html">Combined Spin 1080°</a></li>
+            <li><a href="elements/combined-spin-720.html">Combined Spin 720°</a></li>
+            <li><a href="elements/swordfish-knight-solo.html">Swordfish Straight Leg – Knight</a></li>
+            <li><a href="elements/fishtail-half-twist.html">Fishtail Half Twist – Continuous Spin</a></li>
+            <li><a href="elements/fishtail-continuous-spin.html">Fishtail – Continuous Spin</a></li>
+            <li><a href="elements/rocket-split-joining.html">Rocket Split Bent Knee Joining</a></li>
+            <li><a href="elements/rocket-split-bent-knee.html">Rocket Split Bent Knee</a></li>
+          </ul>
+        </div>
+        <div class="category-card reveal">
+          <a class="category-card__clip" href="elements/duet-technical.html">
+            <div class="category-card__face">
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <span class="category-card__title">Elements — Duet Technical</span>
+              <span class="category-card__count">9 elements</span>
+            </div>
+          </a>
+          <ul class="category-card__list">
+            <li><a href="elements/walkover-back-closing-duet-360.html">Walkover Back Closing 360°</a></li>
+            <li><a href="elements/walkover-back-closing-duet-180.html">Walkover Back Closing 180°</a></li>
+            <li><a href="elements/rocket-split-alternating.html">Rocket Split Alternating Legs</a></li>
+            <li><a href="elements/rocket-split-duet.html">Rocket Split – Spinning 180°</a></li>
+            <li><a href="elements/ballet-leg-flamingo.html">Ballet Leg – Flamingo Bent Knee</a></li>
+            <li><a href="elements/fishtail-knight-duet-1080.html">Fishtail – Knight – 1080°</a></li>
+            <li><a href="elements/fishtail-knight-duet-720.html">Fishtail – Knight – 720°</a></li>
+            <li><a href="elements/thrust-bent-knee-twirl-spin.html">Thrust Bent Knee Twirl Spin 360°</a></li>
+            <li><a href="elements/thrust-bent-knee-twirl.html">Thrust Bent Knee Twirl</a></li>
+          </ul>
+        </div>
+        <div class="category-card reveal">
+          <a class="category-card__clip" href="elements/mixed-duet-technical.html">
+            <div class="category-card__face">
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <span class="category-card__title">Elements — Mixed Duet Technical</span>
+              <span class="category-card__count">5 elements</span>
+            </div>
+          </a>
+          <ul class="category-card__list">
+            <li><a href="elements/rocket-split-twirl-spin.html">Rocket Split Twirl Spin 180°</a></li>
+            <li><a href="elements/rocket-split-twirl-mixed.html">Rocket Split Twirl</a></li>
+            <li><a href="elements/front-pike-vertical-360.html">Front Pike – Vertical 360°</a></li>
+            <li><a href="elements/front-pike-vertical-180.html">Front Pike – Vertical 180°</a></li>
+            <li><a href="elements/manta-ray-half-twist.html">Manta Ray Half Twist</a></li>
+          </ul>
+        </div>
+        <div class="category-card reveal">
+          <a class="category-card__clip" href="elements/junior.html">
+            <div class="category-card__face">
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <span class="category-card__title">Elements — Team Technical</span>
+              <span class="category-card__count">5 elements</span>
+            </div>
+          </a>
+          <ul class="category-card__list">
+            <li><a href="elements/flying-fish-hybrid-spinning.html">Flying Fish Hybrid Spinning 180°</a></li>
+            <li><a href="elements/vertical-full-twist.html">Vertical – Full Twist – Walkout</a></li>
+            <li><a href="elements/two-fouette-rotations.html">Two Fouetté Rotations – Vertical</a></li>
+            <li><a href="elements/butterfly-hybrid.html">Butterfly Hybrid</a></li>
+            <li><a href="elements/rocket-split-twirl-hybrid.html">Rocket Split Bent Knee Twirl Hybrid</a></li>
+          </ul>
+        </div>
+      </div>
     </section>
+
   </main>
 
   <footer class="site-footer">
-    <p>© Sway</p>
+    <div class="site-footer__cols">
+      <div class="site-footer__col reveal">
+        <a class="brand" href="index.html">Sway</a>
+        <p class="site-footer__tagline">A curated catalogue of artistic swimming figures and elements, organized by age and discipline.</p>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Explore</span>
+        <a href="figures.html">Figures</a>
+        <a href="elements.html">Elements</a>
+        <a href="library.html">Library</a>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Contact</span>
+        <a href="contact.html">Get in touch</a>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© Sway</p>
   </footer>
   <script src="script.js" defer></script>
 </body>
