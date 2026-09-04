@@ -10,17 +10,83 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="page--fade">
-  <!-- Decorative animated ocean backdrop (aria-hidden) -->
-  <div class="ocean" aria-hidden="true">
-    <svg class="wave wave1" viewBox="0 0 1200 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,100 C300,200 900,0 1200,100 L1200,200 L0,200 Z"></path>
+  <!-- Decorative pool backdrop: view down onto the water, drifting swimmer motifs,
+       and cursor-driven ripples (wired up in script.js). aria-hidden, index.html only. -->
+  <div class="pool-bg" id="pool-bg" aria-hidden="true">
+    <canvas class="pool-water" id="pool-water"></canvas>
+
+    <!-- Swimmer pose sprite sheet: reused via <use> below -->
+    <svg class="pool-sprites" aria-hidden="true" focusable="false">
+      <defs>
+        <g id="swim-star" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="50" cy="20" r="8"></circle>
+          <line x1="50" y1="28" x2="50" y2="60"></line>
+          <line x1="50" y1="32" x2="20" y2="10"></line>
+          <line x1="50" y1="32" x2="80" y2="10"></line>
+          <line x1="50" y1="60" x2="18" y2="90"></line>
+          <line x1="50" y1="60" x2="82" y2="90"></line>
+        </g>
+        <g id="swim-streamline" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="50" cy="10" r="8"></circle>
+          <line x1="46" y1="18" x2="42" y2="2"></line>
+          <line x1="54" y1="18" x2="58" y2="2"></line>
+          <line x1="50" y1="18" x2="50" y2="70"></line>
+          <line x1="50" y1="70" x2="46" y2="96"></line>
+          <line x1="50" y1="70" x2="54" y2="96"></line>
+        </g>
+        <g id="swim-ballet" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="20" cy="50" r="7"></circle>
+          <line x1="20" y1="57" x2="45" y2="60"></line>
+          <line x1="45" y1="60" x2="48" y2="15"></line>
+          <line x1="45" y1="60" x2="65" y2="75"></line>
+          <line x1="20" y1="50" x2="5" y2="35"></line>
+          <line x1="20" y1="50" x2="8" y2="65"></line>
+        </g>
+        <g id="swim-tuck" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="50" cy="25" r="7"></circle>
+          <path d="M50,32 Q65,45 55,65"></path>
+          <line x1="55" y1="65" x2="75" y2="55"></line>
+          <line x1="55" y1="65" x2="78" y2="75"></line>
+          <line x1="50" y1="32" x2="30" y2="20"></line>
+          <line x1="50" y1="32" x2="28" y2="40"></line>
+        </g>
+        <g id="swim-split" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="50" cy="15" r="8"></circle>
+          <line x1="50" y1="23" x2="44" y2="4"></line>
+          <line x1="50" y1="23" x2="56" y2="4"></line>
+          <line x1="50" y1="23" x2="50" y2="55"></line>
+          <line x1="50" y1="55" x2="10" y2="80"></line>
+          <line x1="50" y1="55" x2="90" y2="80"></line>
+        </g>
+        <g id="swim-flamingo" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="30" cy="30" r="7"></circle>
+          <line x1="30" y1="37" x2="40" y2="65"></line>
+          <line x1="40" y1="65" x2="75" y2="50"></line>
+          <path d="M40,65 L55,80 L38,78"></path>
+          <line x1="30" y1="30" x2="10" y2="15"></line>
+          <line x1="30" y1="30" x2="12" y2="45"></line>
+        </g>
+        <g id="swim-vertical" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <circle cx="50" cy="12" r="8"></circle>
+          <line x1="50" y1="20" x2="50" y2="75"></line>
+          <line x1="50" y1="28" x2="38" y2="50"></line>
+          <line x1="50" y1="28" x2="62" y2="50"></line>
+          <line x1="50" y1="75" x2="46" y2="98"></line>
+          <line x1="50" y1="75" x2="54" y2="98"></line>
+        </g>
+      </defs>
     </svg>
-    <svg class="wave wave2" viewBox="0 0 1200 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,120 C300,20 900,220 1200,120 L1200,200 L0,200 Z"></path>
-    </svg>
-    <svg class="wave wave3" viewBox="0 0 1200 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,80 C200,0 800,200 1200,80 L1200,200 L0,200 Z"></path>
-    </svg>
+
+    <svg class="swimmer swimmer--1" viewBox="0 0 100 100"><use href="#swim-star"></use></svg>
+    <svg class="swimmer swimmer--2" viewBox="0 0 100 100"><use href="#swim-streamline"></use></svg>
+    <svg class="swimmer swimmer--3" viewBox="0 0 100 100"><use href="#swim-ballet"></use></svg>
+    <svg class="swimmer swimmer--4" viewBox="0 0 100 100"><use href="#swim-tuck"></use></svg>
+    <svg class="swimmer swimmer--5" viewBox="0 0 100 100"><use href="#swim-split"></use></svg>
+    <svg class="swimmer swimmer--6" viewBox="0 0 100 100"><use href="#swim-flamingo"></use></svg>
+    <svg class="swimmer swimmer--7" viewBox="0 0 100 100"><use href="#swim-vertical"></use></svg>
+    <svg class="swimmer swimmer--8" viewBox="0 0 100 100"><use href="#swim-star"></use></svg>
+    <svg class="swimmer swimmer--9" viewBox="0 0 100 100"><use href="#swim-ballet"></use></svg>
+    <svg class="swimmer swimmer--10" viewBox="0 0 100 100"><use href="#swim-split"></use></svg>
   </div>
   <!-- Site header/navigation -->
   <header class="site-header" role="banner">
