@@ -201,12 +201,8 @@ a:hover{color:var(--accent-blue)}
 /* Phase 1: Background & ambiance — animated gradient drift + floating particles */
 body{background:linear-gradient(-45deg, var(--bg), var(--bg2), var(--bg3), var(--panel));background-size:400% 400%;background-attachment:fixed}
 
-/* Ambient pool-floor backdrop for every page except index.html: same tile-grid
-   language as the homepage's interactive canvas, but static, quieter (lower
-   opacity, larger tiles — reads as farther away) and shadowed at the edges.
-   Pure CSS, no JS, nothing to interact with. On index.html this sits directly
-   behind the opaque <canvas id="pool-water"> (first child of body, so it
-   paints first/underneath) and is fully hidden there. */
+/* Ambient pool-floor backdrop for pages without the interactive homepage
+   canvas: a static, quieter tile grid shadowed at the edges. */
 body::before{
   content:'';
   position:fixed;
@@ -257,47 +253,9 @@ body::before{
 .card.reveal{transition-delay:calc(var(--card-index, 0) * 80ms)}
 .card.reveal.is-visible{transition-delay:0}
 
-/* Pool backdrop (index.html only): a top-down view of the water with drifting
-   swimmer motifs. The water itself (texture + cursor-driven ripples) is
-   rendered on <canvas id="pool-water"> by the simulation in script.js. */
+/* Pool backdrop (index.html only): a clear top-down water surface with
+   refracted tile lines and cursor-driven ripples rendered by script.js. */
 .pool-bg{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0}
 .pool-water{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
-
-/* Sprite sheet holding the reusable swimmer pose <g> defs; renders nothing itself */
-.pool-sprites{position:absolute;width:0;height:0}
-
-/* Individual swimmer instances, scattered and lightly drifting/rotating.
-   A soft offset drop-shadow lifts each one off the pool floor a little. */
-.swimmer{position:absolute;width:56px;height:56px;overflow:visible;color:var(--accent-teal);opacity:0.4;filter:drop-shadow(3px 6px 3px rgba(8, 32, 40, 0.35))}
-.swimmer--1{top:12%;left:8%;color:var(--accent-cyan)}
-.swimmer--2{top:65%;left:14%;color:var(--accent-indigo)}
-.swimmer--3{top:20%;left:78%;color:var(--accent-blue)}
-.swimmer--4{top:70%;left:70%;color:var(--accent-teal)}
-.swimmer--5{top:45%;left:40%;width:44px;height:44px;color:var(--accent-cyan)}
-.swimmer--6{top:8%;left:48%;width:40px;height:40px;color:var(--accent-indigo)}
-.swimmer--7{top:82%;left:42%;width:48px;height:48px;color:var(--accent-blue)}
-.swimmer--8{top:38%;left:12%;width:40px;height:40px;color:var(--accent-teal)}
-.swimmer--9{top:52%;left:88%;width:46px;height:46px;color:var(--accent-indigo)}
-.swimmer--10{top:4%;left:70%;width:38px;height:38px;color:var(--accent-cyan)}
-@media (prefers-reduced-motion: no-preference){
-  .swimmer{animation:swimmerDrift 20s ease-in-out infinite}
-  .swimmer--1{animation-duration:24s}
-  .swimmer--2{animation-duration:19s;animation-delay:-4s}
-  .swimmer--3{animation-duration:27s;animation-delay:-9s}
-  .swimmer--4{animation-duration:21s;animation-delay:-2s}
-  .swimmer--5{animation-duration:30s;animation-delay:-13s}
-  .swimmer--6{animation-duration:23s;animation-delay:-6s}
-  .swimmer--7{animation-duration:25s;animation-delay:-17s}
-  .swimmer--8{animation-duration:18s;animation-delay:-7s}
-  .swimmer--9{animation-duration:28s;animation-delay:-11s}
-  .swimmer--10{animation-duration:22s;animation-delay:-15s}
-  @keyframes swimmerDrift{
-    0%, 100%{transform:translate(0,0) rotate(0deg)}
-    50%{transform:translate(3%, 4%) rotate(8deg)}
-  }
-}
-@media (prefers-reduced-motion: reduce){
-  .swimmer{animation:none}
-}
 
 /* end of style.css */
