@@ -265,6 +265,13 @@ body{
 .skill-list a{color:var(--text);text-decoration:none}
 .skill-list a:hover{color:var(--accent)}
 
+/* Sprite sheet holding reusable <defs> (swimmer poses, ripple-ring icon,
+   etc.), reused elsewhere via <use>. Renders nothing itself — must stay
+   position:absolute + zero-sized or its default 300x150 SVG box shows up
+   as a real block in the page flow (this is what was pushing the header
+   down / adding blank space above it after the merge dropped this rule). */
+.pool-sprites{position:absolute;width:0;height:0}
+
 /* Figure category hub: large animated card grid (replaces the old plain
    skill-list on figures/10u.html, 12u.html, youth-13-15.html). Each card is
    either a real photo/diagram (aspect-ratio media block) or, where no asset
