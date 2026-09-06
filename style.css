@@ -414,10 +414,12 @@ body{
 .category-card{position:relative;display:block;min-height:210px;border-radius:16px;transition:transform 240ms ease}
 .category-card:hover{transform:translateY(-6px) scale(1.02);z-index:5}
 
-/* The card's own visible face + shine-sweep are clipped to this inner layer,
-   so the popover list (a sibling, not a descendant) is free to grow taller
-   than the card without being cut off by the same overflow:hidden. This is
-   the actual <a> for the category (the outer .category-card is a plain div —
+/* The card's own visible face + shine-sweep are clipped to this inner layer;
+   the popover list is a sibling (not a descendant) so it isn't cut off by
+   that same overflow:hidden — it needs its own visible overflow to show a
+   box-shadow and, unlike this clip layer, is capped at the card's height
+   rather than clipped by it (see .category-card__list below). This is the
+   actual <a> for the category (the outer .category-card is a plain div —
    the skill list below has its own real <a> links, and anchors can't nest). */
 .category-card__clip{position:absolute;inset:0;display:block;border-radius:16px;overflow:hidden;background:linear-gradient(180deg, #ffffff, var(--bg));border:1px solid rgba(101,159,224,0.18);text-decoration:none;color:var(--text);transition:box-shadow 240ms ease, border-color 240ms ease}
 .category-card:hover .category-card__clip{box-shadow:0 16px 36px rgba(13,36,48,0.16), 0 0 28px rgba(101,207,224,0.35);border-color:rgba(101,207,224,0.55)}
@@ -433,11 +435,22 @@ body{
 .category-card:hover .category-card__face{opacity:0;transform:scale(0.92);pointer-events:none}
 
 /* Popover skill list: grows from 0, overlaying the grid below it (never
-   clipped, never pushes the grid's rows around since it's out of flow) */
-.category-card__list{list-style:none;margin:0;padding:10px 6px;position:absolute;top:0;left:0;right:0;min-height:210px;z-index:1;background:var(--panel);border:1px solid rgba(101,207,224,0.45);border-radius:16px;box-shadow:0 20px 44px rgba(13,36,48,0.22);display:flex;flex-direction:column;justify-content:center;gap:1px;max-height:0;overflow:hidden;opacity:0;pointer-events:none;transition:max-height 280ms ease, opacity 200ms ease}
-.category-card:hover .category-card__list{max-height:360px;opacity:1;pointer-events:auto;overflow-y:auto}
+   clipped, never pushes the grid's rows around since it's out of flow).
+   Capped at the same 210px the resting card face uses, so every card is
+   exactly the same size hovered or not, regardless of how many tricks are
+   in it — a short list just leaves empty space, a long one scrolls under
+   its pinned title header rather than growing the card. */
+.category-card__list{list-style:none;margin:0;padding:10px 6px;position:absolute;top:0;left:0;right:0;min-height:210px;z-index:1;background:var(--panel);border:1px solid rgba(101,207,224,0.45);border-radius:16px;box-shadow:0 20px 44px rgba(13,36,48,0.22);display:flex;flex-direction:column;justify-content:flex-start;gap:1px;max-height:0;overflow:hidden;opacity:0;pointer-events:none;transition:max-height 280ms ease, opacity 200ms ease}
+.category-card:hover .category-card__list{max-height:210px;opacity:1;pointer-events:auto;overflow-y:auto}
 .category-card__list a{display:block;padding:6px 10px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:0.86rem;transition:background 150ms ease, color 150ms ease}
 .category-card__list a:hover{background:rgba(101,207,224,0.16);color:var(--text)}
+
+/* Pinned title row: stays visible (and clickable straight through to the
+   category page) at the top of the list while the tricks below it scroll,
+   so hovering never hides the way into the full category */
+.category-card__list-header{position:sticky;top:0;z-index:1;background:var(--panel);margin:-10px -6px 4px;padding:8px 6px 6px;border-radius:16px 16px 0 0;border-bottom:1px solid rgba(101,207,224,0.3)}
+.category-card__list-header a{font-weight:700;color:var(--accent);padding:4px 4px}
+.category-card__list-header a:hover{background:rgba(101,207,224,0.16);color:var(--accent)}
 
 .category-grid > .category-card:nth-child(4n+1) .category-card__icon{color:var(--accent-cyan)}
 .category-grid > .category-card:nth-child(4n+2) .category-card__icon{color:var(--accent-teal)}
