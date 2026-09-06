@@ -143,12 +143,40 @@ body{
 .dropdown--mega .dropdown__mega::before{content:'';position:absolute;left:0;right:0;top:-10px;height:10px}
 .dropdown--mega:hover .dropdown__mega, .dropdown--mega:focus-within .dropdown__mega{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
 .dropdown__col{display:flex;flex-direction:column;gap:2px;min-width:150px}
-.dropdown__heading{color:var(--accent);font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:4px 6px 6px}
-.dropdown__col .dropdown__menu{position:static;margin:0;min-width:0;background:none;padding:0;transform:none;box-shadow:none}
+
+/* Figures/Elements column headings double as links straight to their
+   overview page — kept looking like plain section labels (not buttons) so
+   they still read as headings for the columns below them, with just a
+   color/underline hover to hint they're clickable */
+.dropdown__col > .dropdown__heading{color:var(--accent);font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:4px 6px 6px;display:inline-block;text-decoration:none;transition:color 160ms ease}
+.dropdown__col > .dropdown__heading:hover{color:var(--accent-blue);text-decoration:underline}
+.dropdown__col > .dropdown__heading::after{content:none}
+
+.dropdown__col .dropdown__menu{position:static;margin:0;min-width:0;background:none;padding:0;transform:none;box-shadow:none;opacity:1;visibility:visible;pointer-events:auto}
 .dropdown__col .dropdown__menu a{padding:6px 6px;border-radius:6px}
 
 /* Header search: compact, always visible, submits straight to the library
-   search results (library.html reads ?q= on load) */
+   search results (library.html reads ?q= on load). Wrapped in the same
+   .search-form__field the library/search hero bars use, so it gets the
+   shared autocomplete dropdown too — just narrower, matching the compact
+   nav input instead of the hero's full-width one. */
+.nav-search .search-form__field{flex:none;max-width:none}
+/* The input also carries the shared .search-input class (for the icon-reveal
+   selector below), but that class's own width/padding/font-size are sized
+   for the full hero bar — reassert the compact nav dimensions here at
+   higher specificity so they don't leak in and blow up the header box */
+.nav-search .search-input{width:170px;padding:8px 34px 8px 14px;font-size:0.9rem;box-shadow:none}
+.nav-search .search-input:focus{width:220px}
+/* Same clear-icon-appears-once-you-type affordance as the library/search
+   hero bars, just scaled down to fit the compact pill instead of the
+   full-size hero input */
+.nav-search .search-form__icon{width:26px;height:26px;right:4px}
+/* The compact nav-search box is too narrow for the hero suggestion layout's
+   side-by-side title/category columns, so give it its own fixed-width panel
+   with the category stacked under the title instead of squeezed beside it */
+.nav-search .search-suggest{left:0;right:auto;width:260px}
+.nav-search .search-suggest__item{flex-direction:column;align-items:flex-start;gap:2px}
+.nav-search .search-suggest__cat{font-size:0.72rem}
 .nav-search{display:flex}
 .nav-search__input{width:170px;padding:8px 14px;border-radius:999px;border:1px solid rgba(13,36,48,0.15);background:rgba(255,255,255,0.7);color:var(--text);font:inherit;font-size:0.9rem;transition:width 220ms ease, border-color 200ms ease, box-shadow 200ms ease}
 .nav-search__input:hover{border-color:rgba(49,168,187,0.4)}
@@ -201,7 +229,7 @@ body{
 
 /* Autocomplete suggestions dropdown, attached under any .search-form__field
    (both the library hero search and the header's compact nav-search) */
-.search-suggest{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--panel);border:1px solid rgba(101,159,224,0.22);border-radius:14px;box-shadow:0 16px 34px rgba(13,36,48,0.18);overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity 180ms ease, transform 180ms ease, visibility 180ms ease;z-index:200;text-align:left}
+.search-suggest{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--panel);border:1px solid rgba(101,159,224,0.22);border-radius:14px;box-shadow:0 16px 34px rgba(13,36,48,0.18);max-height:200px;overflow-x:hidden;overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity 180ms ease, transform 180ms ease, visibility 180ms ease;z-index:200;text-align:left}
 .search-suggest.is-open{opacity:1;visibility:visible;transform:translateY(0)}
 .search-suggest__item{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 16px;color:var(--text);text-decoration:none;font-size:0.92rem}
 .search-suggest__item:hover, .search-suggest__item.is-active{background:rgba(101,207,224,0.14)}
@@ -317,6 +345,8 @@ body{
 .figure-grid > .figure-card:nth-child(3n) .figure-card__icon{animation-delay:-3.2s}
 
 .figure-card__title{padding:14px 16px 18px;font-weight:600;line-height:1.35}
+.figure-card__code{color:var(--muted);font-weight:700;margin-right:4px}
+.figure-card__dd{display:block;margin-top:4px;font-size:0.78rem;font-weight:600;color:var(--accent-teal)}
 
 .figure-card.reveal{transition-delay:calc(var(--card-index, 0) * 70ms)}
 .figure-card.reveal.is-visible{transition-delay:0}
