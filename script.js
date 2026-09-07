@@ -342,14 +342,11 @@ function swayLoadSkills() {
   let cols, rows, displayW, displayH;
   let heightsA, heightsB; // wave height fields; swapped each simulation step
   let bufferCanvas, bufferCtx, frame;
-  let tileCells; // tile size in grid-cell units, set on resize
-  let timeT = 0; // slow-moving clock, animates the floor even with no ripples
+  let timeT = 0; // slow-moving clock, animates the water even with no ripples
 
-  // Pool-floor color palette (a "sunlit water over blue tile" look) and the
-  // grout color the wobbly tile grid is blended toward.
+  // Pool-water color palette.
   const DEEP = [138, 196, 217];
   const SHALLOW = [206, 241, 247];
-  const GROUT = [58, 122, 138];
   const REFRACT = 3.2; // how strongly ripple slope displaces the sampled floor
 
   function drawVignette() {
@@ -381,8 +378,6 @@ function swayLoadSkills() {
     frame = bufferCtx.createImageData(cols, rows);
     for (let i = 3; i < frame.data.length; i += 4) frame.data[i] = 255; // opaque
 
-    const desiredTilePx = Math.max(34, Math.min(70, displayW / 20));
-    tileCells = Math.max(4, Math.round(desiredTilePx / CELL));
   }
 
   // Disturb the height field near (clientX, clientY) with a small falloff radius.
@@ -436,12 +431,8 @@ function swayLoadSkills() {
 
   // Paint the low-res buffer, then stretch it onto the real canvas (the
   // smoothing on upscale is what gives the water its soft, liquid look).
-  // Both the caustic shimmer and the tile grid are evaluated procedurally,
-  // *at a position displaced by the local ripple slope* — real refraction,
-  // rather than a static image just relit — so passing ripples visibly bend
-  // the grid lines instead of only brightening them. A second, slower shared
-  // flow field bends the whole grid as one continuous curving sheet even at
-  // rest, so it never reads as a perfectly rigid square grid.
+  // The water texture is evaluated at a position displaced by the local
+  // ripple slope, creating soft refraction without a visible background grid.
   function render() {
     const data = frame.data;
     for (let y = 0; y < rows; y++) {
@@ -464,29 +455,6 @@ function swayLoadSkills() {
         let r = DEEP[0] + (SHALLOW[0] - DEEP[0]) * n;
         let g = DEEP[1] + (SHALLOW[1] - DEEP[1]) * n;
         let b = DEEP[2] + (SHALLOW[2] - DEEP[2]) * n;
-
-        // Wobbly tile grid: the whole coordinate space is bent by one shared,
-        // low-frequency flow field before measuring distance to the nearest
-        // grid line, so neighbouring lines curve together as one continuous
-        // sheet (not each line wiggling out of sync with its neighbours).
-        const warpX = 3 * Math.sin(sy * 0.012 + timeT * 0.35);
-        const warpY = 3 * Math.sin(sx * 0.012 - timeT * 0.3);
-        const wx = sx + warpX;
-        const wy = sy + warpY;
-
-        const li = Math.round(wx / tileCells);
-        const distX = Math.abs(wx - li * tileCells);
-
-        const lj = Math.round(wy / tileCells);
-        const distY = Math.abs(wy - lj * tileCells);
-
-        const lineDist = distX < distY ? distX : distY;
-        if (lineDist < 1.3) {
-          const mix = (1 - lineDist / 1.3) * 0.32;
-          r += (GROUT[0] - r) * mix;
-          g += (GROUT[1] - g) * mix;
-          b += (GROUT[2] - b) * mix;
-        }
 
         const lightMul = 1 + Math.max(-0.2, Math.min(0.24, (dx + dy) * 0.026));
         const p = i * 4;

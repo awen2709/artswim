@@ -624,18 +624,14 @@ a:hover{color:var(--accent-blue)}
 /* Phase 1: Background & ambiance — animated gradient drift + floating particles */
 body{background:linear-gradient(-45deg, var(--bg), var(--bg2), var(--bg3), var(--panel));background-size:400% 400%;background-attachment:fixed}
 
-/* Ambient pool-floor backdrop for pages without the interactive homepage
-   canvas: a static, quieter tile grid shadowed at the edges. */
+/* Ambient backdrop for pages without the interactive homepage canvas. */
 body::before{
   content:'';
   position:fixed;
   inset:0;
   z-index:0;
   pointer-events:none;
-  background:
-    radial-gradient(ellipse at center, transparent 40%, rgba(4, 26, 34, 0.24) 100%),
-    repeating-linear-gradient(90deg, rgba(20, 70, 82, 0.05) 0 1px, transparent 1px 88px),
-    repeating-linear-gradient(0deg, rgba(20, 70, 82, 0.05) 0 1px, transparent 1px 88px);
+  background:radial-gradient(ellipse at center, transparent 40%, rgba(4, 26, 34, 0.24) 100%);
 }
 .page--home::before{display:none}
 @media (prefers-reduced-motion: no-preference){
@@ -692,9 +688,9 @@ body::before{
 .card.reveal{transition-delay:calc(var(--card-index, 0) * 80ms)}
 .card.reveal.is-visible{transition-delay:0}
 
-/* Pool backdrop (index.html only): a clear top-down water surface with
-   refracted tile lines and cursor-driven ripples rendered by script.js. */
-.pool-bg{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0;opacity:0.48;mix-blend-mode:multiply}
+/* Pool backdrop (index.html only): a soft water surface with
+   cursor-driven ripples rendered by script.js. */
+.pool-bg{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0;opacity:0.28;mix-blend-mode:multiply}
 .pool-water{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
 
 /* end of style.css */
