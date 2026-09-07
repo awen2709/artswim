@@ -33,6 +33,25 @@
   });
 })();
 
+// Mobile nav toggle: opens/closes the header nav on small screens
+(function() {
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.getElementById('site-nav');
+  if (!toggle || !nav) return;
+
+  toggle.addEventListener('click', function() {
+    const open = nav.classList.toggle('nav--open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  nav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('nav--open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+})();
+
 // Header scroll-state: add .site-header--scrolled class when scrolled past threshold
 (function() {
   const header = document.querySelector('.site-header');
@@ -77,8 +96,10 @@ function swayLoadSkills() {
 
 // Autocomplete dropdown: attaches to every .search-form__field on the page
 // (the library hero search, the header's compact nav-search, etc). Shows up
-// to 6 matches as the visitor types; Enter/the search icon still submits the
-// form normally (to search.html) for the full results.
+// to 6 matches as the visitor types, capped to a scrollable ~4-item-tall
+// panel (see .search-suggest max-height) so it never sprawls; Enter/the
+// search icon still submits the form normally (to search.html) for the
+// full results.
 (function() {
   const fields = document.querySelectorAll('.search-form__field');
   if (!fields.length) return;

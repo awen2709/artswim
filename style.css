@@ -143,12 +143,40 @@ body{
 .dropdown--mega .dropdown__mega::before{content:'';position:absolute;left:0;right:0;top:-10px;height:10px}
 .dropdown--mega:hover .dropdown__mega, .dropdown--mega:focus-within .dropdown__mega{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
 .dropdown__col{display:flex;flex-direction:column;gap:2px;min-width:150px}
-.dropdown__heading{color:var(--accent);font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:4px 6px 6px}
-.dropdown__col .dropdown__menu{position:static;margin:0;min-width:0;background:none;padding:0;transform:none;box-shadow:none}
+
+/* Figures/Elements column headings double as links straight to their
+   overview page — kept looking like plain section labels (not buttons) so
+   they still read as headings for the columns below them, with just a
+   color/underline hover to hint they're clickable */
+.dropdown__col > .dropdown__heading{color:var(--accent);font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:4px 6px 6px;display:inline-block;text-decoration:none;transition:color 160ms ease}
+.dropdown__col > .dropdown__heading:hover{color:var(--accent-blue);text-decoration:underline}
+.dropdown__col > .dropdown__heading::after{content:none}
+
+.dropdown__col .dropdown__menu{position:static;margin:0;min-width:0;background:none;padding:0;transform:none;box-shadow:none;opacity:1;visibility:visible;pointer-events:auto}
 .dropdown__col .dropdown__menu a{padding:6px 6px;border-radius:6px}
 
 /* Header search: compact, always visible, submits straight to the library
-   search results (library.html reads ?q= on load) */
+   search results (library.html reads ?q= on load). Wrapped in the same
+   .search-form__field the library/search hero bars use, so it gets the
+   shared autocomplete dropdown too — just narrower, matching the compact
+   nav input instead of the hero's full-width one. */
+.nav-search .search-form__field{flex:none;max-width:none}
+/* The input also carries the shared .search-input class (for the icon-reveal
+   selector below), but that class's own width/padding/font-size are sized
+   for the full hero bar — reassert the compact nav dimensions here at
+   higher specificity so they don't leak in and blow up the header box */
+.nav-search .search-input{width:170px;padding:8px 34px 8px 14px;font-size:0.9rem;box-shadow:none}
+.nav-search .search-input:focus{width:220px}
+/* Same clear-icon-appears-once-you-type affordance as the library/search
+   hero bars, just scaled down to fit the compact pill instead of the
+   full-size hero input */
+.nav-search .search-form__icon{width:26px;height:26px;right:4px}
+/* The compact nav-search box is too narrow for the hero suggestion layout's
+   side-by-side title/category columns, so give it its own fixed-width panel
+   with the category stacked under the title instead of squeezed beside it */
+.nav-search .search-suggest{left:0;right:auto;width:260px}
+.nav-search .search-suggest__item{flex-direction:column;align-items:flex-start;gap:2px}
+.nav-search .search-suggest__cat{font-size:0.72rem}
 .nav-search{display:flex}
 .nav-search__input{width:170px;padding:8px 14px;border-radius:999px;border:1px solid rgba(13,36,48,0.15);background:rgba(255,255,255,0.7);color:var(--text);font:inherit;font-size:0.9rem;transition:width 220ms ease, border-color 200ms ease, box-shadow 200ms ease}
 .nav-search__input:hover{border-color:rgba(49,168,187,0.4)}
@@ -201,7 +229,7 @@ body{
 
 /* Autocomplete suggestions dropdown, attached under any .search-form__field
    (both the library hero search and the header's compact nav-search) */
-.search-suggest{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--panel);border:1px solid rgba(101,159,224,0.22);border-radius:14px;box-shadow:0 16px 34px rgba(13,36,48,0.18);overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity 180ms ease, transform 180ms ease, visibility 180ms ease;z-index:200;text-align:left}
+.search-suggest{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--panel);border:1px solid rgba(101,159,224,0.22);border-radius:14px;box-shadow:0 16px 34px rgba(13,36,48,0.18);max-height:200px;overflow-x:hidden;overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity 180ms ease, transform 180ms ease, visibility 180ms ease;z-index:200;text-align:left}
 .search-suggest.is-open{opacity:1;visibility:visible;transform:translateY(0)}
 .search-suggest__item{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 16px;color:var(--text);text-decoration:none;font-size:0.92rem}
 .search-suggest__item:hover, .search-suggest__item.is-active{background:rgba(101,207,224,0.14)}
@@ -265,6 +293,17 @@ body{
 .skill-list a{color:var(--text);text-decoration:none}
 .skill-list a:hover{color:var(--accent)}
 
+/* Breadcrumb trail: Library > Figures > <hub> > <page>, replacing the old
+   "<- Back to X" links. Renders instantly (no .reveal) since it's a
+   wayfinding aid, not decorative content. */
+.breadcrumbs{margin:0 0 14px}
+.breadcrumbs__list{list-style:none;display:flex;flex-wrap:wrap;margin:0;padding:0;font-size:0.88rem;color:var(--muted)}
+.breadcrumbs__item{display:flex;align-items:center}
+.breadcrumbs__item a{color:var(--muted);text-decoration:none;transition:color 160ms ease}
+.breadcrumbs__item a:hover{color:var(--accent);text-decoration:underline}
+.breadcrumbs__item + .breadcrumbs__item::before{content:'›';margin:0 8px;color:rgba(13,36,48,0.3)}
+.breadcrumbs__item--current{color:var(--text);font-weight:600}
+
 /* Sprite sheet holding reusable <defs> (swimmer poses, ripple-ring icon,
    etc.), reused elsewhere via <use>. Renders nothing itself — must stay
    position:absolute + zero-sized or its default 300x150 SVG box shows up
@@ -277,6 +316,7 @@ body{
    either a real photo/diagram (aspect-ratio media block) or, where no asset
    exists yet, an animated swimmer-pose SVG icon standing in for it. */
 .figure-hub-intro{padding:14px 12px}
+.hub-intro__meta{color:var(--muted);font-size:0.9rem;margin-top:4px}
 .figure-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));gap:22px;margin-top:8px}
 
 .figure-card{position:relative;display:flex;flex-direction:column;background:linear-gradient(180deg, #ffffff, var(--bg));border:1px solid rgba(101,159,224,0.18);border-radius:16px;overflow:hidden;text-decoration:none;color:var(--text);transition:transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease}
@@ -308,6 +348,14 @@ body{
   .figure-card__icon{animation:none}
 }
 
+/* Ripple-ring icon fallback (replaces the old swimmer-pose stick figures
+   everywhere a card has no real asset) — the wiggle animation above was
+   built for the stick-figure shape, so turn it off here and let the
+   ripple's own expanding-rings animation (on its child circles) run
+   instead */
+.figure-card__icon.ripple-icon{animation:none;width:66%;height:66%}
+.figure-card:hover .figure-card__icon.ripple-icon{animation:none}
+
 .figure-grid > .figure-card:nth-child(4n+1) .figure-card__icon{color:var(--accent-cyan)}
 .figure-grid > .figure-card:nth-child(4n+2) .figure-card__icon{color:var(--accent-teal)}
 .figure-grid > .figure-card:nth-child(4n+3) .figure-card__icon{color:var(--accent-blue)}
@@ -317,6 +365,8 @@ body{
 .figure-grid > .figure-card:nth-child(3n) .figure-card__icon{animation-delay:-3.2s}
 
 .figure-card__title{padding:14px 16px 18px;font-weight:600;line-height:1.35}
+.figure-card__code{color:var(--muted);font-weight:700;margin-right:4px}
+.figure-card__dd{display:block;margin-top:4px;font-size:0.78rem;font-weight:600;color:var(--accent-teal)}
 
 .figure-card.reveal{transition-delay:calc(var(--card-index, 0) * 70ms)}
 .figure-card.reveal.is-visible{transition-delay:0}
@@ -384,10 +434,12 @@ body{
 .category-card{position:relative;display:block;min-height:210px;border-radius:16px;transition:transform 240ms ease}
 .category-card:hover{transform:translateY(-6px) scale(1.02);z-index:5}
 
-/* The card's own visible face + shine-sweep are clipped to this inner layer,
-   so the popover list (a sibling, not a descendant) is free to grow taller
-   than the card without being cut off by the same overflow:hidden. This is
-   the actual <a> for the category (the outer .category-card is a plain div —
+/* The card's own visible face + shine-sweep are clipped to this inner layer;
+   the popover list is a sibling (not a descendant) so it isn't cut off by
+   that same overflow:hidden — it needs its own visible overflow to show a
+   box-shadow and, unlike this clip layer, is capped at the card's height
+   rather than clipped by it (see .category-card__list below). This is the
+   actual <a> for the category (the outer .category-card is a plain div —
    the skill list below has its own real <a> links, and anchors can't nest). */
 .category-card__clip{position:absolute;inset:0;display:block;border-radius:16px;overflow:hidden;background:linear-gradient(180deg, #ffffff, var(--bg));border:1px solid rgba(101,159,224,0.18);text-decoration:none;color:var(--text);transition:box-shadow 240ms ease, border-color 240ms ease}
 .category-card:hover .category-card__clip{box-shadow:0 16px 36px rgba(13,36,48,0.16), 0 0 28px rgba(101,207,224,0.35);border-color:rgba(101,207,224,0.55)}
@@ -403,11 +455,25 @@ body{
 .category-card:hover .category-card__face{opacity:0;transform:scale(0.92);pointer-events:none}
 
 /* Popover skill list: grows from 0, overlaying the grid below it (never
-   clipped, never pushes the grid's rows around since it's out of flow) */
-.category-card__list{list-style:none;margin:0;padding:10px 6px;position:absolute;top:0;left:0;right:0;min-height:210px;z-index:1;background:var(--panel);border:1px solid rgba(101,207,224,0.45);border-radius:16px;box-shadow:0 20px 44px rgba(13,36,48,0.22);display:flex;flex-direction:column;justify-content:center;gap:1px;max-height:0;overflow:hidden;opacity:0;pointer-events:none;transition:max-height 280ms ease, opacity 200ms ease}
-.category-card:hover .category-card__list{max-height:360px;opacity:1;pointer-events:auto;overflow-y:auto}
+   clipped, never pushes the grid's rows around since it's out of flow).
+   Capped at the same 210px the resting card face uses, so every card is
+   exactly the same size hovered or not, regardless of how many tricks are
+   in it — a short list just leaves empty space, a long one scrolls under
+   its pinned title header rather than growing the card. */
+.category-card__list{list-style:none;margin:0;padding:0 6px 10px;position:absolute;top:0;left:0;right:0;min-height:210px;z-index:1;background:var(--panel);border:1px solid rgba(101,207,224,0.45);border-radius:16px;box-shadow:0 20px 44px rgba(13,36,48,0.22);display:flex;flex-direction:column;justify-content:flex-start;gap:1px;max-height:0;overflow:hidden;opacity:0;pointer-events:none;transition:max-height 280ms ease, opacity 200ms ease}
+.category-card:hover .category-card__list{max-height:210px;opacity:1;pointer-events:auto;overflow-y:auto}
 .category-card__list a{display:block;padding:6px 10px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:0.86rem;transition:background 150ms ease, color 150ms ease}
 .category-card__list a:hover{background:rgba(101,207,224,0.16);color:var(--text)}
+
+/* Pinned title row: stays visible (and clickable straight through to the
+   category page) at the top of the list while the tricks below it scroll,
+   so hovering never hides the way into the full category. Sits flush at
+   top:0 with no container padding above it (padding lives on the header
+   itself instead) — otherwise scrolled trick names would peek through
+   that padding strip above the sticky element. */
+.category-card__list-header{position:sticky;top:0;z-index:1;background:var(--panel);margin:0 -6px 4px;padding:8px 6px 6px;border-radius:16px 16px 0 0;border-bottom:1px solid rgba(101,207,224,0.3)}
+.category-card__list-header a{font-weight:700;color:var(--accent);padding:4px 4px}
+.category-card__list-header a:hover{background:rgba(101,207,224,0.16);color:var(--accent)}
 
 .category-grid > .category-card:nth-child(4n+1) .category-card__icon{color:var(--accent-cyan)}
 .category-grid > .category-card:nth-child(4n+2) .category-card__icon{color:var(--accent-teal)}
@@ -415,6 +481,55 @@ body{
 .category-grid > .category-card:nth-child(4n) .category-card__icon{color:var(--accent-indigo)}
 .category-card.reveal{transition-delay:calc(var(--card-index, 0) * 70ms)}
 .category-card.reveal.is-visible{transition-delay:0}
+
+/* Category "feature rows" for figures.html/elements.html — a small grid of
+   3-4 .category-card tiles looked sparse and left most of the page empty,
+   so these get their own full-width row treatment instead: one big card
+   per category, icon medallion + copy + a live preview of a few tricks in
+   it, filling the width regardless of how few categories there are. */
+.category-features{display:flex;flex-direction:column;gap:16px;margin-top:12px}
+.category-feature{display:flex;align-items:center;gap:24px;padding:24px 28px;background:linear-gradient(180deg, #ffffff, var(--bg));border:1px solid rgba(101,159,224,0.18);border-radius:18px;text-decoration:none;color:var(--text);box-shadow:0 6px 20px rgba(13,36,48,0.05);position:relative;overflow:hidden;transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease}
+.category-feature:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(13,36,48,0.14), 0 0 30px rgba(101,207,224,0.22);border-color:rgba(101,207,224,0.5)}
+.category-feature__icon{flex-shrink:0;width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+.category-feature__icon .ripple-icon{width:52%;height:52%}
+.category-feature__body{flex:1;min-width:0;display:flex;flex-direction:column}
+.category-feature__count{display:block;font-size:0.76rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--accent-teal)}
+.category-feature__title{display:block;margin:2px 0 6px;font-size:1.35rem;font-weight:600}
+.category-feature__blurb{display:block;margin:0;color:var(--muted);max-width:64ch}
+.category-feature__preview{display:block;margin-top:8px;font-size:0.82rem;color:var(--muted);opacity:0.85}
+.category-feature__cta{flex-shrink:0;font-weight:600;color:var(--accent);white-space:nowrap;transition:color 160ms ease}
+.category-feature:hover .category-feature__cta{color:var(--accent-blue)}
+
+.category-features > .category-feature:nth-child(4n+1) .category-feature__icon{background:linear-gradient(135deg, var(--accent-cyan), var(--accent-blue))}
+.category-features > .category-feature:nth-child(4n+2) .category-feature__icon{background:linear-gradient(135deg, var(--accent-teal), var(--accent-cyan))}
+.category-features > .category-feature:nth-child(4n+3) .category-feature__icon{background:linear-gradient(135deg, var(--accent-blue), var(--accent-indigo))}
+.category-features > .category-feature:nth-child(4n) .category-feature__icon{background:linear-gradient(135deg, var(--accent-indigo), var(--accent-teal))}
+
+@media (max-width:640px){
+  .category-feature{flex-wrap:wrap;padding:20px}
+  .category-feature__cta{width:100%;text-align:right}
+}
+
+/* Individual trick page hero: eyebrow + title (+ code/DD badges on element
+   pages) above a media row. The media row holds 1-2 panels — the real
+   asset image (these are official figure description sheets, not photos,
+   so they're framed at a readable width rather than cropped to a fixed
+   box) and/or an embedded YouTube video when the page has one; pages with
+   neither show a decorative icon tile instead. flex + a shared max-width
+   means 1 or 2 panels both end up sensibly sized and centered. */
+.trick-hero{margin:8px 0 12px}
+.trick-hero__eyebrow{display:inline-block;text-transform:uppercase;letter-spacing:0.06em;font-size:0.76rem;font-weight:700;color:var(--accent-teal);margin-bottom:6px}
+.trick-hero__badges{display:flex;gap:8px;margin:10px 0 0}
+
+.trick-media{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin:22px 0}
+.trick-media__panel{flex:1 1 320px;max-width:520px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.trick-media__panel img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid rgba(13,36,48,0.1);box-shadow:0 12px 32px rgba(13,36,48,0.14)}
+.trick-media__zoom{font-size:0.82rem;color:var(--muted);text-decoration:none}
+.trick-media__zoom:hover{color:var(--accent)}
+.trick-media__panel .media-embed__video{width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:0 12px 32px rgba(13,36,48,0.14)}
+.trick-media__panel .media-embed__video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.trick-media__icon-tile{width:100%;aspect-ratio:4/3;border-radius:16px;background:linear-gradient(180deg, rgba(101,207,224,0.18), rgba(255,255,255,0.6));border:1px solid rgba(101,159,224,0.18);display:flex;align-items:center;justify-content:center}
+.trick-media__icon{width:46%;height:46%;color:var(--accent-teal);overflow:visible}
 
 /* Responsive adjustments */
 @media (max-width:760px){
@@ -429,6 +544,8 @@ body{
   .nav-search{order:-1}
   .nav-search__input{width:100%}
   .nav-search__input:focus{width:100%}
+  .nav-search .search-input{width:100%}
+  .nav-search .search-input:focus{width:100%}
   .search-form{flex-direction:column;align-items:stretch}
   .search-hero .lead{white-space:normal}
 }
@@ -440,15 +557,32 @@ a:focus, button:focus, .search-input:focus{outline:3px solid rgba(49,168,187,0.4
 a{color:var(--accent)}
 a:hover{color:var(--accent-blue)}
 
-/* Contact page links */
-.contact-list a{color:var(--accent-indigo)}
+/* Contact page: an email card and a form card, same visual language as the
+   figure/category cards elsewhere (gradient panel, soft border, hover lift) */
+.contact-card{display:flex;gap:20px;align-items:flex-start;background:linear-gradient(180deg, #ffffff, var(--bg));border:1px solid rgba(101,159,224,0.18);border-radius:16px;padding:24px;margin-top:24px;box-shadow:0 6px 20px rgba(13,36,48,0.06);transition:transform 240ms ease, box-shadow 240ms ease}
+.contact-card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(13,36,48,0.12)}
+.contact-card__icon{flex-shrink:0;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));color:#fff}
+.contact-card__body{flex:1;min-width:0}
+.contact-card__body h2{margin:0 0 6px;font-size:1.2rem}
+.contact-card__body p{margin:0 0 14px;color:var(--muted)}
+.contact-card--form{flex-direction:column}
+.contact-card--form .contact-card__body p{margin-bottom:0}
 
-/* Figure page: split top/bottom layout for image + tips/media */
-.figure-split{display:flex;flex-direction:column;gap:16px;min-height:64vh}
-.figure-header{margin-bottom:6px}
-.figure-top{flex:1;display:flex}
+/* Google Form embed: fixed-height frame (the form scrolls internally if
+   it's taller), with a visible fallback link since a signed-in-required
+   form can't render inside a third-party iframe for a signed-out visitor */
+.contact-form-embed{width:100%;margin-top:18px;border-radius:14px;overflow:hidden;border:1px solid rgba(101,159,224,0.18);box-shadow:0 6px 18px rgba(13,36,48,0.06)}
+.contact-form-embed iframe{display:block;width:100%;height:900px;border:none;background:#fff}
+.contact-form-fallback{margin:12px 0 0;font-size:0.88rem;color:var(--muted);text-align:center}
+
+@media (max-width:600px){
+  .contact-card{flex-direction:column}
+  .contact-form-embed iframe{height:700px}
+}
+
+/* Figure page: hero (title) + media row, then a tips/media/related row */
+.figure-split{display:flex;flex-direction:column;gap:16px}
 .figure-bottom{flex:1;display:flex;flex-direction:column;gap:12px}
-.figure-image{flex:1;border-radius:10px;background:linear-gradient(180deg, rgba(101,207,224,0.12), rgba(255,255,255,0.6));border:1px dashed rgba(13,36,48,0.18);display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:600;padding:18px}
 .tips{padding:8px}
 .tips .placeholder{color:var(--muted);background:rgba(101,207,224,0.08);padding:12px;border-radius:8px}
 .media-links{padding:8px}
@@ -456,10 +590,35 @@ a:hover{color:var(--accent-blue)}
 .media-links a{color:var(--accent);text-decoration:none}
 .media-links a:hover{text-decoration:underline}
 
+/* Embedded YouTube video (real URL already present on every figure page) —
+   standard responsive-iframe pattern, fixed 16:9 aspect ratio */
+.media-embed__video{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:rgba(13,36,48,0.06)}
+.media-embed__video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+/* Cross-links to sibling tricks in the same category, shown on every
+   individual page — reuses .skill-list for the link styling itself */
+.related-tricks{padding:8px}
+
 @media (min-width:900px){
   /* on wide screens keep same vertical split but allow bottom content to be a row */
   .figure-bottom{flex-direction:row;align-items:flex-start}
-  .tips,.media-links{flex:1}
+  .tips,.media-links,.related-tricks{flex:1}
+}
+
+/* Element page: parsed code/DD header + movement-sequence list, replacing
+   the old bare heading + "coming soon" placeholder. Shares .tips,
+   .media-links and .related-tricks styling with figure pages. */
+.element-split{display:flex;flex-direction:column;gap:16px}
+.element-header__code{display:inline-block;background:rgba(13,36,48,0.08);color:var(--muted);font-weight:700;font-size:0.82rem;padding:3px 10px;border-radius:999px}
+.element-header__dd{display:inline-block;background:rgba(49,168,187,0.14);color:var(--accent-teal);font-weight:700;font-size:0.82rem;padding:3px 10px;border-radius:999px}
+.element-sequence{padding:16px;background:linear-gradient(180deg, rgba(101,207,224,0.1), rgba(255,255,255,0.55));border:1px solid rgba(13,36,48,0.1);border-radius:10px}
+.element-sequence__list{margin:8px 0 0;padding-left:1.3rem;color:var(--text)}
+.element-sequence__list li{padding:4px 0}
+.element-body{display:flex;flex-direction:column;gap:12px}
+
+@media (min-width:900px){
+  /* same row-of-equal-columns treatment .figure-bottom gets above */
+  .element-body{flex-direction:row;align-items:flex-start}
 }
 
 /* Phase 1: Background & ambiance — animated gradient drift + floating particles */

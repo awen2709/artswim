@@ -9,128 +9,136 @@
   <link rel="stylesheet" href="../style.css">
 </head>
 <body class="page--fade">
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <div class="container--nav">
       <a class="brand" href="../index.html">Sway</a>
-      <nav class="nav">
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="site-nav" role="navigation" aria-label="Main navigation">
         <ul class="nav__list">
-          <li><a href="../index.html">Home</a></li>
-          <li class="dropdown">
+          <li class="dropdown dropdown--mega">
             <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Library ▾</button>
-            <ul class="dropdown__menu">
-              <li><a href="../figures.html">Figures</a></li>
-              <li><a href="../elements.html">Elements</a></li>
-            </ul>
+            <div class="dropdown__mega">
+              <div class="dropdown__col">
+                <a class="dropdown__heading" href="../figures.html">Figures</a>
+                <ul class="dropdown__menu">
+                  <li><a href="../figures/10u.html">10U</a></li>
+                  <li><a href="../figures/12u.html">12U</a></li>
+                  <li><a href="../figures/youth-13-15.html">13 - 15 (Youth)</a></li>
+                </ul>
+              </div>
+              <div class="dropdown__col">
+                <a class="dropdown__heading" href="../elements.html">Elements</a>
+                <ul class="dropdown__menu">
+                  <li><a href="../elements/solo-technical.html">Solo Technical</a></li>
+                  <li><a href="../elements/duet-technical.html">Duet Technical</a></li>
+                  <li><a href="../elements/mixed-duet-technical.html">Mixed Duet Technical</a></li>
+                  <li><a href="../elements/junior.html">Team Technical</a></li>
+                </ul>
+              </div>
+            </div>
           </li>
           <li><a href="../contact.html">Contact</a></li>
         </ul>
+        <form class="nav-search" action="../search.html" method="get" role="search" aria-label="Search site">
+          <div class="search-form__field">
+            <input class="nav-search__input search-input" type="search" name="q" placeholder="Search…" aria-label="Search">
+            <button class="search-form__icon" type="submit" aria-label="Search">
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+              </svg>
+            </button>
+          </div>
+        </form>
       </nav>
     </div>
   </header>
 
-  <!-- Swimmer pose sprite sheet, reused via <use> in each card below -->
-  <svg class="pool-sprites" aria-hidden="true" focusable="false">
-    <defs>
-      <g id="swim-star" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-        <circle cx="50" cy="20" r="8"></circle>
-        <line x1="50" y1="28" x2="50" y2="60"></line>
-        <line x1="50" y1="32" x2="20" y2="10"></line>
-        <line x1="50" y1="32" x2="80" y2="10"></line>
-        <line x1="50" y1="60" x2="18" y2="90"></line>
-        <line x1="50" y1="60" x2="82" y2="90"></line>
-      </g>
-      <g id="swim-streamline" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-        <circle cx="50" cy="10" r="8"></circle>
-        <line x1="46" y1="18" x2="42" y2="2"></line>
-        <line x1="54" y1="18" x2="58" y2="2"></line>
-        <line x1="50" y1="18" x2="50" y2="70"></line>
-        <line x1="50" y1="70" x2="46" y2="96"></line>
-        <line x1="50" y1="70" x2="54" y2="96"></line>
-      </g>
-      <g id="swim-ballet" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-        <circle cx="20" cy="50" r="7"></circle>
-        <line x1="20" y1="57" x2="45" y2="60"></line>
-        <line x1="45" y1="60" x2="48" y2="15"></line>
-        <line x1="45" y1="60" x2="65" y2="75"></line>
-        <line x1="20" y1="50" x2="5" y2="35"></line>
-        <line x1="20" y1="50" x2="8" y2="65"></line>
-      </g>
-      <g id="swim-tuck" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-        <circle cx="50" cy="25" r="7"></circle>
-        <path d="M50,32 Q65,45 55,65"></path>
-        <line x1="55" y1="65" x2="75" y2="55"></line>
-        <line x1="55" y1="65" x2="78" y2="75"></line>
-        <line x1="50" y1="32" x2="30" y2="20"></line>
-        <line x1="50" y1="32" x2="28" y2="40"></line>
-      </g>
-      <g id="swim-split" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-        <circle cx="50" cy="15" r="8"></circle>
-        <line x1="50" y1="23" x2="44" y2="4"></line>
-        <line x1="50" y1="23" x2="56" y2="4"></line>
-        <line x1="50" y1="23" x2="50" y2="55"></line>
-        <line x1="50" y1="55" x2="10" y2="80"></line>
-        <line x1="50" y1="55" x2="90" y2="80"></line>
-      </g>
-      <g id="swim-flamingo" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-        <circle cx="30" cy="30" r="7"></circle>
-        <line x1="30" y1="37" x2="40" y2="65"></line>
-        <line x1="40" y1="65" x2="75" y2="50"></line>
-        <path d="M40,65 L55,80 L38,78"></path>
-        <line x1="30" y1="30" x2="10" y2="15"></line>
-        <line x1="30" y1="30" x2="12" y2="45"></line>
-      </g>
-      <g id="swim-vertical" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-        <circle cx="50" cy="12" r="8"></circle>
-        <line x1="50" y1="20" x2="50" y2="75"></line>
-        <line x1="50" y1="28" x2="38" y2="50"></line>
-        <line x1="50" y1="28" x2="62" y2="50"></line>
-        <line x1="50" y1="75" x2="46" y2="98"></line>
-        <line x1="50" y1="75" x2="54" y2="98"></line>
-      </g>
-    </defs>
-  </svg>
 
   <main class="site-main">
     <section class="figure-hub-intro reveal">
+      <!-- auto:breadcrumbs -->
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol class="breadcrumbs__list">
+          <li class="breadcrumbs__item"><a href="../library.html">Library</a></li>
+          <li class="breadcrumbs__item"><a href="../figures.html">Figures</a></li>
+          <li class="breadcrumbs__item breadcrumbs__item--current" aria-current="page">10U</li>
+        </ol>
+      </nav>
+      <!-- /auto:breadcrumbs -->
       <h1>10U — Figures</h1>
-      <p>Skill list for the 10U age category.</p>
-      <p><a href="../figures.html">← Back to Figures</a></p>
+      <p>Skill list for the 10U age category. Figures for swimmers competing in the 10-and-under age category, focusing on foundational body positions and single rotations.</p>
+      <!-- auto:hub-meta -->
+      <p class="hub-intro__meta">6 figures in this category</p>
+      <!-- /auto:hub-meta -->
     </section>
 
     <section class="figure-grid">
       <a class="figure-card reveal" href="barracuda.html">
         <div class="figure-card__media">
-          <svg class="figure-card__icon" viewBox="0 0 100 100"><use href="#swim-split"></use></svg>
+          <svg class="figure-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="r1" cx="50" cy="50" r="14"></circle>
+            <circle class="r2" cx="50" cy="50" r="14"></circle>
+            <circle class="r3" cx="50" cy="50" r="14"></circle>
+          </svg>
+
         </div>
         <div class="figure-card__title">Barracuda</div>
       </a>
       <a class="figure-card reveal" href="ballet-leg-single.html">
         <div class="figure-card__media">
-          <svg class="figure-card__icon" viewBox="0 0 100 100"><use href="#swim-ballet"></use></svg>
+          <svg class="figure-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="r1" cx="50" cy="50" r="14"></circle>
+            <circle class="r2" cx="50" cy="50" r="14"></circle>
+            <circle class="r3" cx="50" cy="50" r="14"></circle>
+          </svg>
+
         </div>
         <div class="figure-card__title">Ballet Leg Single</div>
       </a>
       <a class="figure-card reveal" href="neptunus.html">
         <div class="figure-card__media">
-          <svg class="figure-card__icon" viewBox="0 0 100 100"><use href="#swim-streamline"></use></svg>
+          <svg class="figure-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="r1" cx="50" cy="50" r="14"></circle>
+            <circle class="r2" cx="50" cy="50" r="14"></circle>
+            <circle class="r3" cx="50" cy="50" r="14"></circle>
+          </svg>
+
         </div>
         <div class="figure-card__title">Neptunus</div>
       </a>
       <a class="figure-card reveal" href="blossom-walkout.html">
         <div class="figure-card__media">
-          <svg class="figure-card__icon" viewBox="0 0 100 100"><use href="#swim-tuck"></use></svg>
+          <svg class="figure-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="r1" cx="50" cy="50" r="14"></circle>
+            <circle class="r2" cx="50" cy="50" r="14"></circle>
+            <circle class="r3" cx="50" cy="50" r="14"></circle>
+          </svg>
+
         </div>
         <div class="figure-card__title">Blossom Walkout</div>
       </a>
       <a class="figure-card reveal" href="surface-prawn.html">
         <div class="figure-card__media">
-          <svg class="figure-card__icon" viewBox="0 0 100 100"><use href="#swim-vertical"></use></svg>
+          <svg class="figure-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="r1" cx="50" cy="50" r="14"></circle>
+            <circle class="r2" cx="50" cy="50" r="14"></circle>
+            <circle class="r3" cx="50" cy="50" r="14"></circle>
+          </svg>
+
         </div>
         <div class="figure-card__title">Surface Prawn</div>
       </a>
       <a class="figure-card reveal" href="kipnus.html">
         <div class="figure-card__media">
-          <svg class="figure-card__icon" viewBox="0 0 100 100"><use href="#swim-star"></use></svg>
+          <svg class="figure-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="r1" cx="50" cy="50" r="14"></circle>
+            <circle class="r2" cx="50" cy="50" r="14"></circle>
+            <circle class="r3" cx="50" cy="50" r="14"></circle>
+          </svg>
+
         </div>
         <div class="figure-card__title">Kipnus</div>
       </a>
@@ -138,7 +146,23 @@
   </main>
 
   <footer class="site-footer">
-    <p>© Sway</p>
+    <div class="site-footer__cols">
+      <div class="site-footer__col reveal">
+        <a class="brand" href="../index.html">Sway</a>
+        <p class="site-footer__tagline">A curated catalogue of artistic swimming figures and elements, organized by age and discipline.</p>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Explore</span>
+        <a href="../figures.html">Figures</a>
+        <a href="../elements.html">Elements</a>
+        <a href="../library.html">Library</a>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Contact</span>
+        <a href="../contact.html">Get in touch</a>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© Sway</p>
   </footer>
   <script src="../script.js" defer></script>
 </body>

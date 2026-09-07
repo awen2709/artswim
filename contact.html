@@ -19,35 +19,100 @@
   <header class="site-header" role="banner">
     <div class="container--nav">
       <a class="brand" href="index.html">Sway</a>
-      <nav class="nav" role="navigation" aria-label="Main navigation">
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="site-nav" role="navigation" aria-label="Main navigation">
         <ul class="nav__list">
-          <li><a href="index.html">Home</a></li>
-          <li class="dropdown">
+          <li class="dropdown dropdown--mega">
             <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Library ▾</button>
-            <ul class="dropdown__menu">
-              <li><a href="figures.html">Figures</a></li>
-              <li><a href="elements.html">Elements</a></li>
-            </ul>
+            <div class="dropdown__mega">
+              <div class="dropdown__col">
+                <a class="dropdown__heading" href="figures.html">Figures</a>
+                <ul class="dropdown__menu">
+                  <li><a href="figures/10u.html">10U</a></li>
+                  <li><a href="figures/12u.html">12U</a></li>
+                  <li><a href="figures/youth-13-15.html">13 - 15 (Youth)</a></li>
+                </ul>
+              </div>
+              <div class="dropdown__col">
+                <a class="dropdown__heading" href="elements.html">Elements</a>
+                <ul class="dropdown__menu">
+                  <li><a href="elements/solo-technical.html">Solo Technical</a></li>
+                  <li><a href="elements/duet-technical.html">Duet Technical</a></li>
+                  <li><a href="elements/mixed-duet-technical.html">Mixed Duet Technical</a></li>
+                  <li><a href="elements/junior.html">Team Technical</a></li>
+                </ul>
+              </div>
+            </div>
           </li>
           <li><a href="contact.html">Contact</a></li>
         </ul>
+        <form class="nav-search" action="search.html" method="get" role="search" aria-label="Search site">
+          <div class="search-form__field">
+            <input class="nav-search__input search-input" type="search" name="q" placeholder="Search…" aria-label="Search">
+            <button class="search-form__icon" type="submit" aria-label="Search">
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+              </svg>
+            </button>
+          </div>
+        </form>
       </nav>
     </div>
   </header>
 
   <main class="site-main contact-main">
-    <section class="reveal">
-      <h1>Contact</h1>
-      <p>Questions, corrections, or suggestions — reach out!</p>
-      <ul class="contact-list">
-        <li>Email: <a href="mailto:abigail.wen2027@gmail.com">abigail.wen2027@gmail.com</a></li>
-      </ul>
-      <p>Looking for demo videos! If you have any videos you would like to submit, fill out this form: <a href="https://forms.gle/QA4GXwszUWMde4HA6">https://forms.gle/QA4GXwszUWMde4HA6</a>. Your help is greatly appreciated!</p>
+    <section class="hero reveal">
+      <h1>Get in Touch</h1>
+      <p class="lead">Questions, corrections, or suggestions — reach out any time.</p>
+    </section>
+
+    <section class="contact-card reveal">
+      <div class="contact-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="26" height="26">
+          <path d="M3 6h18v12H3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+          <path d="M3 7l9 6 9-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </div>
+      <div class="contact-card__body">
+        <h2>Email us</h2>
+        <p>For questions, corrections, or anything else about the library.</p>
+        <a class="btn" href="mailto:abigail.wen2027@gmail.com">abigail.wen2027@gmail.com</a>
+      </div>
+    </section>
+
+    <section class="contact-card contact-card--form reveal">
+      <div class="contact-card__body">
+        <h2>Submit a demo video</h2>
+        <p>Looking for demo videos! If you have footage of a figure or element, share it below — your help is greatly appreciated.</p>
+      </div>
+      <div class="contact-form-embed">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeHYrlrufhFsiEWcObcMGDxv6ilc0N2tGguAibEFx8kToELzQ/viewform?embedded=true" title="Submit a demo video" loading="lazy">Loading…</iframe>
+      </div>
+      <p class="contact-form-fallback">Form not loading? <a href="https://forms.gle/QA4GXwszUWMde4HA6" target="_blank" rel="noopener noreferrer">Open it in a new tab ↗</a></p>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>© Sway</p>
+    <div class="site-footer__cols">
+      <div class="site-footer__col reveal">
+        <a class="brand" href="index.html">Sway</a>
+        <p class="site-footer__tagline">A curated catalogue of artistic swimming figures and elements, organized by age and discipline.</p>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Explore</span>
+        <a href="figures.html">Figures</a>
+        <a href="elements.html">Elements</a>
+        <a href="library.html">Library</a>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Contact</span>
+        <a href="contact.html">Get in touch</a>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© Sway</p>
   </footer>
   <script src="script.js" defer></script>
 </body>

@@ -9,29 +9,79 @@
   <link rel="stylesheet" href="../style.css">
 </head>
 <body class="page--fade">
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <div class="container--nav">
       <a class="brand" href="../index.html">Sway</a>
-      <nav class="nav">
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="site-nav" role="navigation" aria-label="Main navigation">
         <ul class="nav__list">
-          <li><a href="../index.html">Home</a></li>
-          <li><a href="../library.html">Library</a></li>
+          <li class="dropdown dropdown--mega">
+            <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Library ▾</button>
+            <div class="dropdown__mega">
+              <div class="dropdown__col">
+                <a class="dropdown__heading" href="../figures.html">Figures</a>
+                <ul class="dropdown__menu">
+                  <li><a href="../figures/10u.html">10U</a></li>
+                  <li><a href="../figures/12u.html">12U</a></li>
+                  <li><a href="../figures/youth-13-15.html">13 - 15 (Youth)</a></li>
+                </ul>
+              </div>
+              <div class="dropdown__col">
+                <a class="dropdown__heading" href="../elements.html">Elements</a>
+                <ul class="dropdown__menu">
+                  <li><a href="../elements/solo-technical.html">Solo Technical</a></li>
+                  <li><a href="../elements/duet-technical.html">Duet Technical</a></li>
+                  <li><a href="../elements/mixed-duet-technical.html">Mixed Duet Technical</a></li>
+                  <li><a href="../elements/junior.html">Team Technical</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
           <li><a href="../contact.html">Contact</a></li>
         </ul>
+        <form class="nav-search" action="../search.html" method="get" role="search" aria-label="Search site">
+          <div class="search-form__field">
+            <input class="nav-search__input search-input" type="search" name="q" placeholder="Search…" aria-label="Search">
+            <button class="search-form__icon" type="submit" aria-label="Search">
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+              </svg>
+            </button>
+          </div>
+        </form>
       </nav>
     </div>
   </header>
 
   <main class="site-main">
     <section class="figure-split">
-      <header class="figure-header">
+      <!-- auto:breadcrumbs -->
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol class="breadcrumbs__list">
+          <li class="breadcrumbs__item"><a href="../library.html">Library</a></li>
+          <li class="breadcrumbs__item"><a href="../figures.html">Figures</a></li>
+          <li class="breadcrumbs__item"><a href="youth-13-15.html">13 - 15 (Youth)</a></li>
+          <li class="breadcrumbs__item breadcrumbs__item--current" aria-current="page">Whip Continuous Spin 720°</li>
+        </ol>
+      </nav>
+      <!-- /auto:breadcrumbs -->
+      <div class="trick-hero">
+        <span class="trick-hero__eyebrow">Figures — 13 - 15 (Youth)</span>
         <h1>Whip Continuous Spin 720°</h1>
-        <p><a href="youth-13-15.html">← Back to 13-15 Youth</a></p>
-      </header>
-
-      <!-- Top half: image placeholder -->
-      <div class="figure-top" aria-hidden="false">
-        <img src="../assets/Whip Coninuous Spin 720.png" alt="Whip Continuous Spin 720" class="figure-image">
+      </div>
+      <div class="trick-media">
+        <div class="trick-media__panel">
+          <img src="../assets/Whip Coninuous Spin 720.png" alt="Whip Continuous Spin 720">
+          <a class="trick-media__zoom" href="../assets/Whip Coninuous Spin 720.png" target="_blank" rel="noopener noreferrer">View full size &#8599;</a>
+        </div>
+        <div class="trick-media__panel">
+          <div class="media-embed__video">
+            <iframe src="https://www.youtube.com/embed/4Hy-S16F-Vw" title="YouTube — Whip Continuous Spin 720°" loading="lazy" allowfullscreen></iframe>
+          </div>
+        </div>
       </div>
 
       <!-- Bottom half: tips/ticks and media links -->
@@ -43,17 +93,45 @@
 
         <div class="media-links">
           <h3>Related media</h3>
-          <ul>
+          <ul class="media-links__fallback">
             <li><a href="https://www.instagram.com/reel/DRkZKp8DcV5/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" rel="noopener noreferrer">Instagram Reel — Whip Continuous Spin 720</a></li>
             <li><a href="https://www.youtube.com/watch?v=4Hy-S16F-Vw" target="_blank" rel="noopener noreferrer">YouTube — Whip Continuous Spin 720</a></li>
           </ul>
         </div>
+        <!-- auto:related-tricks -->
+        <div class="related-tricks">
+          <h3>More in 13 - 15 (Youth)</h3>
+          <ul class="skill-list">
+            <li><a href="ipanema-spinning-180.html">Ipanema Spinning 180°</a></li>
+            <li><a href="saturn.html">Saturn</a></li>
+            <li><a href="london-continuous-spin-720.html">London Continuous Spin 720°</a></li>
+            <li><a href="flamingo-bent-knee.html">Flamingo Bent Knee Combined Spin 360° + 360°</a></li>
+          </ul>
+        </div>
+        <!-- /auto:related-tricks -->
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>© Sway</p>
+    <div class="site-footer__cols">
+      <div class="site-footer__col reveal">
+        <a class="brand" href="../index.html">Sway</a>
+        <p class="site-footer__tagline">A curated catalogue of artistic swimming figures and elements, organized by age and discipline.</p>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Explore</span>
+        <a href="../figures.html">Figures</a>
+        <a href="../elements.html">Elements</a>
+        <a href="../library.html">Library</a>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Contact</span>
+        <a href="../contact.html">Get in touch</a>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© Sway</p>
   </footer>
+  <script src="../script.js" defer></script>
 </body>
 </html>

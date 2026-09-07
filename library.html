@@ -21,16 +21,6 @@
     <div class="particle particle-4"></div>
   </div>
 
-  <!-- Ripple-ring icon sprite, reused via <use> on every category card below -->
-  <svg class="pool-sprites" aria-hidden="true" focusable="false">
-    <defs>
-      <g id="ripple-rings">
-        <circle class="r1" cx="50" cy="50" r="14"></circle>
-        <circle class="r2" cx="50" cy="50" r="14"></circle>
-        <circle class="r3" cx="50" cy="50" r="14"></circle>
-      </g>
-    </defs>
-  </svg>
 
   <header class="site-header" role="banner">
     <div class="container--nav">
@@ -44,7 +34,7 @@
             <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Library ▾</button>
             <div class="dropdown__mega">
               <div class="dropdown__col">
-                <span class="dropdown__heading">Figures</span>
+                <a class="dropdown__heading" href="figures.html">Figures</a>
                 <ul class="dropdown__menu">
                   <li><a href="figures/10u.html">10U</a></li>
                   <li><a href="figures/12u.html">12U</a></li>
@@ -52,7 +42,7 @@
                 </ul>
               </div>
               <div class="dropdown__col">
-                <span class="dropdown__heading">Elements</span>
+                <a class="dropdown__heading" href="elements.html">Elements</a>
                 <ul class="dropdown__menu">
                   <li><a href="elements/solo-technical.html">Solo Technical</a></li>
                   <li><a href="elements/duet-technical.html">Duet Technical</a></li>
@@ -65,7 +55,15 @@
           <li><a href="contact.html">Contact</a></li>
         </ul>
         <form class="nav-search" action="search.html" method="get" role="search" aria-label="Search site">
-          <input class="nav-search__input" type="search" name="q" placeholder="Search…" aria-label="Search">
+          <div class="search-form__field">
+            <input class="nav-search__input search-input" type="search" name="q" placeholder="Search…" aria-label="Search">
+            <button class="search-form__icon" type="submit" aria-label="Search">
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+              </svg>
+            </button>
+          </div>
         </form>
       </nav>
     </div>
@@ -179,12 +177,18 @@
         <div class="category-card reveal">
           <a class="category-card__clip" href="figures/10u.html">
             <div class="category-card__face">
-              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="r1" cx="50" cy="50" r="14"></circle>
+                <circle class="r2" cx="50" cy="50" r="14"></circle>
+                <circle class="r3" cx="50" cy="50" r="14"></circle>
+              </svg>
+
               <span class="category-card__title">Figures — 10U</span>
               <span class="category-card__count">6 figures</span>
             </div>
           </a>
           <ul class="category-card__list">
+            <li class="category-card__list-header"><a href="figures/10u.html">Figures — 10U</a></li>
             <li><a href="figures/barracuda.html">Barracuda</a></li>
             <li><a href="figures/ballet-leg-single.html">Ballet Leg Single</a></li>
             <li><a href="figures/neptunus.html">Neptunus</a></li>
@@ -196,12 +200,18 @@
         <div class="category-card reveal">
           <a class="category-card__clip" href="figures/12u.html">
             <div class="category-card__face">
-              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="r1" cx="50" cy="50" r="14"></circle>
+                <circle class="r2" cx="50" cy="50" r="14"></circle>
+                <circle class="r3" cx="50" cy="50" r="14"></circle>
+              </svg>
+
               <span class="category-card__title">Figures — 12U</span>
               <span class="category-card__count">8 figures</span>
             </div>
           </a>
           <ul class="category-card__list">
+            <li class="category-card__list-header"><a href="figures/12u.html">Figures — 12U</a></li>
             <li><a href="figures/swordfish.html">Swordfish</a></li>
             <li><a href="figures/straight-ballet-leg.html">Straight Ballet Leg</a></li>
             <li><a href="figures/barracuda-12u.html">Barracuda</a></li>
@@ -215,12 +225,18 @@
         <div class="category-card reveal">
           <a class="category-card__clip" href="figures/youth-13-15.html">
             <div class="category-card__face">
-              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="r1" cx="50" cy="50" r="14"></circle>
+                <circle class="r2" cx="50" cy="50" r="14"></circle>
+                <circle class="r3" cx="50" cy="50" r="14"></circle>
+              </svg>
+
               <span class="category-card__title">Figures — 13 - 15 (Youth)</span>
               <span class="category-card__count">12 figures</span>
             </div>
           </a>
           <ul class="category-card__list">
+            <li class="category-card__list-header"><a href="figures/youth-13-15.html">Figures — 13 - 15 (Youth)</a></li>
             <li><a href="figures/ipanema-spinning-180.html">Ipanema Spinning 180°</a></li>
             <li><a href="figures/saturn.html">Saturn</a></li>
             <li><a href="figures/london-continuous-spin-720.html">London Continuous Spin 720°</a></li>
@@ -238,12 +254,18 @@
         <div class="category-card reveal">
           <a class="category-card__clip" href="elements/solo-technical.html">
             <div class="category-card__face">
-              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="r1" cx="50" cy="50" r="14"></circle>
+                <circle class="r2" cx="50" cy="50" r="14"></circle>
+                <circle class="r3" cx="50" cy="50" r="14"></circle>
+              </svg>
+
               <span class="category-card__title">Elements — Solo Technical</span>
               <span class="category-card__count">9 elements</span>
             </div>
           </a>
           <ul class="category-card__list">
+            <li class="category-card__list-header"><a href="elements/solo-technical.html">Elements — Solo Technical</a></li>
             <li><a href="elements/thrust-continuous-spin-720.html">Thrust Continuous Spin 720°</a></li>
             <li><a href="elements/thrust-continuous-spin-360.html">Thrust Continuous Spin 360°</a></li>
             <li><a href="elements/combined-spin-1080.html">Combined Spin 1080°</a></li>
@@ -258,12 +280,18 @@
         <div class="category-card reveal">
           <a class="category-card__clip" href="elements/duet-technical.html">
             <div class="category-card__face">
-              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="r1" cx="50" cy="50" r="14"></circle>
+                <circle class="r2" cx="50" cy="50" r="14"></circle>
+                <circle class="r3" cx="50" cy="50" r="14"></circle>
+              </svg>
+
               <span class="category-card__title">Elements — Duet Technical</span>
               <span class="category-card__count">9 elements</span>
             </div>
           </a>
           <ul class="category-card__list">
+            <li class="category-card__list-header"><a href="elements/duet-technical.html">Elements — Duet Technical</a></li>
             <li><a href="elements/walkover-back-closing-duet-360.html">Walkover Back Closing 360°</a></li>
             <li><a href="elements/walkover-back-closing-duet-180.html">Walkover Back Closing 180°</a></li>
             <li><a href="elements/rocket-split-alternating.html">Rocket Split Alternating Legs</a></li>
@@ -278,12 +306,18 @@
         <div class="category-card reveal">
           <a class="category-card__clip" href="elements/mixed-duet-technical.html">
             <div class="category-card__face">
-              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="r1" cx="50" cy="50" r="14"></circle>
+                <circle class="r2" cx="50" cy="50" r="14"></circle>
+                <circle class="r3" cx="50" cy="50" r="14"></circle>
+              </svg>
+
               <span class="category-card__title">Elements — Mixed Duet Technical</span>
               <span class="category-card__count">5 elements</span>
             </div>
           </a>
           <ul class="category-card__list">
+            <li class="category-card__list-header"><a href="elements/mixed-duet-technical.html">Elements — Mixed Duet Technical</a></li>
             <li><a href="elements/rocket-split-twirl-spin.html">Rocket Split Twirl Spin 180°</a></li>
             <li><a href="elements/rocket-split-twirl-mixed.html">Rocket Split Twirl</a></li>
             <li><a href="elements/front-pike-vertical-360.html">Front Pike – Vertical 360°</a></li>
@@ -294,12 +328,18 @@
         <div class="category-card reveal">
           <a class="category-card__clip" href="elements/junior.html">
             <div class="category-card__face">
-              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
+              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="r1" cx="50" cy="50" r="14"></circle>
+                <circle class="r2" cx="50" cy="50" r="14"></circle>
+                <circle class="r3" cx="50" cy="50" r="14"></circle>
+              </svg>
+
               <span class="category-card__title">Elements — Team Technical</span>
               <span class="category-card__count">5 elements</span>
             </div>
           </a>
           <ul class="category-card__list">
+            <li class="category-card__list-header"><a href="elements/junior.html">Elements — Team Technical</a></li>
             <li><a href="elements/flying-fish-hybrid-spinning.html">Flying Fish Hybrid Spinning 180°</a></li>
             <li><a href="elements/vertical-full-twist.html">Vertical – Full Twist – Walkout</a></li>
             <li><a href="elements/two-fouette-rotations.html">Two Fouetté Rotations – Vertical</a></li>

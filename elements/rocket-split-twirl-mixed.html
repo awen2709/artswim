@@ -9,29 +9,129 @@
   <link rel="stylesheet" href="../style.css">
 </head>
 <body class="page--fade">
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <div class="container--nav">
       <a class="brand" href="../index.html">Sway</a>
-      <nav class="nav">
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="site-nav" role="navigation" aria-label="Main navigation">
         <ul class="nav__list">
-          <li><a href="../index.html">Home</a></li>
-          <li><a href="../library.html">Library</a></li>
+          <li class="dropdown dropdown--mega">
+            <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Library ▾</button>
+            <div class="dropdown__mega">
+              <div class="dropdown__col">
+                <a class="dropdown__heading" href="../figures.html">Figures</a>
+                <ul class="dropdown__menu">
+                  <li><a href="../figures/10u.html">10U</a></li>
+                  <li><a href="../figures/12u.html">12U</a></li>
+                  <li><a href="../figures/youth-13-15.html">13 - 15 (Youth)</a></li>
+                </ul>
+              </div>
+              <div class="dropdown__col">
+                <a class="dropdown__heading" href="../elements.html">Elements</a>
+                <ul class="dropdown__menu">
+                  <li><a href="../elements/solo-technical.html">Solo Technical</a></li>
+                  <li><a href="../elements/duet-technical.html">Duet Technical</a></li>
+                  <li><a href="../elements/mixed-duet-technical.html">Mixed Duet Technical</a></li>
+                  <li><a href="../elements/junior.html">Team Technical</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
           <li><a href="../contact.html">Contact</a></li>
         </ul>
+        <form class="nav-search" action="../search.html" method="get" role="search" aria-label="Search site">
+          <div class="search-form__field">
+            <input class="nav-search__input search-input" type="search" name="q" placeholder="Search…" aria-label="Search">
+            <button class="search-form__icon" type="submit" aria-label="Search">
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+              </svg>
+            </button>
+          </div>
+        </form>
       </nav>
     </div>
   </header>
 
   <main class="site-main">
-    <section>
-      <h1>1B – Rocket Split Twirl (DD: 2.5)</h1>
-      <p><a href="mixed-duet-technical.html">← Back to Mixed Duet Technical</a></p>
-      <p>Skill details and information coming soon.</p>
+    <section class="element-split">
+      <!-- auto:breadcrumbs -->
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol class="breadcrumbs__list">
+          <li class="breadcrumbs__item"><a href="../library.html">Library</a></li>
+          <li class="breadcrumbs__item"><a href="../elements.html">Elements</a></li>
+          <li class="breadcrumbs__item"><a href="mixed-duet-technical.html">Mixed Duet Technical</a></li>
+          <li class="breadcrumbs__item breadcrumbs__item--current" aria-current="page">1B</li>
+        </ol>
+      </nav>
+      <!-- /auto:breadcrumbs -->
+      <div class="trick-hero">
+        <span class="trick-hero__eyebrow">Elements — Mixed Duet Technical</span>
+        <h1>Rocket Split Twirl</h1>
+        <p class="trick-hero__badges">
+          <span class="element-header__code">1B</span>
+          <span class="element-header__dd">DD 2.5</span>
+        </p>
+      </div>
+      <div class="trick-media">
+        <div class="trick-media__panel">
+          <div class="trick-media__icon-tile">
+            <svg class="trick-media__icon ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="r1" cx="50" cy="50" r="14"></circle>
+              <circle class="r2" cx="50" cy="50" r="14"></circle>
+              <circle class="r3" cx="50" cy="50" r="14"></circle>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="element-sequence">
+        <h2>Movement sequence</h2>
+        <ol class="element-sequence__list">
+          <li>Rocket Split Twirl</li>
+        </ol>
+      </div>
+      <div class="element-body">
+        <div class="tips">
+          <h2>Tips &amp; Ticks</h2>
+          <p class="placeholder">Tips placeholder — add coaching points, common mistakes, and cues here.</p>
+        </div>
+        <!-- auto:related-tricks -->
+        <div class="related-tricks">
+          <h3>More in Mixed Duet Technical</h3>
+          <ul class="skill-list">
+            <li><a href="rocket-split-twirl-spin.html">Rocket Split Twirl Spin 180° (DD: 2.7)</a></li>
+            <li><a href="front-pike-vertical-360.html">Front Pike – Vertical 360° Rotation – Full Twist to Bent Knee – Continuous Spin 720° (DD: 2.4)</a></li>
+            <li><a href="front-pike-vertical-180.html">Front Pike – Vertical 180° Rotation – 1/2 Twist to Bent Knee – Continuous Spin 720° (DD: 2.2)</a></li>
+            <li><a href="manta-ray-half-twist.html">Manta Ray Half Twist (DD: 3.0)</a></li>
+          </ul>
+        </div>
+        <!-- /auto:related-tricks -->
+      </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>© Sway</p>
+    <div class="site-footer__cols">
+      <div class="site-footer__col reveal">
+        <a class="brand" href="../index.html">Sway</a>
+        <p class="site-footer__tagline">A curated catalogue of artistic swimming figures and elements, organized by age and discipline.</p>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Explore</span>
+        <a href="../figures.html">Figures</a>
+        <a href="../elements.html">Elements</a>
+        <a href="../library.html">Library</a>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Contact</span>
+        <a href="../contact.html">Get in touch</a>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© Sway</p>
   </footer>
+  <script src="../script.js" defer></script>
 </body>
 </html>

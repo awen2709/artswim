@@ -19,39 +19,140 @@
   <header class="site-header" role="banner">
     <div class="container--nav">
       <a class="brand" href="index.html">Sway</a>
-      <nav class="nav" role="navigation" aria-label="Main navigation">
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="site-nav" role="navigation" aria-label="Main navigation">
         <ul class="nav__list">
-          <li><a href="index.html">Home</a></li>
-          <li class="dropdown">
+          <li class="dropdown dropdown--mega">
             <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Library ▾</button>
-            <ul class="dropdown__menu">
-              <li><a href="figures.html">Figures</a></li>
-              <li><a href="elements.html">Elements</a></li>
-            </ul>
+            <div class="dropdown__mega">
+              <div class="dropdown__col">
+                <a class="dropdown__heading" href="figures.html">Figures</a>
+                <ul class="dropdown__menu">
+                  <li><a href="figures/10u.html">10U</a></li>
+                  <li><a href="figures/12u.html">12U</a></li>
+                  <li><a href="figures/youth-13-15.html">13 - 15 (Youth)</a></li>
+                </ul>
+              </div>
+              <div class="dropdown__col">
+                <a class="dropdown__heading" href="elements.html">Elements</a>
+                <ul class="dropdown__menu">
+                  <li><a href="elements/solo-technical.html">Solo Technical</a></li>
+                  <li><a href="elements/duet-technical.html">Duet Technical</a></li>
+                  <li><a href="elements/mixed-duet-technical.html">Mixed Duet Technical</a></li>
+                  <li><a href="elements/junior.html">Team Technical</a></li>
+                </ul>
+              </div>
+            </div>
           </li>
           <li><a href="contact.html">Contact</a></li>
         </ul>
+        <form class="nav-search" action="search.html" method="get" role="search" aria-label="Search site">
+          <div class="search-form__field">
+            <input class="nav-search__input search-input" type="search" name="q" placeholder="Search…" aria-label="Search">
+            <button class="search-form__icon" type="submit" aria-label="Search">
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+              </svg>
+            </button>
+          </div>
+        </form>
       </nav>
     </div>
   </header>
 
   <main class="site-main">
+    <!-- auto:breadcrumbs -->
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol class="breadcrumbs__list">
+        <li class="breadcrumbs__item"><a href="library.html">Library</a></li>
+        <li class="breadcrumbs__item breadcrumbs__item--current" aria-current="page">Figures</li>
+      </ol>
+    </nav>
+    <!-- /auto:breadcrumbs -->
+
     <section class="search-hero reveal">
       <h1>Figures</h1>
       <p>Browse all figure categories by age group.</p>
     </section>
 
     <section class="library-links reveal">
-      <div class="grid">
-        <a class="card reveal" href="figures/10u.html">Figures — 10U</a>
-        <a class="card reveal" href="figures/12u.html">Figures — 12U</a>
-        <a class="card reveal" href="figures/youth-13-15.html">Figures — 13 - 15 (Youth)</a>
-      </div>
+          <h2>Browse by category</h2>
+        <!-- auto:category-grid -->
+        <div class="category-features">
+        <a class="category-feature reveal" href="figures/10u.html">
+          <span class="category-feature__icon">
+            <svg class="ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="r1" cx="50" cy="50" r="14"></circle>
+              <circle class="r2" cx="50" cy="50" r="14"></circle>
+              <circle class="r3" cx="50" cy="50" r="14"></circle>
+            </svg>
+          </span>
+          <span class="category-feature__body">
+            <span class="category-feature__count">6 figures</span>
+            <span class="category-feature__title">10U</span>
+            <span class="category-feature__blurb">Figures for swimmers competing in the 10-and-under age category, focusing on foundational body positions and single rotations.</span>
+            <span class="category-feature__preview">Barracuda · Ballet Leg Single · Neptunus + 3 more</span>
+          </span>
+          <span class="category-feature__cta">Browse &rarr;</span>
+        </a>
+        <a class="category-feature reveal" href="figures/12u.html">
+          <span class="category-feature__icon">
+            <svg class="ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="r1" cx="50" cy="50" r="14"></circle>
+              <circle class="r2" cx="50" cy="50" r="14"></circle>
+              <circle class="r3" cx="50" cy="50" r="14"></circle>
+            </svg>
+          </span>
+          <span class="category-feature__body">
+            <span class="category-feature__count">8 figures</span>
+            <span class="category-feature__title">12U</span>
+            <span class="category-feature__blurb">Figures for the 12-and-under age category, building on 10U fundamentals with more advanced spins and transitions.</span>
+            <span class="category-feature__preview">Swordfish · Straight Ballet Leg · Barracuda + 5 more</span>
+          </span>
+          <span class="category-feature__cta">Browse &rarr;</span>
+        </a>
+        <a class="category-feature reveal" href="figures/youth-13-15.html">
+          <span class="category-feature__icon">
+            <svg class="ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="r1" cx="50" cy="50" r="14"></circle>
+              <circle class="r2" cx="50" cy="50" r="14"></circle>
+              <circle class="r3" cx="50" cy="50" r="14"></circle>
+            </svg>
+          </span>
+          <span class="category-feature__body">
+            <span class="category-feature__count">12 figures</span>
+            <span class="category-feature__title">13 - 15 (Youth)</span>
+            <span class="category-feature__blurb">Figures for swimmers aged 13-15, the most advanced age-group figures before senior-level competition.</span>
+            <span class="category-feature__preview">Ipanema Spinning 180° · Saturn · London Continuous Spin 720° + 9 more</span>
+          </span>
+          <span class="category-feature__cta">Browse &rarr;</span>
+        </a>
+        </div>
+        <!-- /auto:category-grid -->
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>© Sway</p>
+    <div class="site-footer__cols">
+      <div class="site-footer__col reveal">
+        <a class="brand" href="index.html">Sway</a>
+        <p class="site-footer__tagline">A curated catalogue of artistic swimming figures and elements, organized by age and discipline.</p>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Explore</span>
+        <a href="figures.html">Figures</a>
+        <a href="elements.html">Elements</a>
+        <a href="library.html">Library</a>
+      </div>
+      <div class="site-footer__col reveal">
+        <span class="site-footer__heading">Contact</span>
+        <a href="contact.html">Get in touch</a>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© Sway</p>
   </footer>
   <script src="script.js" defer></script>
 </body>
