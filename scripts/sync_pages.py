@@ -263,18 +263,19 @@ def current_page_label(entry, page_text):
 # figures.html / elements.html category-card regeneration
 # ---------------------------------------------------------------------------
 
-RIPPLE_DEFS = (
-    '  <!-- Ripple-ring icon sprite, reused via <use> on every category card below -->\n'
-    '  <svg class="pool-sprites" aria-hidden="true" focusable="false">\n'
-    '    <defs>\n'
-    '      <g id="ripple-rings">\n'
-    '        <circle class="r1" cx="50" cy="50" r="14"></circle>\n'
-    '        <circle class="r2" cx="50" cy="50" r="14"></circle>\n'
-    '        <circle class="r3" cx="50" cy="50" r="14"></circle>\n'
-    '      </g>\n'
-    '    </defs>\n'
-    '  </svg>\n'
-)
+def ripple_icon_svg(indent, classes):
+    """Inline circles rather than a shared <defs> + <use> — CSS descendant
+    selectors like `.ripple-icon circle` and per-circle animation classes
+    don't reliably match through a <use> reference's shadow content, which
+    is why every ripple icon used to render as a plain solid black dot."""
+    return (
+        f'{indent}<svg class="{classes}" viewBox="0 0 100 100" aria-hidden="true">\n'
+        f'{indent}  <circle class="r1" cx="50" cy="50" r="14"></circle>\n'
+        f'{indent}  <circle class="r2" cx="50" cy="50" r="14"></circle>\n'
+        f'{indent}  <circle class="r3" cx="50" cy="50" r="14"></circle>\n'
+        f'{indent}</svg>\n'
+    )
+
 
 GRID_RE = re.compile(r'[ \t]*<div class="grid">.*?</div>\n', re.S)
 AUTO_GRID_RE = re.compile(
@@ -282,37 +283,43 @@ AUTO_GRID_RE = re.compile(
 )
 
 
-def category_card_html(category_key, skills):
+PREVIEW_COUNT = 3
+
+
+def category_feature_html(category_key, skills):
     meta = CATEGORIES[category_key]
     entries = [s for s in skills if s["category"] == category_key]
     unit = "figures" if meta["kind"] == "figure" else "elements"
-    items = [
-        f'                  <li><a href="{e["url"]}">{e["title"]}</a></li>'
-        for e in entries
-    ]
+
+    preview_names = [e["title"] for e in entries[:PREVIEW_COUNT]]
+    preview = " · ".join(preview_names)
+    remaining = len(entries) - len(preview_names)
+    if remaining > 0:
+        preview += f" + {remaining} more"
+
+    icon_svg = ripple_icon_svg("            ", "ripple-icon")
     return (
-        '        <div class="category-card reveal">\n'
-        f'          <a class="category-card__clip" href="{meta["hub_url"]}">\n'
-        '            <div class="category-card__face">\n'
-        '              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>\n'
-        f'              <span class="category-card__title">{meta["name"]}</span>\n'
-        f'              <span class="category-card__count">{len(entries)} {unit}</span>\n'
-        '            </div>\n'
-        '          </a>\n'
-        '          <ul class="category-card__list">\n'
-        f'            <li class="category-card__list-header"><a href="{meta["hub_url"]}">{meta["name"]}</a></li>\n'
-        + "\n".join(items) + "\n"
-        '          </ul>\n'
-        '        </div>\n'
-    )
+        '        <a class="category-feature reveal" href="{0}">\n'
+        '          <span class="category-feature__icon">\n'
+        '{icon}'
+        '          </span>\n'
+        '          <span class="category-feature__body">\n'
+        '            <span class="category-feature__count">{1} {2}</span>\n'
+        '            <span class="category-feature__title">{3}</span>\n'
+        '            <span class="category-feature__blurb">{4}</span>\n'
+        '            <span class="category-feature__preview">{5}</span>\n'
+        '          </span>\n'
+        '          <span class="category-feature__cta">Browse &rarr;</span>\n'
+        '        </a>\n'
+    ).format(meta["hub_url"], len(entries), unit, meta["name"], meta["blurb"], preview, icon=icon_svg)
 
 
 def regen_category_landing(path, category_order, skills):
     text = read(path)
-    cards = "".join(category_card_html(key, skills) for key in category_order)
+    cards = "".join(category_feature_html(key, skills) for key in category_order)
     block = (
         '        <!-- auto:category-grid -->\n'
-        '        <div class="category-grid">\n'
+        '        <div class="category-features">\n'
         f'{cards}'
         '        </div>\n'
         '        <!-- /auto:category-grid -->\n'
@@ -325,22 +332,18 @@ def regen_category_landing(path, category_order, skills):
         m = GRID_RE.search(text)
         assert m, f"{path}: could not find .grid block to replace"
         new_text = GRID_RE.sub(block, text, count=1)
-        # add heading + sprite defs on first run
+        # add heading on first run
         new_text = new_text.replace(
             '<section class="library-links reveal">\n',
             '<section class="library-links reveal">\n          <h2>Browse by category</h2>\n',
             1,
         )
-        if 'id="ripple-rings"' not in new_text:
-            anchor = '  <header class="site-header" role="banner">'
-            assert anchor in new_text, f"{path}: could not find header anchor for sprite defs"
-            new_text = new_text.replace(anchor, RIPPLE_DEFS + anchor, 1)
 
     changed = write(path, new_text, text)
 
     # verification
     result_text = read(path) if not DRY_RUN and changed else new_text
-    card_count = result_text.count('class="category-card reveal"')
+    card_count = result_text.count('class="category-feature reveal"')
     assert card_count == len(category_order), f"{path}: expected {len(category_order)} cards, found {card_count}"
     return changed
 
@@ -454,22 +457,49 @@ MEDIA_LI_ITEM_RE = re.compile(r'<li><a href="([^"]+)"[^>]*>([^<]+)</a></li>')
 YOUTUBE_URL_RE = re.compile(r'^https://www\.youtube\.com/watch\?v=([\w-]+)$')
 VIDEO_ID_RE = re.compile(r'^[\w-]{6,}$')
 
+HEADER_AND_TOP_RE = re.compile(
+    r'( *)<header class="figure-header">\s*<h1>(.*?)</h1>\s*</header>\n'
+    r'(?:\s*<!--.*?-->\n)?'
+    r'\s*<div class="figure-top"[^>]*>\n(.*?)\n\s*</div>\n',
+    re.S,
+)
+IMG_TAG_RE = re.compile(r'<img src="([^"]+)" alt="([^"]*)" class="figure-image">')
+
+def icon_tile_html(indent):
+    icon_svg = ripple_icon_svg(indent + "      ", "trick-media__icon ripple-icon")
+    return (
+        f'{indent}  <div class="trick-media__panel">\n'
+        f'{indent}    <div class="trick-media__icon-tile">\n'
+        f'{icon_svg}'
+        f'{indent}    </div>\n'
+        f'{indent}  </div>\n'
+    )
+
 
 def upgrade_figure_page(path, entry, skills):
     """Not every figure page has both an Instagram and a YouTube link (3 of
     26 only have Instagram) — embed a YouTube video when one exists, but
     never require it, and always keep every original link verbatim in the
-    fallback list regardless of platform."""
+    fallback list regardless of platform. The real assets are official
+    figure description sheets (text + diagram + scoring table), not
+    photos — they're framed at a readable width in .trick-media rather
+    than cropped into a fixed box, so a page with both an image and a
+    video shows two side-by-side panels instead of stacking awkwardly."""
     original = read(path)
-    if "media-links__fallback" in original:
+    if "trick-hero" in original:
         return False  # already upgraded
 
-    m = MEDIA_LINKS_BLOCK_RE.search(original)
-    assert m, f"{path}: could not find .media-links block"
-    indent = m.group(1)
-    block_text = m.group(0)
+    text = original
 
-    items = MEDIA_LI_ITEM_RE.findall(block_text)  # [(href, label), ...]
+    m = HEADER_AND_TOP_RE.search(text)
+    assert m, f"{path}: could not find the figure-header + figure-top block"
+    indent, name, top_inner = m.group(1), m.group(2), m.group(3)
+    img_m = IMG_TAG_RE.search(top_inner)
+
+    mm = MEDIA_LINKS_BLOCK_RE.search(text)
+    assert mm, f"{path}: could not find .media-links block"
+    media_indent = mm.group(1)
+    items = MEDIA_LI_ITEM_RE.findall(mm.group(0))  # [(href, label), ...]
     assert items, f"{path}: no media links found in .media-links"
 
     video_id = None
@@ -481,41 +511,62 @@ def upgrade_figure_page(path, entry, skills):
     if video_id:
         assert VIDEO_ID_RE.match(video_id), f"{path}: suspicious YouTube video id {video_id!r}"
 
-    embed_html = ""
+    panels = []
+    if img_m:
+        src, alt = img_m.group(1), img_m.group(2)
+        panels.append(
+            f'{indent}  <div class="trick-media__panel">\n'
+            f'{indent}    <img src="{src}" alt="{alt}">\n'
+            f'{indent}    <a class="trick-media__zoom" href="{src}" target="_blank" rel="noopener noreferrer">View full size &#8599;</a>\n'
+            f'{indent}  </div>\n'
+        )
     if video_id:
-        embed_html = (
-            f'{indent}  <div class="media-embed">\n'
+        panels.append(
+            f'{indent}  <div class="trick-media__panel">\n'
             f'{indent}    <div class="media-embed__video">\n'
             f'{indent}      <iframe src="https://www.youtube.com/embed/{video_id}" title="YouTube — {entry["title"]}" loading="lazy" allowfullscreen></iframe>\n'
             f'{indent}    </div>\n'
             f'{indent}  </div>\n'
         )
+    if not img_m:
+        panels.append(icon_tile_html(indent))
+    assert panels, f"{path}: no media panels built (no image, no video, no fallback icon)"
 
+    hero_and_media = (
+        f'{indent}<div class="trick-hero">\n'
+        f'{indent}  <span class="trick-hero__eyebrow">{entry["category"]}</span>\n'
+        f'{indent}  <h1>{name}</h1>\n'
+        f'{indent}</div>\n'
+        f'{indent}<div class="trick-media">\n'
+        + "".join(panels)
+        + f'{indent}</div>\n'
+    )
+
+    text = text[:m.start()] + hero_and_media + text[m.end():]
+
+    mm2 = MEDIA_LINKS_BLOCK_RE.search(text)
+    assert mm2, f"{path}: could not find .media-links block after hero rebuild"
     fallback_items = "\n".join(
-        f'{indent}    <li><a href="{href}" target="_blank" rel="noopener noreferrer">{label}</a></li>'
+        f'{media_indent}    <li><a href="{href}" target="_blank" rel="noopener noreferrer">{label}</a></li>'
         for href, label in items
     )
-
-    related_block = related_tricks_html(entry, skills, indent=indent)
-
-    new_block = (
-        f'{indent}<div class="media-links">\n'
-        f'{indent}  <h3>Related media</h3>\n'
-        f'{embed_html}'
-        f'{indent}  <ul class="media-links__fallback">\n'
+    related_block = related_tricks_html(entry, skills, indent=media_indent)
+    new_media_block = (
+        f'{media_indent}<div class="media-links">\n'
+        f'{media_indent}  <h3>Related media</h3>\n'
+        f'{media_indent}  <ul class="media-links__fallback">\n'
         f'{fallback_items}\n'
-        f'{indent}  </ul>\n'
-        f'{indent}</div>\n'
+        f'{media_indent}  </ul>\n'
+        f'{media_indent}</div>\n'
         f'{related_block}'
     )
-
-    new_text = original[:m.start()] + new_block + original[m.end():]
+    text = text[:mm2.start()] + new_media_block + text[mm2.end():]
 
     # losslessness check: every original link must survive verbatim
     for href, _label in items:
-        assert href in new_text, f"{path}: media URL {href!r} lost during upgrade"
+        assert href in text, f"{path}: media URL {href!r} lost during upgrade"
 
-    return write(path, new_text, original)
+    return write(path, text, original)
 
 
 SECTION_H1_RE = re.compile(r'[ \t]*<h1>(.*?)</h1>\n', re.S)
@@ -525,8 +576,12 @@ COMING_SOON_RE = re.compile(
 
 
 def upgrade_element_page(path, entry, skills):
+    """Elements have no real media at all, so their hero media slot is
+    always the decorative ripple-icon tile — the real content here is the
+    movement sequence, shown full-width right below the hero rather than
+    squeezed into a narrow column."""
     original = read(path)
-    if "element-split" in original:
+    if "trick-hero" in original:
         return False  # already upgraded
 
     assert "<section>\n" in original, f"{path}: expected a bare <section> to upgrade"
@@ -548,26 +603,30 @@ def upgrade_element_page(path, entry, skills):
         rebuilt = f"{code} – {rebuilt}"
     assert rebuilt == raw_title, f"{path}: lossy title parse: {raw_title!r} -> {rebuilt!r}"
 
-    meta_block = ""
+    badges_block = ""
     if code or dd:
         spans = []
         if code:
             spans.append(f'          <span class="element-header__code">{code}</span>')
         if dd:
             spans.append(f'          <span class="element-header__dd">DD {dd}</span>')
-        meta_block = (
-            '        <p class="element-header__meta">\n'
+        badges_block = (
+            '        <p class="trick-hero__badges">\n'
             + "\n".join(spans) + "\n"
             '        </p>\n'
         )
 
-    new_header = (
-        '      <header class="element-header">\n'
+    hero_and_media = (
+        '      <div class="trick-hero">\n'
+        f'        <span class="trick-hero__eyebrow">{entry["category"]}</span>\n'
         f'        <h1>{steps_text}</h1>\n'
-        f'{meta_block}'
-        '      </header>\n'
+        f'{badges_block}'
+        '      </div>\n'
+        '      <div class="trick-media">\n'
+        + icon_tile_html("      ")
+        + '      </div>\n'
     )
-    text = SECTION_H1_RE.sub(lambda _m: new_header, text, count=1)
+    text = SECTION_H1_RE.sub(lambda _m: hero_and_media, text, count=1)
 
     seq_items = "\n".join(f'          <li>{s}</li>' for s in steps)
     sequence_block = (
@@ -586,10 +645,6 @@ def upgrade_element_page(path, entry, skills):
         '        <div class="tips">\n'
         '          <h2>Tips &amp; Ticks</h2>\n'
         '          <p class="placeholder">Tips placeholder — add coaching points, common mistakes, and cues here.</p>\n'
-        '        </div>\n'
-        '        <div class="media-links">\n'
-        '          <h3>Related media</h3>\n'
-        '          <p class="media-links__empty">No media linked yet for this element.</p>\n'
         '        </div>\n'
         f'{related_block}'
         '      </div>\n'

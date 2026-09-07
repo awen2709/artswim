@@ -348,6 +348,14 @@ body{
   .figure-card__icon{animation:none}
 }
 
+/* Ripple-ring icon fallback (replaces the old swimmer-pose stick figures
+   everywhere a card has no real asset) — the wiggle animation above was
+   built for the stick-figure shape, so turn it off here and let the
+   ripple's own expanding-rings animation (on its child circles) run
+   instead */
+.figure-card__icon.ripple-icon{animation:none;width:66%;height:66%}
+.figure-card:hover .figure-card__icon.ripple-icon{animation:none}
+
 .figure-grid > .figure-card:nth-child(4n+1) .figure-card__icon{color:var(--accent-cyan)}
 .figure-grid > .figure-card:nth-child(4n+2) .figure-card__icon{color:var(--accent-teal)}
 .figure-grid > .figure-card:nth-child(4n+3) .figure-card__icon{color:var(--accent-blue)}
@@ -474,6 +482,55 @@ body{
 .category-card.reveal{transition-delay:calc(var(--card-index, 0) * 70ms)}
 .category-card.reveal.is-visible{transition-delay:0}
 
+/* Category "feature rows" for figures.html/elements.html — a small grid of
+   3-4 .category-card tiles looked sparse and left most of the page empty,
+   so these get their own full-width row treatment instead: one big card
+   per category, icon medallion + copy + a live preview of a few tricks in
+   it, filling the width regardless of how few categories there are. */
+.category-features{display:flex;flex-direction:column;gap:16px;margin-top:12px}
+.category-feature{display:flex;align-items:center;gap:24px;padding:24px 28px;background:linear-gradient(180deg, #ffffff, var(--bg));border:1px solid rgba(101,159,224,0.18);border-radius:18px;text-decoration:none;color:var(--text);box-shadow:0 6px 20px rgba(13,36,48,0.05);position:relative;overflow:hidden;transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease}
+.category-feature:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(13,36,48,0.14), 0 0 30px rgba(101,207,224,0.22);border-color:rgba(101,207,224,0.5)}
+.category-feature__icon{flex-shrink:0;width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+.category-feature__icon .ripple-icon{width:52%;height:52%}
+.category-feature__body{flex:1;min-width:0;display:flex;flex-direction:column}
+.category-feature__count{display:block;font-size:0.76rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--accent-teal)}
+.category-feature__title{display:block;margin:2px 0 6px;font-size:1.35rem;font-weight:600}
+.category-feature__blurb{display:block;margin:0;color:var(--muted);max-width:64ch}
+.category-feature__preview{display:block;margin-top:8px;font-size:0.82rem;color:var(--muted);opacity:0.85}
+.category-feature__cta{flex-shrink:0;font-weight:600;color:var(--accent);white-space:nowrap;transition:color 160ms ease}
+.category-feature:hover .category-feature__cta{color:var(--accent-blue)}
+
+.category-features > .category-feature:nth-child(4n+1) .category-feature__icon{background:linear-gradient(135deg, var(--accent-cyan), var(--accent-blue))}
+.category-features > .category-feature:nth-child(4n+2) .category-feature__icon{background:linear-gradient(135deg, var(--accent-teal), var(--accent-cyan))}
+.category-features > .category-feature:nth-child(4n+3) .category-feature__icon{background:linear-gradient(135deg, var(--accent-blue), var(--accent-indigo))}
+.category-features > .category-feature:nth-child(4n) .category-feature__icon{background:linear-gradient(135deg, var(--accent-indigo), var(--accent-teal))}
+
+@media (max-width:640px){
+  .category-feature{flex-wrap:wrap;padding:20px}
+  .category-feature__cta{width:100%;text-align:right}
+}
+
+/* Individual trick page hero: eyebrow + title (+ code/DD badges on element
+   pages) above a media row. The media row holds 1-2 panels — the real
+   asset image (these are official figure description sheets, not photos,
+   so they're framed at a readable width rather than cropped to a fixed
+   box) and/or an embedded YouTube video when the page has one; pages with
+   neither show a decorative icon tile instead. flex + a shared max-width
+   means 1 or 2 panels both end up sensibly sized and centered. */
+.trick-hero{margin:8px 0 12px}
+.trick-hero__eyebrow{display:inline-block;text-transform:uppercase;letter-spacing:0.06em;font-size:0.76rem;font-weight:700;color:var(--accent-teal);margin-bottom:6px}
+.trick-hero__badges{display:flex;gap:8px;margin:10px 0 0}
+
+.trick-media{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin:22px 0}
+.trick-media__panel{flex:1 1 320px;max-width:520px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.trick-media__panel img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid rgba(13,36,48,0.1);box-shadow:0 12px 32px rgba(13,36,48,0.14)}
+.trick-media__zoom{font-size:0.82rem;color:var(--muted);text-decoration:none}
+.trick-media__zoom:hover{color:var(--accent)}
+.trick-media__panel .media-embed__video{width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:0 12px 32px rgba(13,36,48,0.14)}
+.trick-media__panel .media-embed__video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.trick-media__icon-tile{width:100%;aspect-ratio:4/3;border-radius:16px;background:linear-gradient(180deg, rgba(101,207,224,0.18), rgba(255,255,255,0.6));border:1px solid rgba(101,159,224,0.18);display:flex;align-items:center;justify-content:center}
+.trick-media__icon{width:46%;height:46%;color:var(--accent-teal);overflow:visible}
+
 /* Responsive adjustments */
 @media (max-width:760px){
   .container--nav{padding:10px;position:relative}
@@ -523,12 +580,9 @@ a:hover{color:var(--accent-blue)}
   .contact-form-embed iframe{height:700px}
 }
 
-/* Figure page: split top/bottom layout for image + tips/media */
-.figure-split{display:flex;flex-direction:column;gap:16px;min-height:64vh}
-.figure-header{margin-bottom:6px}
-.figure-top{flex:1;display:flex}
+/* Figure page: hero (title) + media row, then a tips/media/related row */
+.figure-split{display:flex;flex-direction:column;gap:16px}
 .figure-bottom{flex:1;display:flex;flex-direction:column;gap:12px}
-.figure-image{flex:1;border-radius:10px;background:linear-gradient(180deg, rgba(101,207,224,0.12), rgba(255,255,255,0.6));border:1px dashed rgba(13,36,48,0.18);display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:600;padding:18px}
 .tips{padding:8px}
 .tips .placeholder{color:var(--muted);background:rgba(101,207,224,0.08);padding:12px;border-radius:8px}
 .media-links{padding:8px}
@@ -538,13 +592,8 @@ a:hover{color:var(--accent-blue)}
 
 /* Embedded YouTube video (real URL already present on every figure page) —
    standard responsive-iframe pattern, fixed 16:9 aspect ratio */
-.media-embed{margin-top:8px}
 .media-embed__video{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:rgba(13,36,48,0.06)}
 .media-embed__video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-
-/* Honest "nothing here yet" state for element pages, which have no real
-   media data to embed — styled like the .tips placeholder, not hidden */
-.media-links__empty{color:var(--muted);background:rgba(101,207,224,0.08);padding:12px;border-radius:8px;margin:8px 0 0}
 
 /* Cross-links to sibling tricks in the same category, shown on every
    individual page — reuses .skill-list for the link styling itself */
@@ -560,8 +609,6 @@ a:hover{color:var(--accent-blue)}
    the old bare heading + "coming soon" placeholder. Shares .tips,
    .media-links and .related-tricks styling with figure pages. */
 .element-split{display:flex;flex-direction:column;gap:16px}
-.element-header{margin-bottom:6px}
-.element-header__meta{display:flex;gap:8px;margin-top:6px}
 .element-header__code{display:inline-block;background:rgba(13,36,48,0.08);color:var(--muted);font-weight:700;font-size:0.82rem;padding:3px 10px;border-radius:999px}
 .element-header__dd{display:inline-block;background:rgba(49,168,187,0.14);color:var(--accent-teal);font-weight:700;font-size:0.82rem;padding:3px 10px;border-radius:999px}
 .element-sequence{padding:16px;background:linear-gradient(180deg, rgba(101,207,224,0.1), rgba(255,255,255,0.55));border:1px solid rgba(13,36,48,0.1);border-radius:10px}

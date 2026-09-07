@@ -16,16 +16,6 @@
     <div class="particle particle-3"></div>
     <div class="particle particle-4"></div>
   </div>
-  <!-- Ripple-ring icon sprite, reused via <use> on every category card below -->
-  <svg class="pool-sprites" aria-hidden="true" focusable="false">
-    <defs>
-      <g id="ripple-rings">
-        <circle class="r1" cx="50" cy="50" r="14"></circle>
-        <circle class="r2" cx="50" cy="50" r="14"></circle>
-        <circle class="r3" cx="50" cy="50" r="14"></circle>
-      </g>
-    </defs>
-  </svg>
   <header class="site-header" role="banner">
     <div class="container--nav">
       <a class="brand" href="index.html">Sway</a>
@@ -91,69 +81,55 @@
     <section class="library-links reveal">
           <h2>Browse by category</h2>
         <!-- auto:category-grid -->
-        <div class="category-grid">
-        <div class="category-card reveal">
-          <a class="category-card__clip" href="figures/10u.html">
-            <div class="category-card__face">
-              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
-              <span class="category-card__title">10U</span>
-              <span class="category-card__count">6 figures</span>
-            </div>
-          </a>
-          <ul class="category-card__list">
-            <li class="category-card__list-header"><a href="figures/10u.html">10U</a></li>
-                  <li><a href="figures/barracuda.html">Barracuda</a></li>
-                  <li><a href="figures/ballet-leg-single.html">Ballet Leg Single</a></li>
-                  <li><a href="figures/neptunus.html">Neptunus</a></li>
-                  <li><a href="figures/blossom-walkout.html">Blossom Walkout</a></li>
-                  <li><a href="figures/surface-prawn.html">Surface Prawn</a></li>
-                  <li><a href="figures/kipnus.html">Kipnus</a></li>
-          </ul>
-        </div>
-        <div class="category-card reveal">
-          <a class="category-card__clip" href="figures/12u.html">
-            <div class="category-card__face">
-              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
-              <span class="category-card__title">12U</span>
-              <span class="category-card__count">8 figures</span>
-            </div>
-          </a>
-          <ul class="category-card__list">
-            <li class="category-card__list-header"><a href="figures/12u.html">12U</a></li>
-                  <li><a href="figures/swordfish.html">Swordfish</a></li>
-                  <li><a href="figures/straight-ballet-leg.html">Straight Ballet Leg</a></li>
-                  <li><a href="figures/barracuda-12u.html">Barracuda</a></li>
-                  <li><a href="figures/front-ariana.html">Front Ariana</a></li>
-                  <li><a href="figures/tower.html">Tower</a></li>
-                  <li><a href="figures/swanita-spinning-180.html">Swanita Spinning 180°</a></li>
-                  <li><a href="figures/water-drop.html">Water Drop</a></li>
-                  <li><a href="figures/kip.html">Kip</a></li>
-          </ul>
-        </div>
-        <div class="category-card reveal">
-          <a class="category-card__clip" href="figures/youth-13-15.html">
-            <div class="category-card__face">
-              <svg class="category-card__icon ripple-icon" viewBox="0 0 100 100"><use href="#ripple-rings"></use></svg>
-              <span class="category-card__title">13 - 15 (Youth)</span>
-              <span class="category-card__count">12 figures</span>
-            </div>
-          </a>
-          <ul class="category-card__list">
-            <li class="category-card__list-header"><a href="figures/youth-13-15.html">13 - 15 (Youth)</a></li>
-                  <li><a href="figures/ipanema-spinning-180.html">Ipanema Spinning 180°</a></li>
-                  <li><a href="figures/saturn.html">Saturn</a></li>
-                  <li><a href="figures/london-continuous-spin-720.html">London Continuous Spin 720°</a></li>
-                  <li><a href="figures/flamingo-bent-knee.html">Flamingo Bent Knee Combined Spin 360° + 360°</a></li>
-                  <li><a href="figures/venus.html">Venus</a></li>
-                  <li><a href="figures/barracuda-airborne.html">Barracuda Airborne Split, Spin Up 180°</a></li>
-                  <li><a href="figures/flying-fish-spinning-360.html">Flying Fish Spinning 360°</a></li>
-                  <li><a href="figures/whip-continuous-spin-720.html">Whip Continuous Spin 720°</a></li>
-                  <li><a href="figures/albatross-spin-up-360.html">Albatross Spin Up 360°</a></li>
-                  <li><a href="figures/cyclone-open-180.html">Cyclone, Open 180°</a></li>
-                  <li><a href="figures/walkover-back-closing-360.html">Walkover Back Closing 360°</a></li>
-                  <li><a href="figures/swordfish-straight-leg-ariana.html">Swordfish Straight Leg Ariana Rotation</a></li>
-          </ul>
-        </div>
+        <div class="category-features">
+        <a class="category-feature reveal" href="figures/10u.html">
+          <span class="category-feature__icon">
+            <svg class="ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="r1" cx="50" cy="50" r="14"></circle>
+              <circle class="r2" cx="50" cy="50" r="14"></circle>
+              <circle class="r3" cx="50" cy="50" r="14"></circle>
+            </svg>
+          </span>
+          <span class="category-feature__body">
+            <span class="category-feature__count">6 figures</span>
+            <span class="category-feature__title">10U</span>
+            <span class="category-feature__blurb">Figures for swimmers competing in the 10-and-under age category, focusing on foundational body positions and single rotations.</span>
+            <span class="category-feature__preview">Barracuda · Ballet Leg Single · Neptunus + 3 more</span>
+          </span>
+          <span class="category-feature__cta">Browse &rarr;</span>
+        </a>
+        <a class="category-feature reveal" href="figures/12u.html">
+          <span class="category-feature__icon">
+            <svg class="ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="r1" cx="50" cy="50" r="14"></circle>
+              <circle class="r2" cx="50" cy="50" r="14"></circle>
+              <circle class="r3" cx="50" cy="50" r="14"></circle>
+            </svg>
+          </span>
+          <span class="category-feature__body">
+            <span class="category-feature__count">8 figures</span>
+            <span class="category-feature__title">12U</span>
+            <span class="category-feature__blurb">Figures for the 12-and-under age category, building on 10U fundamentals with more advanced spins and transitions.</span>
+            <span class="category-feature__preview">Swordfish · Straight Ballet Leg · Barracuda + 5 more</span>
+          </span>
+          <span class="category-feature__cta">Browse &rarr;</span>
+        </a>
+        <a class="category-feature reveal" href="figures/youth-13-15.html">
+          <span class="category-feature__icon">
+            <svg class="ripple-icon" viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="r1" cx="50" cy="50" r="14"></circle>
+              <circle class="r2" cx="50" cy="50" r="14"></circle>
+              <circle class="r3" cx="50" cy="50" r="14"></circle>
+            </svg>
+          </span>
+          <span class="category-feature__body">
+            <span class="category-feature__count">12 figures</span>
+            <span class="category-feature__title">13 - 15 (Youth)</span>
+            <span class="category-feature__blurb">Figures for swimmers aged 13-15, the most advanced age-group figures before senior-level competition.</span>
+            <span class="category-feature__preview">Ipanema Spinning 180° · Saturn · London Continuous Spin 720° + 9 more</span>
+          </span>
+          <span class="category-feature__cta">Browse &rarr;</span>
+        </a>
         </div>
         <!-- /auto:category-grid -->
     </section>
