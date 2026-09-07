@@ -293,6 +293,17 @@ body{
 .skill-list a{color:var(--text);text-decoration:none}
 .skill-list a:hover{color:var(--accent)}
 
+/* Breadcrumb trail: Library > Figures > <hub> > <page>, replacing the old
+   "<- Back to X" links. Renders instantly (no .reveal) since it's a
+   wayfinding aid, not decorative content. */
+.breadcrumbs{margin:0 0 14px}
+.breadcrumbs__list{list-style:none;display:flex;flex-wrap:wrap;margin:0;padding:0;font-size:0.88rem;color:var(--muted)}
+.breadcrumbs__item{display:flex;align-items:center}
+.breadcrumbs__item a{color:var(--muted);text-decoration:none;transition:color 160ms ease}
+.breadcrumbs__item a:hover{color:var(--accent);text-decoration:underline}
+.breadcrumbs__item + .breadcrumbs__item::before{content:'›';margin:0 8px;color:rgba(13,36,48,0.3)}
+.breadcrumbs__item--current{color:var(--text);font-weight:600}
+
 /* Sprite sheet holding reusable <defs> (swimmer poses, ripple-ring icon,
    etc.), reused elsewhere via <use>. Renders nothing itself — must stay
    position:absolute + zero-sized or its default 300x150 SVG box shows up
@@ -305,6 +316,7 @@ body{
    either a real photo/diagram (aspect-ratio media block) or, where no asset
    exists yet, an animated swimmer-pose SVG icon standing in for it. */
 .figure-hub-intro{padding:14px 12px}
+.hub-intro__meta{color:var(--muted);font-size:0.9rem;margin-top:4px}
 .figure-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));gap:22px;margin-top:8px}
 
 .figure-card{position:relative;display:flex;flex-direction:column;background:linear-gradient(180deg, #ffffff, var(--bg));border:1px solid rgba(101,159,224,0.18);border-radius:16px;overflow:hidden;text-decoration:none;color:var(--text);transition:transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease}
@@ -524,10 +536,42 @@ a:hover{color:var(--accent-blue)}
 .media-links a{color:var(--accent);text-decoration:none}
 .media-links a:hover{text-decoration:underline}
 
+/* Embedded YouTube video (real URL already present on every figure page) —
+   standard responsive-iframe pattern, fixed 16:9 aspect ratio */
+.media-embed{margin-top:8px}
+.media-embed__video{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:rgba(13,36,48,0.06)}
+.media-embed__video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+/* Honest "nothing here yet" state for element pages, which have no real
+   media data to embed — styled like the .tips placeholder, not hidden */
+.media-links__empty{color:var(--muted);background:rgba(101,207,224,0.08);padding:12px;border-radius:8px;margin:8px 0 0}
+
+/* Cross-links to sibling tricks in the same category, shown on every
+   individual page — reuses .skill-list for the link styling itself */
+.related-tricks{padding:8px}
+
 @media (min-width:900px){
   /* on wide screens keep same vertical split but allow bottom content to be a row */
   .figure-bottom{flex-direction:row;align-items:flex-start}
-  .tips,.media-links{flex:1}
+  .tips,.media-links,.related-tricks{flex:1}
+}
+
+/* Element page: parsed code/DD header + movement-sequence list, replacing
+   the old bare heading + "coming soon" placeholder. Shares .tips,
+   .media-links and .related-tricks styling with figure pages. */
+.element-split{display:flex;flex-direction:column;gap:16px}
+.element-header{margin-bottom:6px}
+.element-header__meta{display:flex;gap:8px;margin-top:6px}
+.element-header__code{display:inline-block;background:rgba(13,36,48,0.08);color:var(--muted);font-weight:700;font-size:0.82rem;padding:3px 10px;border-radius:999px}
+.element-header__dd{display:inline-block;background:rgba(49,168,187,0.14);color:var(--accent-teal);font-weight:700;font-size:0.82rem;padding:3px 10px;border-radius:999px}
+.element-sequence{padding:16px;background:linear-gradient(180deg, rgba(101,207,224,0.1), rgba(255,255,255,0.55));border:1px solid rgba(13,36,48,0.1);border-radius:10px}
+.element-sequence__list{margin:8px 0 0;padding-left:1.3rem;color:var(--text)}
+.element-sequence__list li{padding:4px 0}
+.element-body{display:flex;flex-direction:column;gap:12px}
+
+@media (min-width:900px){
+  /* same row-of-equal-columns treatment .figure-bottom gets above */
+  .element-body{flex-direction:row;align-items:flex-start}
 }
 
 /* Phase 1: Background & ambiance — animated gradient drift + floating particles */
