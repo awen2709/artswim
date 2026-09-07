@@ -505,6 +505,21 @@ body::before{
 .site-main, .site-footer{position:relative;z-index:2}
 .site-header{position:relative;z-index:3}
 
+/* Home-only pool photo: kept soft so the shared grid and page content remain
+   the visual focus while the scene still feels submerged. */
+.home-photo-bg{
+  position:fixed;
+  inset:-2%;
+  z-index:0;
+  pointer-events:none;
+  opacity:0.2;
+  filter:saturate(0.78) blur(1px);
+  background:
+    linear-gradient(180deg, rgba(221, 250, 255, 0.5), rgba(32, 139, 158, 0.28)),
+    url("assets/pngtree-the-water-in-a-pool-is-very-clear-image_13349747%20(1).jpg") center / cover no-repeat;
+  background-blend-mode:soft-light, normal;
+}
+
 /* Phase 2: Scroll-triggered reveals */
 .reveal{opacity:0;transform:translateY(16px);transition:opacity 600ms ease, transform 600ms ease}
 .reveal.is-visible{opacity:1;transform:none}
