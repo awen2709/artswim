@@ -25,6 +25,11 @@
 /* Page baseline */
 *{box-sizing:border-box}
 html,body{height:100%}
+/* .bleed (homepage full-width panels) uses 100vw to stretch edge to edge,
+   but 100vw includes the vertical scrollbar's own width — wider than the
+   actual visible viewport whenever a scrollbar is present, which otherwise
+   shows up as a few extra pixels of permanent horizontal scroll site-wide. */
+html{overflow-x:hidden}
 body{
   margin:0;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
@@ -152,7 +157,16 @@ body{
 .dropdown__col > .dropdown__heading:hover{color:var(--accent-blue);text-decoration:underline}
 .dropdown__col > .dropdown__heading::after{content:none}
 
-.dropdown__col .dropdown__menu{position:static;margin:0;min-width:0;background:none;padding:0;transform:none;box-shadow:none;opacity:1;visibility:visible;pointer-events:auto}
+/* opacity/visibility stay unconditional (fixes the nested-menu-invisible
+   bug described above), but pointer-events must NOT — pointer-events on a
+   child is honored even while an ancestor (.dropdown__mega) is
+   pointer-events:none, so forcing "auto" here unconditionally left these
+   links silently clickable/hoverable at all times, invisible, sitting
+   right under the header, regardless of whether the mega panel was ever
+   opened. Gate it behind the same hover/focus state that reveals the
+   mega panel itself. */
+.dropdown__col .dropdown__menu{position:static;margin:0;min-width:0;background:none;padding:0;transform:none;box-shadow:none;opacity:1;visibility:visible}
+.dropdown--mega:hover .dropdown__col .dropdown__menu, .dropdown--mega:focus-within .dropdown__col .dropdown__menu{pointer-events:auto}
 .dropdown__col .dropdown__menu a{padding:6px 6px;border-radius:6px}
 
 /* Header search: compact, always visible, submits straight to the library
@@ -303,13 +317,6 @@ body{
 .breadcrumbs__item a:hover{color:var(--accent);text-decoration:underline}
 .breadcrumbs__item + .breadcrumbs__item::before{content:'›';margin:0 8px;color:rgba(13,36,48,0.3)}
 .breadcrumbs__item--current{color:var(--text);font-weight:600}
-
-/* Sprite sheet holding reusable <defs> (swimmer poses, ripple-ring icon,
-   etc.), reused elsewhere via <use>. Renders nothing itself — must stay
-   position:absolute + zero-sized or its default 300x150 SVG box shows up
-   as a real block in the page flow (this is what was pushing the header
-   down / adding blank space above it after the merge dropped this rule). */
-.pool-sprites{position:absolute;width:0;height:0}
 
 /* Figure category hub: large animated card grid (replaces the old plain
    skill-list on figures/10u.html, 12u.html, youth-13-15.html). Each card is
@@ -662,14 +669,16 @@ body::before{
 .site-header{position:relative;z-index:3}
 
 /* Home-only pool photo: kept soft so the shared grid and page content remain
-   the visual focus while the scene still feels submerged. */
+   the visual focus while the scene still feels submerged. Opacity/saturation
+   raised slightly over the original values so the real pool photo reads with
+   more of its own blue/turquoise color instead of washing toward gray. */
 .home-photo-bg{
   position:fixed;
   inset:-2%;
   z-index:0;
   pointer-events:none;
-  opacity:0.2;
-  filter:saturate(0.78) blur(1px);
+  opacity:0.3;
+  filter:saturate(0.95) blur(1px);
   background:
     linear-gradient(180deg, rgba(221, 250, 255, 0.5), rgba(32, 139, 158, 0.28)),
     url("assets/pngtree-the-water-in-a-pool-is-very-clear-image_13349747%20(1).jpg") center / cover no-repeat;
@@ -689,8 +698,198 @@ body::before{
 .card.reveal.is-visible{transition-delay:0}
 
 /* Pool backdrop (index.html only): a soft water surface with
-   cursor-driven ripples rendered by script.js. */
-.pool-bg{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0;opacity:0.28;mix-blend-mode:multiply}
+   cursor-driven ripples rendered by script.js. Opacity raised from the
+   original 0.28 so the water reads as a primary visual element rather than
+   a faint watermark — safe since .site-main/.site-footer sit at z-index:2,
+   above this layer's z-index:0. */
+.pool-bg{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0;opacity:0.48;mix-blend-mode:multiply}
 .pool-water{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
+
+/* Light-shimmer sweep: a pure-CSS diagonal highlight drifting across the
+   water surface, independent of the canvas ripple sim, mimicking sunlight
+   moving across a pool. */
+.pool-bg::after{
+  content:'';
+  position:absolute;
+  inset:-20%;
+  background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.14) 48%, transparent 66%);
+  background-size:220% 220%;
+  mix-blend-mode:screen;
+  pointer-events:none;
+}
+@media (prefers-reduced-motion: no-preference){
+  .pool-bg::after{animation:shimmerSweep 22s ease-in-out infinite}
+  @keyframes shimmerSweep{
+    0%, 100%{background-position:0% 0%}
+    50%{background-position:100% 100%}
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .pool-bg::after{background-position:50% 50%}
+}
+
+
+/* ============================================================
+   Homepage-only sections below. These are deliberately NOT built
+   from .card/.category-feature/.category-card — this page gets its
+   own visual language (pool-deck signage + swim-lane rail + a
+   porthole-strung gallery) rather than re-skinning the same
+   components every other page already uses.
+   ============================================================ */
+
+/* Full-bleed helper: break a section out of .site-main's 1100px column
+   to the full viewport width, for the two "poster" panels below. */
+.bleed{width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw}
+
+/* --- Marquee ribbon: a diagonal, infinitely-scrolling strip of category
+   names right under the hero — glassy, tilted, a bit of showy motion that
+   isn't a card or a list, just texture/personality before the real content
+   starts. Pure CSS loop (two copies of the content, translateX -50%). --- */
+.marquee-ribbon{transform:rotate(-1.4deg);margin:8px -4vw 34px;overflow:hidden;background:linear-gradient(90deg, var(--accent-teal), var(--accent-blue) 50%, var(--accent-indigo));box-shadow:0 10px 30px rgba(13,36,48,0.18);position:relative;z-index:1}
+.marquee-ribbon__track{display:flex;width:max-content;white-space:nowrap;padding:10px 0}
+.marquee-ribbon__track a{display:inline-flex;align-items:center;color:#fff;text-decoration:none;font-weight:600;letter-spacing:0.04em;font-size:0.95rem;padding:0 22px;transition:color 160ms ease}
+.marquee-ribbon__track a:hover, .marquee-ribbon__track a:focus-visible{color:var(--text)}
+.marquee-ribbon__track a::after{content:'✺';margin-left:22px;opacity:0.6;font-size:0.8rem}
+@media (prefers-reduced-motion: no-preference){
+  .marquee-ribbon__track{animation:marqueeScroll 32s linear infinite}
+  .marquee-ribbon:hover .marquee-ribbon__track, .marquee-ribbon:focus-within .marquee-ribbon__track{animation-play-state:paused}
+}
+@media (prefers-reduced-motion: reduce){
+  .marquee-ribbon__track{width:auto;flex-wrap:wrap}
+  .marquee-ribbon__track a[aria-hidden="true"]{display:none}
+}
+@keyframes marqueeScroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+/* Shimmering gradient heading treatment — an animated version of .brand's
+   gradient-text-clip trick, for the two dark poster panels' headings. */
+.gradient-text{
+  background:linear-gradient(100deg, var(--accent-cyan), #fff 45%, var(--accent-cyan) 90%);
+  background-size:260% auto;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+@media (prefers-reduced-motion: no-preference){
+  .gradient-text{animation:shineSweep 5s ease-in-out infinite}
+}
+@keyframes shineSweep{
+  0%, 100%{background-position:0% center}
+  50%{background-position:100% center}
+}
+
+/* --- Depth marker: a pool-deck signage panel standing in for the old
+   plain feature list + stats band. Dark tiled "pool wall" background,
+   stenciled catalog numbers like the depth numerals painted at a
+   poolside, with a lane-rope stripe running through the middle. --- */
+/* Translucent, not opaque: the live ripple canvas (position:fixed, behind
+   everything) stays visible and blurred through this panel instead of being
+   flatly covered up — scrolling past "deeper" sections should still feel
+   like the same body of water, just darker/under more pressure. */
+.depth-marker{background:linear-gradient(165deg, rgba(13,36,48,0.86), rgba(20,53,68,0.8) 55%, rgba(13,36,48,0.86));backdrop-filter:blur(3px) saturate(1.15);-webkit-backdrop-filter:blur(3px) saturate(1.15);color:#eaf9fc;padding:56px 16px 64px;overflow:hidden;position:relative}
+.depth-marker::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 26px),
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 26px);
+  pointer-events:none;
+}
+.depth-marker__inner{max-width:1100px;margin:0 auto;position:relative}
+.depth-marker__watermark{position:absolute;top:-0.3em;right:-0.05em;font-size:min(38vw, 420px);font-weight:700;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.06);pointer-events:none;user-select:none;z-index:-1}
+.depth-marker__eyebrow{display:block;text-align:center;text-transform:uppercase;letter-spacing:0.22em;font-size:0.72rem;color:var(--accent-cyan);margin:0 0 8px}
+.depth-marker__heading{text-align:center;margin:0 0 28px;font-size:clamp(1.6rem, 4vw, 2.3rem)}
+.depth-rope{position:relative;height:2px;margin:0 0 40px;background:repeating-linear-gradient(90deg, rgba(255,255,255,0.35) 0 14px, transparent 14px 26px)}
+.depth-rope::before, .depth-rope::after{content:'';position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:var(--accent-cyan);transform:translateY(-50%);box-shadow:0 0 12px rgba(101,207,224,0.7)}
+.depth-rope::before{left:0}
+.depth-rope::after{right:0}
+.depth-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));gap:0}
+.depth-stat{position:relative;text-align:center;padding:8px 12px}
+.depth-stat + .depth-stat::before{content:'';position:absolute;left:0;top:10%;bottom:10%;width:1px;background:rgba(255,255,255,0.14)}
+.depth-stat__num{display:block;font-size:clamp(2.4rem, 6vw, 3.6rem);font-weight:700;line-height:1;letter-spacing:-0.02em;-webkit-text-stroke:1px rgba(101,207,224,0.5);color:#eaf9fc;text-shadow:0 0 30px rgba(101,207,224,0.35)}
+.depth-stat__label{display:block;margin-top:10px;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.14em;color:rgba(234,249,252,0.6)}
+
+/* Zigzag "water surface" edges bookending the depth marker, so it reads as
+   a slab submerged between two waterlines rather than a plain rectangle. */
+.depth-marker{clip-path:polygon(0 18px, 4% 0, 8% 18px, 12% 0, 16% 18px, 20% 0, 24% 18px, 28% 0, 32% 18px, 36% 0, 40% 18px, 44% 0, 48% 18px, 52% 0, 56% 18px, 60% 0, 64% 18px, 68% 0, 72% 18px, 76% 0, 80% 18px, 84% 0, 88% 18px, 92% 0, 96% 18px, 100% 0, 100% calc(100% - 18px), 96% 100%, 92% calc(100% - 18px), 88% 100%, 84% calc(100% - 18px), 80% 100%, 76% calc(100% - 18px), 72% 100%, 68% calc(100% - 18px), 64% 100%, 60% calc(100% - 18px), 56% 100%, 52% calc(100% - 18px), 48% 100%, 44% calc(100% - 18px), 40% 100%, 36% calc(100% - 18px), 32% 100%, 28% calc(100% - 18px), 24% 100%, 20% calc(100% - 18px), 16% 100%, 12% calc(100% - 18px), 8% 100%, 4% calc(100% - 18px), 0 100%)}
+.depth-marker__inner{padding:18px 0}
+
+/* --- Swim-lane rail: horizontal scroll-snap replacement for the category
+   row list, styled like looking down a pool lengthways — alternating
+   lane-stripe backgrounds, a lane-number buoy, snap-scrolls natively
+   (no JS) with visible native scrollbar styling. --- */
+.lane-rail-wrap{margin:36px 0}
+.lane-rail-wrap > h2{margin:0 0 6px}
+.lane-rail-hint{margin:0 0 16px;color:var(--muted);font-size:0.88rem}
+/* Padding on the frame (not the rail) reserves dedicated gutters for the
+   nav paddles so they never sit on top of card content — the rail itself
+   fills the remaining width and scrolls independently. */
+.lane-rail-frame{position:relative;padding:0 50px}
+.lane-rail-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:38px;height:76px;border-radius:14px;border:1px solid rgba(101,159,224,0.28);background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.78));backdrop-filter:blur(4px);box-shadow:0 10px 24px rgba(13,36,48,0.2);color:var(--accent-teal);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 160ms ease, box-shadow 160ms ease, background 160ms ease}
+.lane-rail-nav svg{width:20px;height:20px}
+.lane-rail-nav:hover{transform:translateY(-50%) scale(1.05);box-shadow:0 14px 30px rgba(13,36,48,0.26);color:var(--accent-blue)}
+.lane-rail-nav--prev{left:0}
+.lane-rail-nav--next{right:0}
+@media (max-width:640px){
+  .lane-rail-frame{padding:0}
+  .lane-rail-nav{display:none}
+}
+.lane-rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding:6px 6px 18px;scrollbar-width:thin;scrollbar-color:var(--accent-cyan) transparent}
+.lane-rail::-webkit-scrollbar{height:8px}
+.lane-rail::-webkit-scrollbar-thumb{background:var(--accent-cyan);border-radius:999px}
+.lane-rail::-webkit-scrollbar-track{background:rgba(101,159,224,0.12);border-radius:999px}
+.lane-card{scroll-snap-align:start;flex:0 0 auto;width:min(78vw, 320px);border-radius:18px;padding:26px 22px 22px;color:#fff;text-decoration:none;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;transition:transform 220ms ease, box-shadow 220ms ease}
+.lane-card::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg, rgba(255,255,255,0.07) 0 3px, transparent 3px 34px);pointer-events:none}
+.lane-card:hover{transform:translateY(-6px) rotate(-0.4deg);box-shadow:0 18px 40px rgba(13,36,48,0.28)}
+.lane-card__buoy{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.16);border:2px solid rgba(255,255,255,0.55);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem}
+.lane-card__title{margin:6px 0 0;font-size:1.2rem}
+.lane-card__count{font-size:0.76rem;text-transform:uppercase;letter-spacing:0.1em;opacity:0.85}
+.lane-card__blurb{margin:0;font-size:0.86rem;opacity:0.92;flex:1}
+.lane-card__cta{font-weight:600;font-size:0.86rem}
+.lane-rail > .lane-card:nth-child(7n+1){background:linear-gradient(160deg, var(--accent-cyan), var(--accent-blue))}
+.lane-rail > .lane-card:nth-child(7n+2){background:linear-gradient(160deg, var(--accent-teal), var(--accent-cyan))}
+.lane-rail > .lane-card:nth-child(7n+3){background:linear-gradient(160deg, var(--accent-blue), var(--accent-indigo))}
+.lane-rail > .lane-card:nth-child(7n+4){background:linear-gradient(160deg, var(--accent-indigo), var(--accent-teal))}
+.lane-rail > .lane-card:nth-child(7n+5){background:linear-gradient(160deg, var(--accent-cyan), var(--accent-indigo))}
+.lane-rail > .lane-card:nth-child(7n+6){background:linear-gradient(160deg, var(--accent-teal), var(--accent-blue))}
+.lane-rail > .lane-card:nth-child(7n){background:linear-gradient(160deg, var(--accent-blue), var(--accent-cyan))}
+
+/* --- Porthole gallery: a modifier on the shared .media-strip (script.js's
+   drag/auto-drift logic is reused as-is — that's plumbing, not the visual
+   language), reskinned as circular ship-window portholes strung on a rope,
+   alternating up/down like they're bobbing, instead of library.html's
+   rectangular polaroid strip. --- */
+.media-strip--portholes{-webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);padding:20px 0 8px;position:relative}
+.media-strip--portholes::before{content:'';position:absolute;left:0;right:0;top:50%;height:2px;transform:translateY(-1px);background:repeating-linear-gradient(90deg, rgba(101,159,224,0.4) 0 10px, transparent 10px 20px);z-index:0}
+.media-strip--portholes .media-strip__track{align-items:center;gap:26px}
+.media-strip--portholes .media-strip__item{width:150px;height:150px;border-radius:50%;flex-shrink:0;box-shadow:0 10px 26px rgba(13,36,48,0.22), inset 0 0 0 6px rgba(255,255,255,0.85), inset 0 0 0 9px var(--accent-teal);z-index:1}
+.media-strip--portholes .media-strip__item:nth-child(odd){transform:translateY(-10px)}
+.media-strip--portholes .media-strip__item:nth-child(even){transform:translateY(10px)}
+.media-strip--portholes .media-strip__item img{width:100%;height:100%;border:none;border-radius:50%;padding:0;object-fit:cover}
+.media-strip--portholes:not(.media-strip--dragging) .media-strip__item:nth-child(odd):hover{transform:translateY(-14px) scale(1.06)}
+.media-strip--portholes:not(.media-strip--dragging) .media-strip__item:nth-child(even):hover{transform:translateY(6px) scale(1.06)}
+.media-strip--portholes .media-strip__caption{inset:0;border-radius:50%;align-items:center;padding:12px}
+
+/* --- Closing poster: same dark pool-deck slab language as .depth-marker
+   (not .hero — .hero's entrance keyframes are timed from page load, so
+   reusing it this far down the page would fire invisibly before anyone
+   scrolls here) with its own single zigzag waterline on top only. --- */
+.cta-poster{background:linear-gradient(160deg, rgba(20,53,68,0.82), rgba(13,36,48,0.88) 70%);backdrop-filter:blur(3px) saturate(1.15);-webkit-backdrop-filter:blur(3px) saturate(1.15);color:#eaf9fc;text-align:center;padding:56px 16px 60px;clip-path:polygon(0 18px, 4% 0, 8% 18px, 12% 0, 16% 18px, 20% 0, 24% 18px, 28% 0, 32% 18px, 36% 0, 40% 18px, 44% 0, 48% 18px, 52% 0, 56% 18px, 60% 0, 64% 18px, 68% 0, 72% 18px, 76% 0, 80% 18px, 84% 0, 88% 18px, 92% 0, 96% 18px, 100% 0, 100% 100%, 0 100%)}
+.cta-poster h2{margin:18px 0 8px;font-size:clamp(1.5rem, 4vw, 2.1rem)}
+.cta-poster .lead{margin:0 0 20px;color:rgba(234,249,252,0.75)}
+.cta-poster .btn{background:linear-gradient(90deg, var(--accent-cyan), #fff, var(--accent-cyan));background-size:220% auto;color:var(--text);font-weight:700}
+
+@media (max-width:640px){
+  .depth-grid{grid-template-columns:repeat(2, 1fr)}
+  .depth-stat + .depth-stat::before{display:none}
+  .depth-stat:nth-child(2n)::before{content:'';position:absolute;left:0;top:10%;bottom:10%;width:1px;background:rgba(255,255,255,0.14)}
+}
+
+/* Ripple-sound mute toggle (index.html only) */
+.sound-toggle{position:fixed;bottom:18px;right:18px;z-index:4;width:40px;height:40px;border:none;border-radius:50%;background:rgba(255,255,255,0.75);backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(13,36,48,0.16);font-size:1.1rem;line-height:1;cursor:pointer;transition:transform 160ms ease, box-shadow 160ms ease}
+.sound-toggle:hover{transform:scale(1.08);box-shadow:0 8px 22px rgba(13,36,48,0.2)}
+.sound-toggle[aria-pressed="true"]{opacity:0.6}
 
 /* end of style.css */

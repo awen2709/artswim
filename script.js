@@ -320,6 +320,75 @@ function swayLoadSkills() {
   requestAnimationFrame(frame);
 })();
 
+// Lane rail (index.html only): the horizontal category rail auto-drifts
+// back and forth so it's obvious the row scrolls, on top of native
+// drag/touch/wheel scrolling and the prev/next arrow buttons. Pauses
+// whenever the visitor is actually interacting with it.
+(function() {
+  const rail = document.querySelector('.lane-rail');
+  const frameEl = document.querySelector('.lane-rail-frame');
+  if (!rail || !frameEl) return;
+
+  const prevBtn = document.querySelector('.lane-rail-nav--prev');
+  const nextBtn = document.querySelector('.lane-rail-nav--next');
+
+  const PAUSE_AFTER_INTERACTION = 2600; // ms before auto-drift resumes
+  let paused = false;
+  let resumeTimer = null;
+  let last = null;
+
+  function pause() {
+    paused = true;
+    if (resumeTimer) clearTimeout(resumeTimer);
+  }
+  function scheduleResume() {
+    if (resumeTimer) clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(() => { paused = false; last = null; }, PAUSE_AFTER_INTERACTION);
+  }
+
+  function step() {
+    const card = rail.querySelector('.lane-card');
+    return card ? card.getBoundingClientRect().width + 14 : 300;
+  }
+  // Clicking a nav button must also pause the auto-drift loop — otherwise
+  // the loop keeps writing rail.scrollLeft every frame right on top of the
+  // button's smooth scroll and instantly cancels it.
+  if (nextBtn) nextBtn.addEventListener('click', () => { pause(); rail.scrollBy({ left: step(), behavior: 'smooth' }); scheduleResume(); });
+  if (prevBtn) prevBtn.addEventListener('click', () => { pause(); rail.scrollBy({ left: -step(), behavior: 'smooth' }); scheduleResume(); });
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+
+  const SPEED = 0.02; // px per ms of auto-drift
+  let direction = 1;
+
+  // Hover/touch/drag anywhere in the frame (rail or either button) pauses.
+  frameEl.addEventListener('mouseenter', pause);
+  frameEl.addEventListener('mouseleave', scheduleResume);
+  frameEl.addEventListener('touchstart', pause, { passive: true });
+  frameEl.addEventListener('touchend', scheduleResume, { passive: true });
+  rail.addEventListener('pointerdown', pause);
+  rail.addEventListener('pointerup', scheduleResume);
+  rail.addEventListener('wheel', () => { pause(); scheduleResume(); }, { passive: true });
+
+  function frame(now) {
+    if (last === null) last = now;
+    const dt = now - last;
+    last = now;
+    if (!paused) {
+      const max = rail.scrollWidth - rail.clientWidth;
+      if (max > 0) {
+        let next = rail.scrollLeft + direction * SPEED * dt;
+        if (next >= max) { next = max; direction = -1; }
+        else if (next <= 0) { next = 0; direction = 1; }
+        rail.scrollLeft = next;
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
 // Pool water simulation (index.html only): renders a clear, textured water surface
 // to <canvas id="pool-water"> using a classic two-buffer ripple/wave algorithm
 // (each cell's next height = average of its neighbours' current height minus
@@ -344,10 +413,12 @@ function swayLoadSkills() {
   let bufferCanvas, bufferCtx, frame;
   let timeT = 0; // slow-moving clock, animates the water even with no ripples
 
-  // Pool-water color palette.
-  const DEEP = [138, 196, 217];
-  const SHALLOW = [206, 241, 247];
-  const REFRACT = 3.2; // how strongly ripple slope displaces the sampled floor
+  // Pool-water color palette. Range widened from the original
+  // [138,196,217]/[206,241,247] so the caustic pattern reads with more
+  // contrast — more literally like sunlit water, less like a flat tint.
+  const DEEP = [70, 150, 180];
+  const SHALLOW = [214, 248, 252];
+  const REFRACT = 6.2; // how strongly ripple slope displaces the sampled floor (was 3.2)
 
   function drawVignette() {
     const cx = displayW / 2, cy = displayH / 2;
@@ -401,18 +472,34 @@ function swayLoadSkills() {
   // effect delicate instead of turning fast cursor movement into a splash.
   let pointerX = null, pointerY = null;
   let lastRipple = 0;
+  let lastMoveTime = 0;
   const RIPPLE_INTERVAL = 42;
   const MIN_MOVE = 4;
+
+  // Sound only plays while a button/finger is actually held down and
+  // dragged through the water — plain hover-move stays silent. Playing a
+  // sound on every throttled hover-move turned fast cursor movement into a
+  // rapid machine-gun "brrrrrrr" instead of the occasional real splash a
+  // deliberate drag should make.
+  let pointerDown = false;
 
   function handleMove(clientX, clientY) {
     const now = performance.now();
     const moved = pointerX === null ? Infinity : Math.hypot(clientX - pointerX, clientY - pointerY);
     if (moved >= MIN_MOVE && now - lastRipple >= RIPPLE_INTERVAL) {
-      splash(clientX, clientY, 2.6, 1);
+      // Scale splash strength by how fast the pointer is actually moving,
+      // instead of a flat constant, so a quick swipe makes a bigger
+      // disturbance than a slow drift.
+      const dt = Math.max(1, now - lastMoveTime);
+      const speed = moved === Infinity ? 0 : moved / dt;
+      const strength = 3.4 + Math.min(7, speed * 2.6);
+      splash(clientX, clientY, strength, 2);
+      if (pointerDown) playRippleSound(strength);
       lastRipple = now;
     }
     pointerX = clientX;
     pointerY = clientY;
+    lastMoveTime = now;
   }
 
   // One physics step of the wave equation, with damping.
@@ -451,12 +538,15 @@ function swayLoadSkills() {
         let n = 0.5 + 0.5 * Math.sin(u * 9 + v * 5.5 + timeT);
         n += 0.5 + 0.5 * Math.sin(u * 3.2 - v * 8.4 + 1.4 - timeT * 0.7);
         n += 0.4 * (0.5 + 0.5 * Math.sin((u + v) * 13.5 + timeT * 1.3));
-        n /= 2.4;
+        // Extra high-frequency, cubed term: tight bright "sun-glint" specks
+        // layered on top of the broader wavy bands above.
+        n += 0.3 * Math.pow(0.5 + 0.5 * Math.sin(u * 22 - v * 17 + timeT * 1.8), 3);
+        n /= 2.7;
         let r = DEEP[0] + (SHALLOW[0] - DEEP[0]) * n;
         let g = DEEP[1] + (SHALLOW[1] - DEEP[1]) * n;
         let b = DEEP[2] + (SHALLOW[2] - DEEP[2]) * n;
 
-        const lightMul = 1 + Math.max(-0.2, Math.min(0.24, (dx + dy) * 0.026));
+        const lightMul = 1 + Math.max(-0.36, Math.min(0.52, (dx + dy) * 0.032));
         const p = i * 4;
         data[p] = r * lightMul;
         data[p + 1] = g * lightMul;
@@ -469,8 +559,24 @@ function swayLoadSkills() {
     drawVignette();
   }
 
+  // Idle "drip": once the pointer has been still for a couple of seconds,
+  // occasionally splash a small random point on its own so the water still
+  // has ambient life even with no cursor input. Low per-frame probability so
+  // drips land every few seconds on average rather than in bursts.
+  const IDLE_DRIP_DELAY = 2800;
+
+  function maybeIdleDrip(now) {
+    if (now - lastRipple < IDLE_DRIP_DELAY) return;
+    if (Math.random() >= 0.003) return;
+    const rect = pool.getBoundingClientRect();
+    const x = rect.left + Math.random() * rect.width;
+    const y = rect.top + Math.random() * rect.height;
+    splash(x, y, 1.4 + Math.random() * 1.2, 1);
+  }
+
   function loop(now) {
     timeT += 0.006;
+    maybeIdleDrip(now);
     step();
     render();
     requestAnimationFrame(loop);
@@ -492,12 +598,113 @@ function swayLoadSkills() {
     if (t) handleMove(t.clientX, t.clientY);
   }, { passive: true });
 
-  // Right-click: a single big, deliberate splash instead of the browser menu.
-  // Triggered on mousedown (button 2) rather than solely on 'contextmenu' so
-  // the splash always fires even if something else on the page ends up
-  // handling/suppressing the context menu event itself.
   window.addEventListener('mousedown', (e) => {
-    if (e.button === 2) splash(e.clientX, e.clientY, 17, 3);
+    if (e.button === 0) pointerDown = true;
+    // Right-click: a single big, deliberate splash instead of the browser
+    // menu. Triggered on mousedown (button 2) rather than solely on
+    // 'contextmenu' so the splash always fires even if something else on
+    // the page ends up handling/suppressing the context menu event itself.
+    if (e.button === 2) {
+      splash(e.clientX, e.clientY, 24, 4);
+      playRippleSound(24);
+    }
   });
+  window.addEventListener('mouseup', (e) => { if (e.button === 0) pointerDown = false; });
+  window.addEventListener('touchstart', () => { pointerDown = true; }, { passive: true });
+  window.addEventListener('touchend', () => { pointerDown = false; }, { passive: true });
+  window.addEventListener('touchcancel', () => { pointerDown = false; }, { passive: true });
   window.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  // --- Ripple sound: a real recorded water-drip sample (assets/water-drip.mp3,
+  // Pixabay Content License), not synthesized — every synthesized attempt
+  // here ended up reading as a struck/percussive sound instead of water, so
+  // this plays real audio instead. Lives entirely after the reduceMotion
+  // early-return above, so under prefers-reduced-motion no AudioContext is
+  // ever created and no listeners are attached — matching every other
+  // animation's guard in this file.
+  let audioCtx = null;
+  let masterGain = null;
+  let dropBuffer = null;
+  let soundMuted = false;
+
+  try {
+    soundMuted = window.localStorage.getItem('sway-sound-muted') === '1';
+  } catch (e) { /* localStorage unavailable (private mode, etc.) — default unmuted */ }
+
+  function unlockAudio() {
+    if (audioCtx) return;
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    audioCtx = new AudioContextClass();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = soundMuted ? 0 : 0.5;
+    masterGain.connect(audioCtx.destination);
+
+    fetch('assets/water-drip.mp3')
+      .then((res) => res.arrayBuffer())
+      .then((buf) => audioCtx.decodeAudioData(buf))
+      .then((decoded) => { dropBuffer = decoded; })
+      .catch((err) => console.error('Failed to load ripple sound:', err));
+
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+
+  window.addEventListener('pointerdown', unlockAudio, { once: true });
+  window.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+
+  // Plays the real drip sample with per-call pitch/volume jitter for
+  // variety, pitched slightly lower for stronger splashes (bigger drops
+  // sound lower). A no-op until the sample has finished loading. Fire-and-
+  // forget: each call builds its own tiny node graph and lets it get
+  // garbage collected once it stops.
+  function playRippleSound(strength) {
+    if (!audioCtx || !masterGain || !dropBuffer) return;
+
+    const now = audioCtx.currentTime;
+    const clampedStrength = Math.max(0, Math.min(1, (strength - 1) / 20));
+
+    function drop(t0, peak, rate) {
+      const source = audioCtx.createBufferSource();
+      source.buffer = dropBuffer;
+      source.playbackRate.value = rate;
+
+      const env = audioCtx.createGain();
+      env.gain.setValueAtTime(0, t0);
+      env.gain.linearRampToValueAtTime(peak, t0 + 0.004);
+
+      const tail = dropBuffer.duration / rate;
+      env.gain.setTargetAtTime(0.0001, t0 + tail * 0.55, tail * 0.2);
+
+      source.connect(env);
+      env.connect(masterGain);
+      source.start(t0);
+      source.stop(t0 + tail + 0.05);
+    }
+
+    const rate = (1.15 - clampedStrength * 0.35) * (0.9 + Math.random() * 0.2);
+    const peak = (0.3 + clampedStrength * 0.45) * (0.75 + Math.random() * 0.4);
+    drop(now, peak, rate);
+
+    // Stronger splashes (the right-click "big" splash, fast swipes) get a
+    // second, quieter, slightly-delayed drop layered underneath for weight.
+    if (clampedStrength > 0.45) {
+      drop(now + 0.02 + Math.random() * 0.02, peak * 0.45, 0.75 + Math.random() * 0.15);
+    }
+  }
+
+  // Mute toggle button (index.html only — guarded like everything else here).
+  const soundToggle = document.getElementById('sound-toggle');
+  if (soundToggle) {
+    function updateToggleUI() {
+      soundToggle.textContent = soundMuted ? '🔇' : '🔊';
+      soundToggle.setAttribute('aria-pressed', soundMuted ? 'true' : 'false');
+    }
+    updateToggleUI();
+    soundToggle.addEventListener('click', () => {
+      soundMuted = !soundMuted;
+      if (masterGain) masterGain.gain.value = soundMuted ? 0 : 0.5;
+      try { window.localStorage.setItem('sway-sound-muted', soundMuted ? '1' : '0'); } catch (e) { /* ignore */ }
+      updateToggleUI();
+    });
+  }
 })();

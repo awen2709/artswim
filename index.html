@@ -11,91 +11,12 @@
 </head>
 <body class="page--fade page--home">
   <div class="home-photo-bg" aria-hidden="true"></div>
-  <!-- Decorative pool backdrop: view down onto the water, drifting swimmer motifs,
-       and cursor-driven ripples (wired up in script.js). aria-hidden, index.html only. -->
+  <!-- Decorative pool backdrop: view down onto the water, with
+       cursor-driven ripples (wired up in script.js). aria-hidden, index.html only. -->
   <div class="pool-bg" id="pool-bg" aria-hidden="true">
     <canvas class="pool-water" id="pool-water"></canvas>
-
-    <!-- Swimmer pose sprite sheet: reused via <use> below -->
-    <svg class="pool-sprites" aria-hidden="true" focusable="false">
-      <defs>
-        <g id="swim-star" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-          <circle cx="50" cy="20" r="8"></circle>
-          <line x1="50" y1="28" x2="50" y2="60"></line>
-          <line x1="50" y1="32" x2="20" y2="10"></line>
-          <line x1="50" y1="32" x2="80" y2="10"></line>
-          <line x1="50" y1="60" x2="18" y2="90"></line>
-          <line x1="50" y1="60" x2="82" y2="90"></line>
-        </g>
-        <g id="swim-streamline" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-          <circle cx="50" cy="10" r="8"></circle>
-          <line x1="46" y1="18" x2="42" y2="2"></line>
-          <line x1="54" y1="18" x2="58" y2="2"></line>
-          <line x1="50" y1="18" x2="50" y2="70"></line>
-          <line x1="50" y1="70" x2="46" y2="96"></line>
-          <line x1="50" y1="70" x2="54" y2="96"></line>
-        </g>
-        <g id="swim-ballet" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-          <circle cx="20" cy="50" r="7"></circle>
-          <line x1="20" y1="57" x2="45" y2="60"></line>
-          <line x1="45" y1="60" x2="48" y2="15"></line>
-          <line x1="45" y1="60" x2="65" y2="75"></line>
-          <line x1="20" y1="50" x2="5" y2="35"></line>
-          <line x1="20" y1="50" x2="8" y2="65"></line>
-        </g>
-        <g id="swim-tuck" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-          <circle cx="50" cy="25" r="7"></circle>
-          <path d="M50,32 Q65,45 55,65"></path>
-          <line x1="55" y1="65" x2="75" y2="55"></line>
-          <line x1="55" y1="65" x2="78" y2="75"></line>
-          <line x1="50" y1="32" x2="30" y2="20"></line>
-          <line x1="50" y1="32" x2="28" y2="40"></line>
-        </g>
-        <g id="swim-split" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-          <circle cx="50" cy="15" r="8"></circle>
-          <line x1="50" y1="23" x2="44" y2="4"></line>
-          <line x1="50" y1="23" x2="56" y2="4"></line>
-          <line x1="50" y1="23" x2="50" y2="55"></line>
-          <line x1="50" y1="55" x2="10" y2="80"></line>
-          <line x1="50" y1="55" x2="90" y2="80"></line>
-        </g>
-        <g id="swim-flamingo" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-          <circle cx="30" cy="30" r="7"></circle>
-          <line x1="30" y1="37" x2="40" y2="65"></line>
-          <line x1="40" y1="65" x2="75" y2="50"></line>
-          <path d="M40,65 L55,80 L38,78"></path>
-          <line x1="30" y1="30" x2="10" y2="15"></line>
-          <line x1="30" y1="30" x2="12" y2="45"></line>
-        </g>
-        <g id="swim-vertical" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-          <circle cx="50" cy="12" r="8"></circle>
-          <line x1="50" y1="20" x2="50" y2="75"></line>
-          <line x1="50" y1="28" x2="38" y2="50"></line>
-          <line x1="50" y1="28" x2="62" y2="50"></line>
-          <line x1="50" y1="75" x2="46" y2="98"></line>
-          <line x1="50" y1="75" x2="54" y2="98"></line>
-        </g>
-      </defs>
-    </svg>
-
-    <svg class="swimmer swimmer--1" viewBox="0 0 100 100"><use href="#swim-star"></use></svg>
-    <svg class="swimmer swimmer--2" viewBox="0 0 100 100"><use href="#swim-streamline"></use></svg>
-    <svg class="swimmer swimmer--3" viewBox="0 0 100 100"><use href="#swim-ballet"></use></svg>
-    <svg class="swimmer swimmer--4" viewBox="0 0 100 100"><use href="#swim-tuck"></use></svg>
-    <svg class="swimmer swimmer--5" viewBox="0 0 100 100"><use href="#swim-split"></use></svg>
-    <svg class="swimmer swimmer--6" viewBox="0 0 100 100"><use href="#swim-flamingo"></use></svg>
-    <svg class="swimmer swimmer--7" viewBox="0 0 100 100"><use href="#swim-vertical"></use></svg>
-    <svg class="swimmer swimmer--8" viewBox="0 0 100 100"><use href="#swim-star"></use></svg>
-    <svg class="swimmer swimmer--9" viewBox="0 0 100 100"><use href="#swim-ballet"></use></svg>
-    <svg class="swimmer swimmer--10" viewBox="0 0 100 100"><use href="#swim-split"></use></svg>
   </div>
-  <!-- Match the ambient background used across the library pages. -->
-  <div class="particles-container" aria-hidden="true">
-    <div class="particle particle-1"></div>
-    <div class="particle particle-2"></div>
-    <div class="particle particle-3"></div>
-    <div class="particle particle-4"></div>
-  </div>
+  <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" aria-label="Mute ripple sound">🔊</button>
   <!-- Site header/navigation -->
   <header class="site-header" role="banner">
     <div class="container--nav">
@@ -148,18 +69,226 @@
     <!-- Hero / Welcome section -->
     <section class="hero reveal">
       <h1>Welcome to Sway</h1>
-      <p class="lead">The ultimate digital archive for artistic swimming. Discover clear, accessible guides for figures, elements, and essential skills.</p>
+      <p class="lead">Every figure and element in the library, explained clearly and kept in one place instead of scattered across old PDFs and handouts.</p>
       <p class="cta"><a class="btn" href="library.html">Explore the Library</a></p>
     </section>
 
-    <!-- Short explainer -->
-    <section class="about reveal">
-      <h2>What you'll find</h2>
-      <ul>
-        <li>Comprehensive info on artistic swimming skills and figures</li>
-        <li>Execution tips, tricks, and key pointers</li>
-        <li>Embedded media guides to visual aid your practice</li>
-      </ul>
+    <!-- Diagonal marquee ribbon: pure texture/motion before the real
+         content starts, not a widget borrowed from anywhere else -->
+    <nav class="marquee-ribbon" aria-label="Jump to a category">
+      <div class="marquee-ribbon__track">
+        <a href="figures/10u.html">10U</a><a href="figures/12u.html">12U</a><a href="figures/youth-13-15.html">13&ndash;15 YOUTH</a><a href="elements/solo-technical.html">SOLO TECHNICAL</a><a href="elements/duet-technical.html">DUET TECHNICAL</a><a href="elements/mixed-duet-technical.html">MIXED DUET TECHNICAL</a><a href="elements/junior.html">TEAM TECHNICAL</a>
+        <a href="figures/10u.html" aria-hidden="true" tabindex="-1">10U</a><a href="figures/12u.html" aria-hidden="true" tabindex="-1">12U</a><a href="figures/youth-13-15.html" aria-hidden="true" tabindex="-1">13&ndash;15 YOUTH</a><a href="elements/solo-technical.html" aria-hidden="true" tabindex="-1">SOLO TECHNICAL</a><a href="elements/duet-technical.html" aria-hidden="true" tabindex="-1">DUET TECHNICAL</a><a href="elements/mixed-duet-technical.html" aria-hidden="true" tabindex="-1">MIXED DUET TECHNICAL</a><a href="elements/junior.html" aria-hidden="true" tabindex="-1">TEAM TECHNICAL</a>
+      </div>
+    </nav>
+
+    <!-- Depth marker: pool-deck signage panel standing in for a plain
+         feature list + stats band — real, verifiable catalog counts,
+         no fabricated stats, styled like the numerals painted poolside -->
+    <section class="depth-marker bleed reveal">
+      <div class="depth-marker__inner">
+        <span class="depth-marker__watermark">54</span>
+        <span class="depth-marker__eyebrow">The library, measured</span>
+        <h2 class="gradient-text depth-marker__heading">By the numbers</h2>
+        <div class="depth-rope"></div>
+        <div class="depth-grid">
+          <div class="depth-stat"><span class="depth-stat__num">26</span><span class="depth-stat__label">Figures</span></div>
+          <div class="depth-stat"><span class="depth-stat__num">28</span><span class="depth-stat__label">Elements</span></div>
+          <div class="depth-stat"><span class="depth-stat__num">7</span><span class="depth-stat__label">Categories</span></div>
+          <div class="depth-stat"><span class="depth-stat__num">54</span><span class="depth-stat__label">In the water</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Swim-lane rail: horizontal scroll-snap replacement for a plain
+         category list — looking down a pool lengthways, one lane per
+         category, lane-rope stripe running along the top -->
+    <section class="lane-rail-wrap reveal">
+      <h2>Pick a lane</h2>
+      <p class="lane-rail-hint">All seven categories, side by side. Scroll or drag to browse them.</p>
+      <div class="lane-rail-frame">
+      <button class="lane-rail-nav lane-rail-nav--prev" type="button" aria-label="Scroll categories left">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="lane-rail-nav lane-rail-nav--next" type="button" aria-label="Scroll categories right">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="lane-rail">
+        <a class="lane-card" href="figures.html">
+          <span class="lane-card__buoy">All</span>
+          <span class="lane-card__count">26 figures</span>
+          <h3 class="lane-card__title">Figures</h3>
+          <p class="lane-card__blurb">10U, 12U, and 13-15 (Youth): body positions, spins, and the transitions between them.</p>
+          <span class="lane-card__cta">Dive in &rarr;</span>
+        </a>
+        <a class="lane-card" href="figures/10u.html">
+          <span class="lane-card__buoy">1</span>
+          <span class="lane-card__count">6 figures</span>
+          <h3 class="lane-card__title">10U</h3>
+          <p class="lane-card__blurb">Single rotations and the basic positions everything else builds on.</p>
+          <span class="lane-card__cta">Dive in &rarr;</span>
+        </a>
+        <a class="lane-card" href="figures/12u.html">
+          <span class="lane-card__buoy">2</span>
+          <span class="lane-card__count">8 figures</span>
+          <h3 class="lane-card__title">12U</h3>
+          <p class="lane-card__blurb">Builds on 10U with more advanced spins and transitions.</p>
+          <span class="lane-card__cta">Dive in &rarr;</span>
+        </a>
+        <a class="lane-card" href="figures/youth-13-15.html">
+          <span class="lane-card__buoy">3</span>
+          <span class="lane-card__count">12 figures</span>
+          <h3 class="lane-card__title">13 - 15 (Youth)</h3>
+          <p class="lane-card__blurb">As advanced as age-group figures get before senior competition.</p>
+          <span class="lane-card__cta">Dive in &rarr;</span>
+        </a>
+        <a class="lane-card" href="elements/solo-technical.html">
+          <span class="lane-card__buoy">4</span>
+          <span class="lane-card__count">9 elements</span>
+          <h3 class="lane-card__title">Solo Technical</h3>
+          <p class="lane-card__blurb">Spins, twists, and continuous rotations performed individually.</p>
+          <span class="lane-card__cta">Dive in &rarr;</span>
+        </a>
+        <a class="lane-card" href="elements/duet-technical.html">
+          <span class="lane-card__buoy">5</span>
+          <span class="lane-card__count">9 elements</span>
+          <h3 class="lane-card__title">Duet Technical</h3>
+          <p class="lane-card__blurb">Two swimmers performing in sync, sharing timing and positioning.</p>
+          <span class="lane-card__cta">Dive in &rarr;</span>
+        </a>
+        <a class="lane-card" href="elements/mixed-duet-technical.html">
+          <span class="lane-card__buoy">6</span>
+          <span class="lane-card__count">5 elements</span>
+          <h3 class="lane-card__title">Mixed Duet Technical</h3>
+          <p class="lane-card__blurb">Duet requirements adapted for mixed-gender partnered routines.</p>
+          <span class="lane-card__cta">Dive in &rarr;</span>
+        </a>
+        <a class="lane-card" href="elements/junior.html">
+          <span class="lane-card__buoy">7</span>
+          <span class="lane-card__count">5 elements</span>
+          <h3 class="lane-card__title">Team Technical</h3>
+          <p class="lane-card__blurb">Individual skills combined into larger group formations.</p>
+          <span class="lane-card__cta">Dive in &rarr;</span>
+        </a>
+      </div>
+      </div>
+    </section>
+
+    <!-- Gallery: every real figure diagram in assets/, strung as circular
+         portholes rather than library.html's rectangular strip -->
+    <section class="media-section reveal">
+      <h2>A glimpse of the archive</h2>
+      <p class="lead">Real diagrams from the figure library. Drag to look through them.</p>
+      <div class="media-strip media-strip--portholes">
+        <div class="media-strip__track">
+          <a class="media-strip__item" href="figures/saturn.html">
+            <img src="assets/Saturn.png" alt="Saturn figure diagram">
+            <span class="media-strip__caption">Saturn</span>
+          </a>
+          <a class="media-strip__item" href="figures/venus.html">
+            <img src="assets/Venus.png" alt="Venus figure diagram">
+            <span class="media-strip__caption">Venus</span>
+          </a>
+          <a class="media-strip__item" href="figures/ipanema-spinning-180.html">
+            <img src="assets/Ipanema Spinning 180.png" alt="Ipanema Spinning 180° figure diagram">
+            <span class="media-strip__caption">Ipanema Spinning 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/albatross-spin-up-360.html">
+            <img src="assets/Albatross Spin Up 360.png" alt="Albatross Spin Up 360° figure diagram">
+            <span class="media-strip__caption">Albatross Spin Up 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/cyclone-open-180.html">
+            <img src="assets/Cyclone, Open 180.png" alt="Cyclone, Open 180° figure diagram">
+            <span class="media-strip__caption">Cyclone, Open 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/walkover-back-closing-360.html">
+            <img src="assets/Walkover Back Closing 360.png" alt="Walkover Back Closing 360° figure diagram">
+            <span class="media-strip__caption">Walkover Back Closing 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/whip-continuous-spin-720.html">
+            <img src="assets/Whip Coninuous Spin 720.png" alt="Whip Continuous Spin 720° figure diagram">
+            <span class="media-strip__caption">Whip Continuous Spin 720°</span>
+          </a>
+          <a class="media-strip__item" href="figures/barracuda-airborne.html">
+            <img src="assets/Barracuda Airborone Split, Spin Up 180.png" alt="Barracuda Airborne Split, Spin Up 180° figure diagram">
+            <span class="media-strip__caption">Barracuda Airborne Split, Spin Up 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/swordfish-straight-leg-ariana.html">
+            <img src="assets/Swordfish Straight Leg Arianna Rotation.png" alt="Swordfish Straight Leg Ariana Rotation figure diagram">
+            <span class="media-strip__caption">Swordfish Straight Leg Ariana Rotation</span>
+          </a>
+          <a class="media-strip__item" href="figures/flamingo-bent-knee.html">
+            <img src="assets/Flamingo Bent Knee Combined Spin 360 + 360.png" alt="Flamingo Bent Knee Combined Spin 360° + 360° figure diagram">
+            <span class="media-strip__caption">Flamingo Bent Knee Combined Spin 360° + 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/flying-fish-spinning-360.html">
+            <img src="assets/Flying Fish Spinning 360.png" alt="Flying Fish Spinning 360° figure diagram">
+            <span class="media-strip__caption">Flying Fish Spinning 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/london-continuous-spin-720.html">
+            <img src="assets/London Continuous Spin 720.png" alt="London Continuous Spin 720° figure diagram">
+            <span class="media-strip__caption">London Continuous Spin 720°</span>
+          </a>
+          <!-- duplicated for a seamless loop; hidden from assistive tech and keyboard tab order since they're the same links again -->
+          <a class="media-strip__item" href="figures/saturn.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Saturn.png" alt="">
+            <span class="media-strip__caption">Saturn</span>
+          </a>
+          <a class="media-strip__item" href="figures/venus.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Venus.png" alt="">
+            <span class="media-strip__caption">Venus</span>
+          </a>
+          <a class="media-strip__item" href="figures/ipanema-spinning-180.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Ipanema Spinning 180.png" alt="">
+            <span class="media-strip__caption">Ipanema Spinning 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/albatross-spin-up-360.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Albatross Spin Up 360.png" alt="">
+            <span class="media-strip__caption">Albatross Spin Up 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/cyclone-open-180.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Cyclone, Open 180.png" alt="">
+            <span class="media-strip__caption">Cyclone, Open 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/walkover-back-closing-360.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Walkover Back Closing 360.png" alt="">
+            <span class="media-strip__caption">Walkover Back Closing 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/whip-continuous-spin-720.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Whip Coninuous Spin 720.png" alt="">
+            <span class="media-strip__caption">Whip Continuous Spin 720°</span>
+          </a>
+          <a class="media-strip__item" href="figures/barracuda-airborne.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Barracuda Airborone Split, Spin Up 180.png" alt="">
+            <span class="media-strip__caption">Barracuda Airborne Split, Spin Up 180°</span>
+          </a>
+          <a class="media-strip__item" href="figures/swordfish-straight-leg-ariana.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Swordfish Straight Leg Arianna Rotation.png" alt="">
+            <span class="media-strip__caption">Swordfish Straight Leg Ariana Rotation</span>
+          </a>
+          <a class="media-strip__item" href="figures/flamingo-bent-knee.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Flamingo Bent Knee Combined Spin 360 + 360.png" alt="">
+            <span class="media-strip__caption">Flamingo Bent Knee Combined Spin 360° + 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/flying-fish-spinning-360.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/Flying Fish Spinning 360.png" alt="">
+            <span class="media-strip__caption">Flying Fish Spinning 360°</span>
+          </a>
+          <a class="media-strip__item" href="figures/london-continuous-spin-720.html" aria-hidden="true" tabindex="-1">
+            <img src="assets/London Continuous Spin 720.png" alt="">
+            <span class="media-strip__caption">London Continuous Spin 720°</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing CTA bookend, so a visitor who scrolled all the way down
+         doesn't have to scroll back up to the hero's button -->
+    <section class="cta-poster bleed reveal">
+      <span class="depth-marker__eyebrow">One more length</span>
+      <h2 class="gradient-text">Ready to dive in?</h2>
+      <p class="lead">Every figure and element, sorted by age and discipline.</p>
+      <p class="cta"><a class="btn" href="library.html">Explore the Library</a></p>
     </section>
   </main>
 
