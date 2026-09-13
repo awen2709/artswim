@@ -34,8 +34,10 @@ The footer follows the same two-depth pattern and was synchronized the same way:
 ### Figure/element hub card grid (all 7 hub pages)
 
 All 7 hub pages (`figures/10u.html`, `figures/12u.html`, `figures/youth-13-15.html`, and all 4 `elements/*.html` hubs — the elements ones were converted from a plain `<ul class="skill-list">` to match) share the same animated `.figure-grid` of `.figure-card` links. Each card is either:
-- an `<img>` thumbnail (only where a real asset exists in `assets/` — currently 9 of the 12 `youth-13-15.html` figures), or
-- an inline ripple-ring icon fallback (every other card, including *all* element cards, since no element has real artwork) — see the "Ripple-ring icon" note below for why this is inline circles, not a swimmer-pose stick figure or a `<use>` reference.
+- an `<img>` thumbnail (wherever a real asset exists in `assets/` for that skill — every figure/element page with a real image also has its hub card wired to the same file, kept in sync by hand whenever a new image is added), or
+- an inline ripple-ring icon fallback (every other card) — see the "Ripple-ring icon" note below for why this is inline circles, not a swimmer-pose stick figure or a `<use>` reference.
+
+16 of the 28 individual element pages now have a real image (official World Aquatics Technical Required Elements diagrams — see `media-todo.md` for sourcing), and their hub cards (across `elements/solo-technical.html`, `duet-technical.html`, `mixed-duet-technical.html`) were updated to match. Only Ballet Leg Flamingo (`duet-technical.html`) and Manta Ray Half Twist (`mixed-duet-technical.html`) still fall back to the ripple-icon — no official diagram could be sourced for either (see `media-todo.md`).
 
 Element cards also show a `.figure-card__code` ("1A –") and `.figure-card__dd` ("DD 2.7") inline in the title where the skill has them (5 of 28, all in Team Technical, have neither).
 

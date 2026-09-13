@@ -599,7 +599,17 @@ function swayLoadSkills() {
   }, { passive: true });
 
   window.addEventListener('mousedown', (e) => {
-    if (e.button === 0) pointerDown = true;
+    // Left click: an immediate splash+sound right on press, same as the
+    // right-click below, just lighter — a plain click (no drag) never
+    // reaches handleMove at all, so without this a single left click was
+    // silent while right-click always made a sound, which read as "only
+    // right click works." Holding and dragging still adds continuous
+    // splashes+sound via handleMove/pointerDown below, on top of this.
+    if (e.button === 0) {
+      pointerDown = true;
+      splash(e.clientX, e.clientY, 8, 2);
+      playRippleSound(8);
+    }
     // Right-click: a single big, deliberate splash instead of the browser
     // menu. Triggered on mousedown (button 2) rather than solely on
     // 'contextmenu' so the splash always fires even if something else on
