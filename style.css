@@ -677,10 +677,10 @@ body::before{
   inset:-2%;
   z-index:0;
   pointer-events:none;
-  opacity:0.32;
-  filter:saturate(1.25) blur(1px);
+  opacity:0.3;
+  filter:saturate(1.05) blur(1px);
   background:
-    linear-gradient(180deg, rgba(255, 160, 205, 0.48), rgba(140, 195, 220, 0.24)),
+    linear-gradient(180deg, rgba(255, 205, 222, 0.42), rgba(150, 205, 230, 0.24)),
     url("assets/pngtree-the-water-in-a-pool-is-very-clear-image_13349747%20(1).jpg") center / cover no-repeat;
   background-blend-mode:soft-light, normal;
 }
@@ -712,7 +712,7 @@ body::before{
   content:'';
   position:absolute;
   inset:-20%;
-  background:linear-gradient(115deg, transparent 30%, rgba(255,190,220,0.22) 48%, transparent 66%);
+  background:linear-gradient(115deg, transparent 30%, rgba(255,220,232,0.18) 48%, transparent 66%);
   background-size:220% 220%;
   mix-blend-mode:screen;
   pointer-events:none;
@@ -788,7 +788,7 @@ body::before{
    everything) stays visible and blurred through this panel instead of being
    flatly covered up — scrolling past "deeper" sections should still feel
    like the same body of water, just darker/under more pressure. */
-.depth-marker{background:linear-gradient(165deg, rgba(190,30,120,0.85), rgba(225,60,150,0.78) 55%, rgba(190,30,120,0.85));backdrop-filter:blur(3px) saturate(1.15);-webkit-backdrop-filter:blur(3px) saturate(1.15);color:#eaf9fc;padding:56px 16px 64px;overflow:hidden;position:relative}
+.depth-marker{background:linear-gradient(165deg, rgba(220,50,140,0.85), rgba(255,115,185,0.8) 55%, rgba(220,50,140,0.85));backdrop-filter:blur(3px) saturate(1.15);-webkit-backdrop-filter:blur(3px) saturate(1.15);color:#eaf9fc;padding:33px 16px 38px;overflow:hidden;position:relative}
 .depth-marker::before{
   content:'';
   position:absolute;inset:0;
@@ -800,21 +800,21 @@ body::before{
 .depth-marker__inner{max-width:1100px;margin:0 auto;position:relative}
 .depth-marker__watermark{position:absolute;top:-0.3em;right:-0.05em;font-size:min(38vw, 420px);font-weight:700;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.06);pointer-events:none;user-select:none;z-index:-1}
 .depth-marker__eyebrow{display:block;text-align:center;text-transform:uppercase;letter-spacing:0.22em;font-size:0.72rem;color:var(--accent-cyan);margin:0 0 8px}
-.depth-marker__heading{text-align:center;margin:0 0 28px;font-size:clamp(1.6rem, 4vw, 2.3rem)}
-.depth-rope{position:relative;height:2px;margin:0 0 40px;background:repeating-linear-gradient(90deg, rgba(255,255,255,0.35) 0 14px, transparent 14px 26px)}
+.depth-marker__heading{text-align:center;margin:0 0 21px;font-size:clamp(1.45rem, 3.5vw, 2.05rem)}
+.depth-rope{position:relative;height:2px;margin:0 0 29px;background:repeating-linear-gradient(90deg, rgba(255,255,255,0.35) 0 14px, transparent 14px 26px)}
 .depth-rope::before, .depth-rope::after{content:'';position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:var(--accent-cyan);transform:translateY(-50%);box-shadow:0 0 12px rgba(101,207,224,0.7)}
 .depth-rope::before{left:0}
 .depth-rope::after{right:0}
 .depth-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));gap:0}
-.depth-stat{position:relative;text-align:center;padding:8px 12px}
+.depth-stat{position:relative;text-align:center;padding:5px 12px}
 .depth-stat + .depth-stat::before{content:'';position:absolute;left:0;top:10%;bottom:10%;width:1px;background:rgba(255,255,255,0.14)}
-.depth-stat__num{display:block;font-size:clamp(2.4rem, 6vw, 3.6rem);font-weight:700;line-height:1;letter-spacing:-0.02em;-webkit-text-stroke:1px rgba(101,207,224,0.5);color:#eaf9fc;text-shadow:0 0 30px rgba(101,207,224,0.35)}
-.depth-stat__label{display:block;margin-top:10px;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.14em;color:rgba(234,249,252,0.6)}
+.depth-stat__num{display:block;font-size:clamp(1.7rem, 4.2vw, 2.4rem);font-weight:700;line-height:1;letter-spacing:-0.02em;-webkit-text-stroke:1px rgba(101,207,224,0.5);color:#eaf9fc;text-shadow:0 0 30px rgba(101,207,224,0.35)}
+.depth-stat__label{display:block;margin-top:4px;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.14em;color:rgba(234,249,252,0.6)}
 
 /* Zigzag "water surface" edges bookending the depth marker, so it reads as
    a slab submerged between two waterlines rather than a plain rectangle. */
 .depth-marker{clip-path:polygon(0 18px, 4% 0, 8% 18px, 12% 0, 16% 18px, 20% 0, 24% 18px, 28% 0, 32% 18px, 36% 0, 40% 18px, 44% 0, 48% 18px, 52% 0, 56% 18px, 60% 0, 64% 18px, 68% 0, 72% 18px, 76% 0, 80% 18px, 84% 0, 88% 18px, 92% 0, 96% 18px, 100% 0, 100% calc(100% - 18px), 96% 100%, 92% calc(100% - 18px), 88% 100%, 84% calc(100% - 18px), 80% 100%, 76% calc(100% - 18px), 72% 100%, 68% calc(100% - 18px), 64% 100%, 60% calc(100% - 18px), 56% 100%, 52% calc(100% - 18px), 48% 100%, 44% calc(100% - 18px), 40% 100%, 36% calc(100% - 18px), 32% 100%, 28% calc(100% - 18px), 24% 100%, 20% calc(100% - 18px), 16% 100%, 12% calc(100% - 18px), 8% 100%, 4% calc(100% - 18px), 0 100%)}
-.depth-marker__inner{padding:18px 0}
+.depth-marker__inner{padding:14px 0}
 
 /* --- Swim-lane rail: horizontal scroll-snap replacement for the category
    row list, styled like looking down a pool lengthways — alternating
@@ -876,7 +876,7 @@ body::before{
    (not .hero — .hero's entrance keyframes are timed from page load, so
    reusing it this far down the page would fire invisibly before anyone
    scrolls here) with its own single zigzag waterline on top only. --- */
-.cta-poster{background:linear-gradient(160deg, rgba(225,60,150,0.78), rgba(190,30,120,0.86) 70%);backdrop-filter:blur(3px) saturate(1.15);-webkit-backdrop-filter:blur(3px) saturate(1.15);color:#eaf9fc;text-align:center;padding:56px 16px 60px;clip-path:polygon(0 18px, 4% 0, 8% 18px, 12% 0, 16% 18px, 20% 0, 24% 18px, 28% 0, 32% 18px, 36% 0, 40% 18px, 44% 0, 48% 18px, 52% 0, 56% 18px, 60% 0, 64% 18px, 68% 0, 72% 18px, 76% 0, 80% 18px, 84% 0, 88% 18px, 92% 0, 96% 18px, 100% 0, 100% 100%, 0 100%)}
+.cta-poster{background:linear-gradient(160deg, rgba(255,115,185,0.78), rgba(220,50,140,0.86) 70%);backdrop-filter:blur(3px) saturate(1.15);-webkit-backdrop-filter:blur(3px) saturate(1.15);color:#eaf9fc;text-align:center;padding:33px 16px 36px;clip-path:polygon(0 18px, 4% 0, 8% 18px, 12% 0, 16% 18px, 20% 0, 24% 18px, 28% 0, 32% 18px, 36% 0, 40% 18px, 44% 0, 48% 18px, 52% 0, 56% 18px, 60% 0, 64% 18px, 68% 0, 72% 18px, 76% 0, 80% 18px, 84% 0, 88% 18px, 92% 0, 96% 18px, 100% 0, 100% 100%, 0 100%)}
 .cta-poster h2{margin:18px 0 8px;font-size:clamp(1.5rem, 4vw, 2.1rem)}
 .cta-poster .lead{margin:0 0 20px;color:rgba(234,249,252,0.75)}
 .cta-poster .btn{background:linear-gradient(90deg, var(--accent-cyan), #fff, var(--accent-cyan));background-size:220% auto;color:var(--text);font-weight:700}

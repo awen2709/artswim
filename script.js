@@ -417,8 +417,8 @@ function swayLoadSkills() {
   // 12U, 13-15 Youth), so this is deliberately light, bright and playful —
   // a light blue pool with soft pink highlights — rather than a moody,
   // desaturated "adult" palette.
-  const DEEP = [130, 200, 235];
-  const SHALLOW = [255, 145, 195];
+  const DEEP = [140, 200, 230];
+  const SHALLOW = [255, 165, 205];
   const REFRACT = 6.2; // how strongly ripple slope displaces the sampled floor (was 3.2)
 
   function drawVignette() {
