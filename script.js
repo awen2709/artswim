@@ -413,11 +413,12 @@ function swayLoadSkills() {
   let bufferCanvas, bufferCtx, frame;
   let timeT = 0; // slow-moving clock, animates the water even with no ripples
 
-  // Pool-water color palette. Range widened from the original
-  // [138,196,217]/[206,241,247] so the caustic pattern reads with more
-  // contrast — more literally like sunlit water, less like a flat tint.
-  const DEEP = [70, 150, 180];
-  const SHALLOW = [214, 248, 252];
+  // Pool-water color palette. Site's actual audience is kids/teens (10U,
+  // 12U, 13-15 Youth), so this is deliberately light, bright and playful —
+  // a light blue pool with soft pink highlights — rather than a moody,
+  // desaturated "adult" palette.
+  const DEEP = [130, 200, 235];
+  const SHALLOW = [255, 145, 195];
   const REFRACT = 6.2; // how strongly ripple slope displaces the sampled floor (was 3.2)
 
   function drawVignette() {

@@ -677,10 +677,10 @@ body::before{
   inset:-2%;
   z-index:0;
   pointer-events:none;
-  opacity:0.3;
-  filter:saturate(0.95) blur(1px);
+  opacity:0.32;
+  filter:saturate(1.25) blur(1px);
   background:
-    linear-gradient(180deg, rgba(221, 250, 255, 0.5), rgba(32, 139, 158, 0.28)),
+    linear-gradient(180deg, rgba(255, 160, 205, 0.48), rgba(140, 195, 220, 0.24)),
     url("assets/pngtree-the-water-in-a-pool-is-very-clear-image_13349747%20(1).jpg") center / cover no-repeat;
   background-blend-mode:soft-light, normal;
 }
@@ -712,7 +712,7 @@ body::before{
   content:'';
   position:absolute;
   inset:-20%;
-  background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.14) 48%, transparent 66%);
+  background:linear-gradient(115deg, transparent 30%, rgba(255,190,220,0.22) 48%, transparent 66%);
   background-size:220% 220%;
   mix-blend-mode:screen;
   pointer-events:none;
@@ -788,7 +788,7 @@ body::before{
    everything) stays visible and blurred through this panel instead of being
    flatly covered up — scrolling past "deeper" sections should still feel
    like the same body of water, just darker/under more pressure. */
-.depth-marker{background:linear-gradient(165deg, rgba(13,36,48,0.86), rgba(20,53,68,0.8) 55%, rgba(13,36,48,0.86));backdrop-filter:blur(3px) saturate(1.15);-webkit-backdrop-filter:blur(3px) saturate(1.15);color:#eaf9fc;padding:56px 16px 64px;overflow:hidden;position:relative}
+.depth-marker{background:linear-gradient(165deg, rgba(190,30,120,0.85), rgba(225,60,150,0.78) 55%, rgba(190,30,120,0.85));backdrop-filter:blur(3px) saturate(1.15);-webkit-backdrop-filter:blur(3px) saturate(1.15);color:#eaf9fc;padding:56px 16px 64px;overflow:hidden;position:relative}
 .depth-marker::before{
   content:'';
   position:absolute;inset:0;
@@ -876,7 +876,7 @@ body::before{
    (not .hero — .hero's entrance keyframes are timed from page load, so
    reusing it this far down the page would fire invisibly before anyone
    scrolls here) with its own single zigzag waterline on top only. --- */
-.cta-poster{background:linear-gradient(160deg, rgba(20,53,68,0.82), rgba(13,36,48,0.88) 70%);backdrop-filter:blur(3px) saturate(1.15);-webkit-backdrop-filter:blur(3px) saturate(1.15);color:#eaf9fc;text-align:center;padding:56px 16px 60px;clip-path:polygon(0 18px, 4% 0, 8% 18px, 12% 0, 16% 18px, 20% 0, 24% 18px, 28% 0, 32% 18px, 36% 0, 40% 18px, 44% 0, 48% 18px, 52% 0, 56% 18px, 60% 0, 64% 18px, 68% 0, 72% 18px, 76% 0, 80% 18px, 84% 0, 88% 18px, 92% 0, 96% 18px, 100% 0, 100% 100%, 0 100%)}
+.cta-poster{background:linear-gradient(160deg, rgba(225,60,150,0.78), rgba(190,30,120,0.86) 70%);backdrop-filter:blur(3px) saturate(1.15);-webkit-backdrop-filter:blur(3px) saturate(1.15);color:#eaf9fc;text-align:center;padding:56px 16px 60px;clip-path:polygon(0 18px, 4% 0, 8% 18px, 12% 0, 16% 18px, 20% 0, 24% 18px, 28% 0, 32% 18px, 36% 0, 40% 18px, 44% 0, 48% 18px, 52% 0, 56% 18px, 60% 0, 64% 18px, 68% 0, 72% 18px, 76% 0, 80% 18px, 84% 0, 88% 18px, 92% 0, 96% 18px, 100% 0, 100% 100%, 0 100%)}
 .cta-poster h2{margin:18px 0 8px;font-size:clamp(1.5rem, 4vw, 2.1rem)}
 .cta-poster .lead{margin:0 0 20px;color:rgba(234,249,252,0.75)}
 .cta-poster .btn{background:linear-gradient(90deg, var(--accent-cyan), #fff, var(--accent-cyan));background-size:220% auto;color:var(--text);font-weight:700}
