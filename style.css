@@ -392,6 +392,8 @@ body{
 .site-footer__col a:hover{color:var(--accent)}
 .site-footer__col.reveal{transition-delay:calc(var(--card-index, 0) * 90ms)}
 .site-footer__col.reveal.is-visible{transition-delay:0}
+.site-footer__col--video{max-width:260px}
+.site-footer__video{width:100%;max-width:260px;border-radius:10px;display:block;object-fit:cover;box-shadow:0 6px 18px rgba(13,36,48,0.25)}
 .site-footer__bottom{margin:0;padding:16px 0 24px;border-top:1px solid rgba(101,159,224,0.12);font-size:0.85rem;text-align:center}
 
 /* Library page: a real-media showcase, framed as its own clearly-marked
@@ -808,8 +810,8 @@ body::before{
 .depth-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));gap:0}
 .depth-stat{position:relative;text-align:center;padding:5px 12px}
 .depth-stat + .depth-stat::before{content:'';position:absolute;left:0;top:10%;bottom:10%;width:1px;background:rgba(255,255,255,0.14)}
-.depth-stat__num{display:block;font-size:clamp(1.7rem, 4.2vw, 2.4rem);font-weight:700;line-height:1;letter-spacing:-0.02em;-webkit-text-stroke:1px rgba(101,207,224,0.5);color:#eaf9fc;text-shadow:0 0 30px rgba(101,207,224,0.35)}
-.depth-stat__label{display:block;margin-top:4px;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.14em;color:rgba(234,249,252,0.6)}
+.depth-stat__num{display:block;font-size:clamp(2.05rem, 5.1vw, 3rem);font-weight:700;line-height:1;letter-spacing:-0.02em;-webkit-text-stroke:1px rgba(101,207,224,0.5);color:#eaf9fc;text-shadow:0 0 30px rgba(101,207,224,0.35)}
+.depth-stat__label{display:block;margin-top:7px;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.14em;color:rgba(234,249,252,0.6)}
 
 /* Zigzag "water surface" edges bookending the depth marker, so it reads as
    a slab submerged between two waterlines rather than a plain rectangle. */
