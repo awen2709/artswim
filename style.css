@@ -383,8 +383,12 @@ body{
    column fades/slides in on scroll like the rest of the site (.reveal). */
 .site-footer{max-width:1100px;margin:56px auto 0;padding:0 16px 0;color:var(--muted)}
 .site-footer::before{content:'';display:block;width:100%;height:1px;margin:0 0 30px;background:rgba(13,36,48,0.7)}
-.site-footer__cols{display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px 48px;padding-bottom:26px}
-.site-footer__col{display:flex;flex-direction:column;gap:9px;flex:1 1 200px;max-width:260px}
+.site-footer__cols{display:grid;grid-template-columns:1.3fr 1fr 1fr 1.2fr;grid-template-areas:"brand explore contact photo";gap:32px 48px;padding-bottom:26px}
+.site-footer__col{display:flex;flex-direction:column;gap:9px;min-width:0}
+.site-footer__col--brand{grid-area:brand}
+.site-footer__col--explore{grid-area:explore}
+.site-footer__col--contact{grid-area:contact}
+.site-footer__col--photo{grid-area:photo}
 .site-footer__col .brand{font-size:1.35rem}
 .site-footer__tagline{margin:0;font-size:0.88rem;max-width:230px;line-height:1.5}
 .site-footer__heading{font-size:0.76rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--text)}
@@ -392,8 +396,35 @@ body{
 .site-footer__col a:hover{color:var(--accent)}
 .site-footer__col.reveal{transition-delay:calc(var(--card-index, 0) * 90ms)}
 .site-footer__col.reveal.is-visible{transition-delay:0}
-.site-footer__col--video{max-width:260px}
-.site-footer__video{width:100%;max-width:260px;border-radius:10px;display:block;object-fit:cover;box-shadow:0 6px 18px rgba(13,36,48,0.25)}
+.site-footer__photo{width:100%;height:100%;min-height:120px;aspect-ratio:4/3;border-radius:10px;display:block;object-fit:cover;background:linear-gradient(135deg,rgba(101,159,224,0.18),rgba(13,36,48,0.1));box-shadow:0 6px 18px rgba(13,36,48,0.25)}
+
+/* Tablet: text block on the left, photo becomes a full-height sidebar image on the right */
+@media (max-width:820px){
+  .site-footer__cols{
+    grid-template-columns:1.15fr 1fr;
+    grid-template-areas:
+      "brand   photo"
+      "explore photo"
+      "contact photo";
+    row-gap:22px;column-gap:28px;
+    align-items:start;
+  }
+  .site-footer__col--photo{align-self:stretch}
+  .site-footer__photo{aspect-ratio:auto}
+}
+
+/* Phone: photo becomes a wide banner up top, link columns sit side by side to save height */
+@media (max-width:520px){
+  .site-footer__cols{
+    grid-template-columns:1fr 1fr;
+    grid-template-areas:
+      "photo   photo"
+      "brand   brand"
+      "explore contact";
+    row-gap:20px;column-gap:20px;
+  }
+  .site-footer__photo{aspect-ratio:16/9}
+}
 .site-footer__bottom{margin:0;padding:16px 0 24px;border-top:1px solid rgba(101,159,224,0.12);font-size:0.85rem;text-align:center}
 
 /* Library page: a real-media showcase, framed as its own clearly-marked
