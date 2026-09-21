@@ -449,14 +449,11 @@ def regen_related_tricks(path, entry, skills):
 
 
 # ---------------------------------------------------------------------------
-# One-time structural upgrades (figure media embed, element sequence layout)
+# One-time structural upgrades (figure media, element sequence layout)
 # ---------------------------------------------------------------------------
 
 MEDIA_LINKS_BLOCK_RE = re.compile(r'( *)<div class="media-links">.*?</div>\n', re.S)
 MEDIA_LI_ITEM_RE = re.compile(r'<li><a href="([^"]+)"[^>]*>([^<]+)</a></li>')
-YOUTUBE_URL_RE = re.compile(r'^https://www\.youtube\.com/watch\?v=([\w-]+)$')
-VIDEO_ID_RE = re.compile(r'^[\w-]{6,}$')
-
 HEADER_AND_TOP_RE = re.compile(
     r'( *)<header class="figure-header">\s*<h1>(.*?)</h1>\s*</header>\n'
     r'(?:\s*<!--.*?-->\n)?'
@@ -477,14 +474,11 @@ def icon_tile_html(indent):
 
 
 def upgrade_figure_page(path, entry, skills):
-    """Not every figure page has both an Instagram and a YouTube link (3 of
-    26 only have Instagram) — embed a YouTube video when one exists, but
-    never require it, and always keep every original link verbatim in the
-    fallback list regardless of platform. The real assets are official
-    figure description sheets (text + diagram + scoring table), not
-    photos — they're framed at a readable width in .trick-media rather
-    than cropped into a fixed box, so a page with both an image and a
-    video shows two side-by-side panels instead of stacking awkwardly."""
+    """Upgrade a figure page while preserving non-video media links.
+
+    The real assets are official figure description sheets (text + diagram +
+    scoring table), not photos, so they are framed at a readable width.
+    """
     original = read(path)
     if "trick-hero" in original:
         return False  # already upgraded
@@ -499,17 +493,11 @@ def upgrade_figure_page(path, entry, skills):
     mm = MEDIA_LINKS_BLOCK_RE.search(text)
     assert mm, f"{path}: could not find .media-links block"
     media_indent = mm.group(1)
-    items = MEDIA_LI_ITEM_RE.findall(mm.group(0))  # [(href, label), ...]
-    assert items, f"{path}: no media links found in .media-links"
-
-    video_id = None
-    for href, _label in items:
-        ytm = YOUTUBE_URL_RE.match(href)
-        if ytm:
-            video_id = ytm.group(1)
-            break
-    if video_id:
-        assert VIDEO_ID_RE.match(video_id), f"{path}: suspicious YouTube video id {video_id!r}"
+    items = [
+        (href, label)
+        for href, label in MEDIA_LI_ITEM_RE.findall(mm.group(0))
+        if not href.startswith("https://www.youtube.com/")
+    ]
 
     panels = []
     if img_m:
@@ -520,17 +508,9 @@ def upgrade_figure_page(path, entry, skills):
             f'{indent}    <a class="trick-media__zoom" href="{src}" target="_blank" rel="noopener noreferrer">View full size &#8599;</a>\n'
             f'{indent}  </div>\n'
         )
-    if video_id:
-        panels.append(
-            f'{indent}  <div class="trick-media__panel">\n'
-            f'{indent}    <div class="media-embed__video">\n'
-            f'{indent}      <iframe src="https://www.youtube.com/embed/{video_id}" title="YouTube — {entry["title"]}" loading="lazy" allowfullscreen></iframe>\n'
-            f'{indent}    </div>\n'
-            f'{indent}  </div>\n'
-        )
     if not img_m:
         panels.append(icon_tile_html(indent))
-    assert panels, f"{path}: no media panels built (no image, no video, no fallback icon)"
+    assert panels, f"{path}: no media panels built (no image or fallback icon)"
 
     hero_and_media = (
         f'{indent}<div class="trick-hero">\n'
@@ -546,20 +526,22 @@ def upgrade_figure_page(path, entry, skills):
 
     mm2 = MEDIA_LINKS_BLOCK_RE.search(text)
     assert mm2, f"{path}: could not find .media-links block after hero rebuild"
-    fallback_items = "\n".join(
-        f'{media_indent}    <li><a href="{href}" target="_blank" rel="noopener noreferrer">{label}</a></li>'
-        for href, label in items
-    )
     related_block = related_tricks_html(entry, skills, indent=media_indent)
-    new_media_block = (
-        f'{media_indent}<div class="media-links">\n'
-        f'{media_indent}  <h3>Related media</h3>\n'
-        f'{media_indent}  <ul class="media-links__fallback">\n'
-        f'{fallback_items}\n'
-        f'{media_indent}  </ul>\n'
-        f'{media_indent}</div>\n'
-        f'{related_block}'
-    )
+    new_media_block = related_block
+    if items:
+        fallback_items = "\n".join(
+            f'{media_indent}    <li><a href="{href}" target="_blank" rel="noopener noreferrer">{label}</a></li>'
+            for href, label in items
+        )
+        new_media_block = (
+            f'{media_indent}<div class="media-links">\n'
+            f'{media_indent}  <h3>Related media</h3>\n'
+            f'{media_indent}  <ul class="media-links__fallback">\n'
+            f'{fallback_items}\n'
+            f'{media_indent}  </ul>\n'
+            f'{media_indent}</div>\n'
+            f'{related_block}'
+        )
     text = text[:mm2.start()] + new_media_block + text[mm2.end():]
 
     # losslessness check: every original link must survive verbatim
