@@ -535,7 +535,7 @@ def upgrade_figure_page(path, entry, skills):
         )
         new_media_block = (
             f'{media_indent}<div class="media-links">\n'
-            f'{media_indent}  <h3>Related media</h3>\n'
+            f'{media_indent}  <h3>Demo Videos</h3>\n'
             f'{media_indent}  <ul class="media-links__fallback">\n'
             f'{fallback_items}\n'
             f'{media_indent}  </ul>\n'
