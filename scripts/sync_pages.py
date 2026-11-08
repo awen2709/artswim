@@ -405,7 +405,7 @@ def regen_hub_meta(path, category_key, skills):
 
 
 # ---------------------------------------------------------------------------
-# Related tricks (all 55 individual pages)
+# Related tricks (all 50 individual pages)
 # ---------------------------------------------------------------------------
 
 AUTO_RELATED_RE = re.compile(
@@ -645,10 +645,10 @@ def upgrade_element_page(path, entry, skills):
 
 def main():
     skills = load_skills()
-    assert len(skills) == 54, f"expected 54 search-data.json entries, found {len(skills)}"
+    assert len(skills) == 50, f"expected 50 search-data.json entries, found {len(skills)}"
     fig_count = sum(1 for s in skills if s["category"].startswith("Figures"))
     elem_count = sum(1 for s in skills if s["category"].startswith("Elements"))
-    assert fig_count == 26 and elem_count == 28, f"unexpected split: {fig_count} figures, {elem_count} elements"
+    assert fig_count == 22 and elem_count == 28, f"unexpected split: {fig_count} figures, {elem_count} elements"
 
     changed_files = []
 

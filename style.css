@@ -337,6 +337,8 @@ body{
 .figure-card__media{position:relative;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(101,207,224,0.16), rgba(255,255,255,0.55));overflow:hidden}
 .figure-card__media img{width:100%;height:100%;object-fit:cover;transition:transform 450ms ease}
 .figure-card:hover .figure-card__media img{transform:scale(1.1)}
+.page--12u-figures .figure-card__media,.page--youth-figures .figure-card__media{aspect-ratio:2.4/1;background:#fff}
+.page--12u-figures .figure-card__media img,.page--youth-figures .figure-card__media img{object-fit:contain}
 
 /* Shine sweep on hover, same language as the homepage quick-link cards */
 .figure-card__media::before{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:linear-gradient(180deg, rgba(255,255,255,0.35), transparent);pointer-events:none;transition:top 650ms ease;z-index:1}

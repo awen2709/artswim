@@ -22,6 +22,10 @@ Video embeds:
 
 Still images added from the official World Aquatics Figures Manual (see below for the full story): `figures/ballet-leg-single.html`, `figures/barracuda.html`, `figures/barracuda-12u.html`, `figures/front-ariana.html`, `figures/kip.html`, `figures/neptunus.html`, `figures/swanita-spinning-180.html`, `figures/swordfish.html`, `figures/tower.html`, `figures/water-drop.html`, `figures/straight-ballet-leg.html`, `figures/blossom-walkout.html`.
 
+**2027 12U update:** The old 12U figures and their images were superseded. The 12U hub and figure pages now use cropped cover diagrams from each official figure sheet and link to the original PDF page. `assets/Barracuda.png` remains because it is still used by the 10U Barracuda page.
+
+**2027 Youth update:** The Youth hub and figure pages now use the eight figures in the same World Aquatics list, with cropped official cover diagrams and links to the corresponding PDF pages and YouTube demonstrations. The outdated Youth pages and their unused diagrams were removed.
+
 ## Figures — still images: RESOLVED
 
 The 11-figure still-image gap below is now closed. The actual fix: the official **World Aquatics (FINA) Artistic Swimming Figures Manual 2022-2025** (`resources.fina.org/fina/document/2023/01/12/38c73e1c-6dfa-4919-bf64-328e4260aff8/Figures-Manual-2022-2025-ALL.pdf`, 477 pages, publicly downloadable) contains an official diagram+scoring-table sheet for every compulsory figure — including every one of these. It was downloaded, searched page-by-page for each figure's exact "Figure – ### NAME" header (via PyMuPDF, installed for this purpose), the matching page rendered to PNG (cropping out any adjacent unrelated figure sharing the page), and saved into `assets/`. Confirmed correct in every case by cross-checking the figure number/difficulty against the existing YouTube video's own on-screen title card (e.g. Kip's video literally reads "Kip (Fig 311 DD 1.6)," matching the extracted sheet exactly).
